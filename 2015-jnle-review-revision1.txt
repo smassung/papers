@@ -1,0 +1,361 @@
+Reviewer: 1
+
+Comments to the Author
+
+The following is a review of "Non-Native Text Analysis: A Survey" submitted
+to the Journal of Natural Language Engineering (NLE-SUR-14-0112).  The
+paper presents a survey of three NLP tasks which involve non-native text
+analysis.  I found the paper suffered from trying to do too much in a
+short space.  There actually have been dissertations and books and book
+chapters doing different parts (sometimes whole parts) of what this paper
+aims to tackle, so it is important that this paper differentiate itself
+in its utility and message from this prior art.  Additionally, the
+paper is hampered by the fact that most of the work it refers to is
+over a year old.  Especially in the NLI and grammar error correction
+cases, this is problematic as a lot of interesting work has been
+published.  It is important that the authors include this in any future
+version of the paper.  There are also many claims which need to be
+properly substantiated.
+
+My recommendation to the authors is to choose between the following.
+
+1) If you will tackle all three topics, then more space should be devoted
+to explaining the field, giving examples, delving into annotation and
+evaluation, and also raising outstanding issues with the field.
+
+2) Just focus on one topic.  This is the one I like the best.  It frees
+up more space and allows better attention to detail.  Right now the paper
+looks like a collection of tasks that just happen to revolve around
+some similar data sets and might mature into a unified machinery in the
+future.
+
+In general, you want the reader to come out of the paper having a good
+knowledge of what
+works and what doesn't as well as how the field is evolving.  And just as
+important, the current set of papers selected (esp. for grammatical error
+correction) seem ad hoc.  I would think hard about what you would view as the
+top five or seven *must-read* papers for the field.  I found many of
+the ones in this paper were solid, but wouldn't be the first ones I would
+recommend to someone who wanted to get into the field.  Essentially,
+imagine you are giving a recommendation to a fellow colleague or
+student.  What are the top papers to read and why?  Right now, they
+are focused on system papers.
+
+More specific comments follow:
+
+
+ABSTRACT
+
+* I thought it was interesting that MOOCs are mentioned but a way stronger
+motivation is that in Asia alone (China, Japan, Korea) there are tens of
+millions of students (if not hundreds of millions) learning English
+currently.  Most of the non-native English student will come from these
+sources, not necessarily from MOOCs.
+
+* The last sentence makes the claim that the approaches are general, but is
+there any evidence to back this up?  The PhD work by Ross Israel, for example,
+on Korean particle detection showed that mapping previous classification
+methods for English error correction required a lot of adapting and even
+then there was a performance drop.  I suggest the authors investigate
+that work, related work by Detmar Meurer's lab (looking at German learner
+error correction) and the recent TEA shared task on Chinese error
+correction to provide citations either substantiating or contradicting
+the original claim.
+
+https://sites.google.com/site/nlptea1/shared-task
+
+In terms of language independence with respect to NLI, please look at
+the work of Shervin Malmasi who has published on Chinese NLI as well
+as other L1/L2 combinations.
+
+The point about generality to other languages resurfaces in the beginning of
+the Introduction so it should be corrected there as well.
+
+While NLI work is in its infancy, grammatical error correction papers
+are now common in main conferences such as ACL and EMNLP. In fact at ACL11,
+there was a whole track devoted to the subfield and since then there are at
+least one or two papers per conference.  It's small, but establishing.
+
+
+1. INTRODUCTION
+
+* The Leacock et al. (2010) grammatical error correction citation is out of
+date since a second edition came out in 2014 encompassing
+all the shared tasks and papers up until that point, as well as a massive
+list of all the relevant non-native corpora the field uses:
+
+http://www.morganclaypool.com/doi/abs/10.2200/S00562ED1V01Y201401HLT025
+
+* I take a small issue with the claim that "spelling correction is practically
+L1-agnostic".  While it may be true that the approaches are similar,
+non-native writers tend to make different errors than their native
+counterparts, since the former is driven more by the L1 and the latter
+is driven by simple typographical mistakes.  Michael Flor has published
+papers at the LRC investigating these differences and what they mean
+for a system, as well as I believe, releasing a corpus of annotations.
+
+* The paper is on non-native writing, specifically on three tasks.  However,
+why is automated essay scoring not included in this survey?  The
+collection of these three, especially when the third one is barely
+a field, comes across a little arbitrary.
+
+* what does it mean that "the classification problem is itself relatively simple"?
+
+* The NLI shared task is not technically a NAACL shared task, it is a shared
+task hosted at the BEA workshop, which itself was hosted at NAACL2013.  For
+accuracy, one should refer to it simply as "NLI Shared Task 2013".
+
+2. NON-NATIVE CORPORA
+
+The table or text in this section should also indicate which of the corpora
+actually has error corrections, or L1 marked.  As well as which ones require
+a license of are freely downloadable.
+
+The NUCLE corpus is written by Singapore students learning English, it is
+possible that there are some other foreigners in the corpus but unlikely.
+I would check with the authors before writing "unknown" in the table:
+
+http://www.aclweb.org/anthology/W13-1703
+
+In the table, "NUS undergrads" are mentioned but the acronym is not
+substantiated.
+
+Additionally, TOEF11 (used throughout the paper) is incorrect, it was
+formerly called the TOEFL11 named after the test (TOEFL) from which
+the essays were drawn.  However, the official name of the corpus is
+the ETS Corpus of Non-Native English:
+
+https://catalog.ldc.upenn.edu/LDC2014T06
+
+I think some comment should be made about the historical usage of
+the ICLE and ICLEv2.  This corpus was used because there was basically
+nothing else of similar size out there.  The claim that the number of
+L1s is roughly the same is incorrect, the 5-way and 7-way ICLE
+subsections researchers tend to use are driven by the fact that there is a
+large inequality in the number of essays per L1.  Why in the
+table are the number of essays between ICLE and ICLEv2 different?  Or that
+ICLEv2 less than the original?  Finally, there should be some discussion
+about issues with the ICLE - namely that topics aren't distributed
+equally and there are weird characters only found in certain L1 essays
+and not in others which makes it difficult to use, and difficult to
+interpret results.  This drove the creation of the formerly known as TOEFL11
+set.  This discussion is covered in the NLI shared task summary as well
+as the Blanchard et al. (2013) technical report.
+
+I find it surprising that ICNALE is mentioned but not the CLEC corpus (or the
+UIUC corpus which was helpful in their system development), which has been
+commonly used in the GEC community.
+
+http://langbank.engl.polyu.edu.hk/corpus/clec.html
+
+Or lang-8, which has been used in NLI and in error correction and
+has actually proved an extremely useful resource in both tasks, and for
+non-English error correction (search ACL anthology for lang-8), and though I
+note it is mentioned in passing on page 10 in the NLI section.  I find
+the omission of CLEC and lang-8 to be a bit glaring.   Here are a few
+citations:
+
+http://www.aclweb.org/anthology/P12-2039
+http://www.aclweb.org/anthology/C12-2084
+http://www.aclweb.org/anthology/N13-1055
+
+
+3. NATIVE LANGUAGE IDENTIFICATION
+
+* For this sentence: "It was previously thought that lexical features would
+be biased or overfit towards essay topic...this was not the case."  Can you
+provide the citation for this?  This was exactly the issue with the ICLE.
+
+* This is perhaps a note more for the editor - I wasn't sure what the
+level of detail and technical jargon was for a survey.  I would imagine
+terms such as SVM and MaxEnt and language models are par for the course
+in NLP now, but tree substitution grammars and adapative grammars may
+require a little more explanation than is currently provided in the
+article? (p.8)
+
+* I found that last paragraph about authorship identification to be
+unnecessary.  While it is on a similar task, it is superfluous to this
+paper since it is not on non-native text.  I would rather see the space
+spent on more fully describing things in this paper.
+
+* "a n-gram variant" --> "an n-gram variant"
+
+* A whole paragraph is devoted to skip grams, however very little is
+devoted to the different parse features and specialized grammars.
+
+* Several of the methodologies of the shared task systems were listed,
+but the reader should know whether they were effective or not, in
+addition to highlighting their effectiveness.  For example, the LIMSI
+team used the MT features but it was in the bottom third of the results.
+It's important to give the reader an idea of what works and what doesn't,
+otherwise the summary comes off as a list of approaches that people
+tried.  I think a good summary paper encapsulates what works and what
+doesn't and gives recommendations based on the past.
+
+* Finally, a method that is certainly unique and has some linguistic
+basis, is the use of language families in classification:
+
+http://www.aclweb.org/anthology/N13-2005
+
+
+4. NON-NATIVE GRAMMAR CORRECTION
+
+* what is meant by "deeper syntatic meaning"?
+
+* it should be mentioned that in addition to specific and more general
+errors (first paragraph), that there are those who attempt whole
+sentence error correction as a one pass or multi pass approach:
+
+http://www.aclweb.org/anthology/W/W14/W14-1702.pdf
+http://www.aclweb.org/anthology/W12-2005
+
+
+* I think it's a bit weird to group Brockett's work with Alla R.'s 2010
+artificial error one.  The former uses MT but the latter uses a
+classification method trained on artificial errors.
+
+* Overall I found the 4.1 section a bit lacking.  Why were these papers
+chosen in particular?  And why were these methodologies focused on in
+particular.  It's hard not to look at the Leacock et al. book and see
+that they divided things up by error type and then noted that approaches
+could be categorized by the methods employed (classification, LM, etc.)
+and by data type used (well-formed text, artificial errors, real errors).
+This typology tracks the history of the field as well.  Given that
+so many of the early and even current approaches to GEC on articles
+and prepositions, used a classification methodology - such as the
+early Izumi work, Gamon et al., De Felice et al., etc. which was then
+adopted by Rozovskaya's and Dahlmeier's PhD work, it would be good to have
+a section focusing on those and the features they used, and how they
+differ for different error types or tasks.
+
+Additionally, while the NLI task is very clear cut in terms of
+evaluation and annotation, the GEC task is definitely not.  There
+are many papers on evaluation and annotation alone, and this is far
+from being a solved track.  A good summary will at least mention this
+and delve into it as part of future work for the field.  In fact,
+eval and annotation have been the main complaints about the four
+shared tasks that have gone on, and each one has tried to improve upon
+the previous one in these endeavors.  In terms of pointers, there
+is an LRE paper by Tetreault, Madnani and Chodorow that lays out the
+annotation issues and one on the issues with evaluation/annotation:
+
+http://www.aclweb.org/anthology/C/C12/C12-1038.pdf
+
+Dahlmeier's ACL12 paper and the CoNLL 2014 Shared Task also have must-read
+treatments of this issue.
+
+* Why is the CoNLL 2013 shared task reviewed but not the 2014 which is
+a) more recent and b) covers more errors?
+
+
+* In the end of the section, a distinction is made between targeted and
+general error correction methodologies.  Was the West et al. paper the
+only general one?  Also, a probably better paper to cite for their work
+is the Park and Levy paper from ACL11.
+
+5. TEXT SIMPLICATION
+
+I think an argument can be made for not having this section (in favor
+of say essay scoring) when there is little to no work
+in the field.  That being said, I think the section suffers from the same
+issues in the GEC section.  It is important to state the task, give
+some examples of text simplification, note the key works specific to that
+particular field of non-native text simplification and discuss outstanding
+issues in the field.
+
+6. CONCLUSIONS
+
+I found the conclusion to be fine, though many of the questions or
+insights have been mentioned in prior work before.
+
+Reviewer: 2
+
+Comments to the Author
+This paper reviews previous work on non-native text analysis such as native
+language identification, non-native grammatical error correction, and text
+simplification. Native language identification and non-native grammatical error
+correction explain both applied techniques and shared task results
+comprehensively. However, the developing field of text simplification for
+non-native speakers covers only small part, because of the lack of related
+work.
+
+The structure and organization of this survey seem to be moderate for this
+journal. However, a few major comments are as listed follows.
+
+The title of this paper seems to be too broad. In addition, “text analysis” cannot cover the review part of the non-native corpora.
+
+Section 5, text simplification for non-native speakers seems to be too shallow
+comparing other parts. Text simplification or summarization is a very important
+application area of NLP, however the connection between the text simplification
+part and non-native speakers seems to be too weak. The most important comment
+is that there are two subsections (techniques and shared task) for section 3
+and section 4, but these two sections are too independent even though shard
+task part explains more recent techniques. It seems like combining two
+different reviews in one section.
+
+A few minor comments are as list follows.
+
+In section 2, only some resources have related online links. If it is not
+available for other resources, it would be better to say it.
+
+Reviewer: 3
+
+Comments to the Author
+
+This is a valuable survey, and I commend the authors for what I take to be a
+very useful contribution to the field.
+
+I only require one NECESSARY fix, and SUGGEST two additions.
+
+The authors MUST define "NLI" the first time it is used.  I was halfway through
+the paper before I realised that it did NOT refer to "Natural Language
+Interaction", but to "Native Language Interference".
+
+I suggest that the authors distinguish between native speakers of dialects of
+English (what are often called "World Englishes") and non-native speakers of
+some "standard" English.  This is going to be important in any Language
+Technology application to text written by such speakers. Are the problems the
+same or different?  If nothing else, this should be mentioned in the Discussion
+in Section 6.
+
+I also suggest that the authors return in Section 6 to the consideration of
+this problem in other "receiving languages" -- that is, the languages in those
+countries that accept large numbers of non-native speakers. The authors
+acknowledge this issue early in the paper, before noting their focus on
+English, but the problem hasn't gone away, so deserves mention again in the
+Discussion.
+
+Reviewer: 4
+
+Comments to the Author
+
+General Comments
+
+An excellent survey paper. “Non-native text analysis” has been a hot topic in
+NLP as well as in TESOL. The author carefully examines the related literature,
+which has been scattered in varied journals, reports and ephemeral documents,
+and gives us a useful summary of the current situation concerning three types
+of non-native text study: nativeness identification, error correction, and text
+simplification. The paper is well-organized and a series of figures help
+readers understand the achievements in the fields in an easier way.
+
+Comments for minor revisions
+
+1) Unlike nativeness identification and error correction, “text simplification”
+does not seem to be closely related to “non-native text analysis.” It is about
+texts for non-native speakers, not about texts by non-native speakers. The
+author had better explain why text simplification can be a part of non-native
+analysis.
+2) Section 2 is closely related to Section 3, but not to Section 4 and 5. It
+might be better to integrate Sections 2 as a subsection into Section 3 (native
+language identification).
+3) Should Fig 2 appear in Section 2, not in Section 1?
+4) [p.4] The average length in CEEAUS and ICNALE might not be correct.
+According to the project website, the average size of an essay collected in
+CEEAUS/ ICNALE is 231 words and that of a transcribed speech collected in
+ICNALE is approx. 110 words.
+5) [p.5] NLI! --- Is an exclamation mark needed here?
+6) [p.7] “It was previously thought lexical features... but a cross-corpus
+evaluation showed...” Please add a reference.
+7) [p.8] “which means the accuracy can’t be...” Maybe “cannot” should be used
+here.

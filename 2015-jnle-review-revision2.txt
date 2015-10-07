@@ -1,0 +1,235 @@
+Reviewer: 1
+
+Comments to the Author
+I liked the paper before, and I continue to like it with the authors' responses
+to the reviews they received.
+
+However, I would recommend two sorts of very minor revisions. First, several of
+the citations should be formatted as \citep, where the entire citation is
+enclosed in parentheses -- for example, the citation at the end of the first
+paragraph of Section 3, and the citation in Sec 3.2 to work by the CMU-Haifa
+team.
+
+Second, the authors have used evaluative words that are inappropriate to a
+scholarly article. So instead of "This paper is a must read for ...", it would
+be more in keeping to say "This paper would be of value to..." I know I found
+others, but must not have recorded them.
+
+Reviewer: 2
+
+Comments to the Author
+Tables should be differentiate from figures. At this paper all tables are
+captioned as figures.
+
+Reviewer: 3
+
+The following is a review of the revision to "Non-Native Text Analysis: A
+Survey" (SUR-14-0112.R1). I'd like to thank the authors for addressing many
+of the comments made by myself and the other reviewers. However, there are
+several outstanding issues which remain or have been introduced with this new
+version.
+The main ones are:
+1. Issues with importance and structure in GEC key works section (4.1): this
+is a comment that remains from my previous review. That comment is pasted here
+again:
++++ (from previous review)
+In general, you want the reader to come out of the paper having a good
+knowledge
+of what works and what doesn't as well as how the field is evolving. And just
+as important, the current set of papers selected (esp. for grammatical error
+correction) seem ad hoc. I would think hard about what you would view as the
+top five or seven *must-read* papers for the field. I found many of the ones
+in
+this paper were solid, but wouldn't be the first ones I would recommend to
+someone who wanted to get into the field. Essentially, imagine you are giving
+a
+recommendation to a fellow colleague or student. What are the top
++++
+It seems that this section really hasn't changed that much. Main thing is
+that it is not clear WHY the five papers were selected. Are they historically
+relevant? Do they represent a canonical example of a key approach? Are they
+state-of-the-art? Are they a unique approach that has changed the field? In
+a good survey paper, you want papers that you can use to answer those
+questions. Most of the ones currently in 4.1 are not that. For example,
+Madnani et al., is added in this version I believe, but this is an example of
+a pilot study which hasn't had much impact on the field, so it seems the space
+could be better spent on some more relevant papers. For example, the
+Rozovskaya and Roth (2010) paper on artificial errors has had a very large
+impact and is widely cited, however it is only mentioned in passing with the
+Brocket et al. paper (which is more about SMT anyway). If it were me, the
+papers I feel would be in there would be R&R 2010, the Dahlmeier ones as
+listed (maybe even the beam search one is better than the one on collocations)
+possibly the Levy paper given its uniqueness, Gamon (NAACL 2010) where
+classification and LMs and ensembles are used, and Cahill et al. (NAACL 2013)
+where they review the top training methodologies and training data types and
+do a comprehensive bake-off between them all.
+My advice to the authors is to once again think about, and justify, the papers
+that are selected for this section, because these are the ones that people
+outside the field will read more in depth after reading a survey paper. A
+survey paper should give great pointers and summaries to the key works. Prior
+work in GEC has looked at different machine learning strategies, different
+clever uses of training data, etc. The papers should be selected based on how
+you want to depict the field.
+Finally, Sec 4.1. as it is written currently comes off as basically just a
+list of papers with a table. There is no few sentence introduction explaining
+why they are selected and what the major themes are in the field that would
+make one select a paper over another.
+
+2. Lack of an essay scoring session: in both the paper and in the author
+response, the claim is that the paper will be a "systematic overview of all
+the related work to the theme of non-native text", however there is NO section
+on essay scoring of non-native essays, a field which has been around for well
+over a decade and has seen dozens of papers in the NLP field (from Cambridge,
+ETS, etc.). There is also growing interest in essay scoring for non-native
+speakers of Chinese and German, etc. In fact, the early work in ESL GEC was
+motivated by the need for good ESL error correction features for non-native
+essay scoring. So to this reviewer, if the claim is to be comprehensive, then
+not having a section on non-native essay scoring is a glaring omission. There
+are two solutions: 1) add another section, though this may mean shrinking
+other sections or 2) refocus the paper to just be on GEC and NLI (at the
+expense of fluency and simplification) and simply state that most of the
+literature has focused on those two areas recently. To be frank, there is way
+more NLP literature on non-native essay scoring than fluency and
+simplification.
+
+3. Fluency section: this section is new but unfortunately is now a weakness of
+the paper. First, an unusual amount of attention is directed towards essay
+scoring though it is a different task. (if anything, fluency scoring would
+feed into an essay scorer, especially one for non-native writers). Second,
+almost all relevant work is omitted:
+* Heilman et al. (ACL 2014): in this work they develop a corpus of TOEFL
+sentences, develop a fluency annotation scheme, and have TOEFL sentences
+manually annotated given this scheme, and then develop a classifier to score
+each sentence on the 1-4 scale, and binary scale:
+http://www.aclweb.org/anthology/P/P14/P14-2029.pdf
+This addresses the point in the middle of the section "no serious study to
+measure purely fluency has been performed."
+* There has been a lot of prior work on detecting whether a sentence is native
+or non-native. One of my favorites is Sun et al. (ACL 2007) who used a
+pattern matching algorithms (LSPs). Others include Lee et al. (NAACL 2007)
+and Gamon (BEA 2011).
+* It is mentioned in the paper that essay scoring can't be used for fluency
+scoring. Actually, there was a system using ETS's e-rater which won the
+MTeval (fluency) competition in 2011:
+http://www.cs.columbia.edu/~kristen/files/wmt11-eRatingMT.pdf
+* Finally, there is a LOT of work on fluency metrics for MT eval, not just the
+one above, which could be ported to the non-native task. That work provided
+some of the direction for the Heilman paper.
+Third, a lot of the essay scoring comparisons or data is either out-of-date or
+not quite accurate. First, I suggest looking at this book:
+http://www.taylorandfrancis.com/books/details/9780415810968/
+which is a collection of articles on different state-of-the-art essay scoring
+systems and how they work and their performances, and future work. This can
+be used to update the correlation scores between human raters, which is now
+higher. Also, the details for the Attali and BUrstein paper were omitted for
+space and can be found in other papers which specifically discuss each module.
+The paragraph starting with "Powers..." seems unnecessary.
+
+Given the references above, the conclusions of Sec 5.1 has to be revised
+completely.
+"current work in essay grading is usually based on lexical features..." -->
+this is definitely NOT true as they are based on lexical features IN ADDITION
+to grammar features, style, discourse, argumentation, even sentiment now, and
+so forth (this is found in the Attali and Burstein paper). The Valenti
+citation is woefully out of date, and if this essay scoring component of the
+section is to be kept in (I really don't think it should), then one of the
+chapters in the Essay Scoring book I cited above would be the one to use.
+OTHER COMMENTS:
+
+Introduction:
+* I'm not sure if Figure 1 makes a lot of sense in light of my comments above
+about essay grading. It's also not clear to me what the structure of the
+figure is. Are level 1 and 2 (starting from the top) supposed to be native
+and then levels 3 and 4 supposed to be non-native? Or is 3 supposed to be an
+instance of 2? If the latter, then NLI should not be an instance of Author
+Profiling. They use the same features but doing different (though similar)
+tasks. Fluency scoring also has a lot more to do with GEC and both are or can
+be used for essay scoring. To sum up, the structure and relatedness of the
+different boxes in the figure are a little confusing.
+* Sec 1.1: it is not clear what text simplification is from the text provided.
+To a general NLP audience first reading this, there is a subfield of
+paraphrase / summarization which aims to make complex texts shorter, usually
+to make it easier to read to people with lower abilities. But what does this
+mean with respect to non-native writing? There is a lot of work on
+simplifying *English* native texts by reading level to make it easier for
+non-native speakers to understand. Or is the aim to simplify the text the
+learner writes?
+* If space is an issue (and number of citations), one could easily do without
+the references to author attribution and PAN shared task. It's nice if one
+has the space for sure, but not essential.
+* Sec 1.2: what is meant by "system papers" exactly? Aren't most papers in
+the GEC/NLI/NLP fields system papers since they are a system evaluated on a
+corpus and results are provided?
+* (p.4): "This workshop uses..." --> "This shared task uses..."
+SECTION 2
+* "Fig 2" --> "Figure 2"
+* This sentence doesn't mesh with section 5.1: "any corpus that has error
+annotations can be used for fluency scoring." How is that possible? Sec 5.1
+says that fluency scoring isn't necessarily about presence of grammatical
+errors. The impression I have is that fluency = style + errors. Also,
+suppose the corpora could be used, some overall fluency score would have to be
+assigned each sentence, right? I don't think any of the corpora marked as FS
+have that.
+
+* "...CLEC is only available to members of the university that created it."
+--> can you check this? This corpus has been used by lots of researchers
+(most notably Rozovskaya) so they were able to get it, though it may have had
+a difference license several years ago.
+* ETS corpus: After talking with ETS folks, it seems that TOEFL11 is what is
+commonly used even if there was an initial push to call it ETS. So either one
+is fine (I personally prefer TOEFL11).
+* NAACL-HLT 2013 shared task --> BEA8 shared task
+* footnote 8 is incorrect, it should be the LDC link:
+https://catalog.ldc.upenn.edu/LDC2014T06
+* "Web site Lang-8" --> "website Lang-8
+
+SECTION 3
+* Fig 3 --> Fig. 3 or Figure 3
+* The sentence starting "They finally hypothesized..." is a bit awkward
+towards the end
+* Sec 3.2: NAACL Human Language Technologies --> 8th Building Educational
+Applications workshop
+* I noticed that while results are placed in a table for the ICLE corpus for
+3.1, there is no corresponding table for ETS / TOEFL11, which is the more
+commonly used corpus. The revised paper should address this.
+* Additionally, it would be better to follow the schema in the GEC shared task
+section of discussing the best systems and most unique ones. Surprisingly, no
+mention of which teams were in the top 3 (or even which one was best) is made!
+However the Crossley et al. paper which did not do well has a whole paragraph
+devoted to it.
+* The paper also needs to be updated with the fact that two post-shared task
+works have eclipsed the top performer from shared task. Meurers had a paper
+at COLING 2014 which used ensembles which had the best performance until
+Popescu et al.'s 2014 EMNLP paper which has the best performance to date
+improving their string kernel method. Shervin Malmasi has also done a LOT fo
+work the last year since the shared task on NLI for other languages.
+* Ensembles is something worth mentioning since a bunch of papers during and
+after the shared task have employed it to get a performance boost.
+SECTION 4
+* In the intro paragraph to this section, it's not clear what the difference
+between targeted and general errors are. Word sense and collocations are
+listed as general, but those seem like specific error types, just like
+prepositions and articles.
+I think targeted vs. general usually means that
+an approach may target only a specific error type, while a general approach
+will try and tackle all errors in a system. The UIUC system is thus a
+collection of targeted error modules which, in total, does general correction.
+In contrast, the Cambridge 2014 shared task system is a system specifically
+tuned for general correction. There is just one module. I think some of the
+confusion may be coming from general vs. targeted APPROACHES (see the last
+paragraph of Sec 4) as opposed to general errors. It seems that the bulk of
+this paper, and my recommendations from the last review, discuss approaches.
+Sec 4.1:
+* why is evaluation discussed in a techniques section?
+* Sec 4.2: Rozovskaya et al. had a TACL paper in 2014 which showed a slight
+improvement over their ST system. To my knowledge it might be the best
+performance on that data set.
+* I would remove the part about how many teams registered, it's superfluous
+and one can save space.
+* "In the CoNLL-2012 shared task" --> is it 2013 or 2014?
+
+SECTION 5
+* Sec 5.1: see comments at beginning
+* Sec 5.2: this section or field is a little weird because the rest of the
+paper deals with learner text. This one only deals with native text, so it
+actually doesn't fit the thrust / title of the paper.
