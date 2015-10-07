@@ -1,0 +1,267 @@
+------------- Review from Reviewer 1 -------------
+Relevance to SIGIR (1-5, accept threshold=3)  : 4
+Originality of Work (1-5, accept threshold=3) : 4
+Technical Soundness (1-5, accept threshold=3) : 4
+Quality of Presentation (1-5, accept threshold=3)  : 3
+Impact of Ideas or Results (1-5, accept threshold=3) : 3
+Adequacy of Citations (1-5, accept threshold=3) : 3
+Reproducibility of Methods (1-5, accept threshold=3) : 4
+Overall Recommendation (1-6)                  : 3
+
+-- Comments to the author(s):
+This is the meta-review by the Primary PCM responsible for your paper and takes
+into account the opinions expressed by the referees, the subsequent decision
+thread, and my own opinions about your work.
+
+Synthesis:
+
+Reviewers agreed that this paper contains the basis of an interesting idea,
+with creative descriptions of potential applications. However, in reviews and
+discussion, reviewers also agreed that the work is not quite ready for
+acceptance at SIGIR, due to concerns that include (1) lack of appropriate
+baselines for tasks being evaluated and (2) the unclear novelty of its
+contributions in an already fairly crowded field of methods for similar
+applications that are based on, e.g. language modeling approaches to
+grammatical error correction that also use background model perplexity as a
+decision criterion for selecting edits.
+
+Additional comments:
+
+My own impression of this paper's main contribution is that it recognizes the
+generality of the language-model error correction approach to new types of text
+mining applications and provides some creative and well-explained ideas to the
+community.  However, I do place significant weight on the scientific concerns
+of reviewers that the novelty and effectiveness claims need to be better
+substantiated.
+
+Final disposition:
+
+The reviewers recognize the quality and creativity of the ideas in this work,
+but based on the concerns raised in reviews about clarifying the novelty of the
+approach, and clearly demonstrating its soundness through an improved
+evaluation, the recommendation is that this paper is not yet ready for
+acceptance as a SIGIR full paper.
+
+-- Summary:
+The reviewers recognize the quality and creativity of the ideas in this work,
+but based on the concerns raised in reviews about clarifying the novelty of the
+approach, and clearly demonstrating its soundness through an improved
+evaluation, the recommendation is that this paper is not yet ready for
+acceptance as a SIGIR full paper.
+---------- End of Review from Reviewer 1 ----------
+
+
+------------- Review from Reviewer 2 -------------
+Relevance to SIGIR (1-5, accept threshold=3)  : 4
+Originality of Work (1-5, accept threshold=3) : 4
+Technical Soundness (1-5, accept threshold=3) : 4
+Quality of Presentation (1-5, accept threshold=3)  : 3
+Impact of Ideas or Results (1-5, accept threshold=3) : 3
+Adequacy of Citations (1-5, accept threshold=3) : 3
+Reproducibility of Methods (1-5, accept threshold=3) : 3
+Overall Recommendation (1-6)                  : 3
+
+-- Comments to the author(s):
+As Secondary PCM I have reviewed this submission, the review, as well as the
+discussion and I concur with the decision.
+-- Summary:
+As Secondary PCM I have reviewed this submission, the review, as well as the
+discussion and I concur with the decision.
+---------- End of Review from Reviewer 2 ----------
+
+
+------------- Review from Reviewer 3 -------------
+Relevance to SIGIR (1-5, accept threshold=3)  : 2
+Originality of Work (1-5, accept threshold=3) : 2
+Technical Soundness (1-5, accept threshold=3) : 3
+Quality of Presentation (1-5, accept threshold=3)  : 3
+Impact of Ideas or Results (1-5, accept threshold=3) : 3
+Adequacy of Citations (1-5, accept threshold=3) : 3
+Reproducibility of Methods (1-5, accept threshold=3) : 2
+Overall Recommendation (1-6)                  : 3
+
+-- Comments to the author(s):
+This paper presents an edit distance method for text transformation and its
+application to three text mining tasks: (1) grammar correction, (2) clustering,
+(3) native language identification.
+
+The edit distance method uses the three well-known Levenshtein operations
+(insertion, deletion, substitution) with the relaxed constraint that, instead
+of transforming one string into another, the transformed string should just
+'look like' the original string. This is interpreted as the probability that
+the transformed string is observed in the language model of the original
+string. This last point is the novelty of this work. The resulting edit
+distance approach is called SyntacticDiff, even though it is not clear what is
+specifically 'syntactic' about it.
+
+The presentation is centered on the three applications of this approach, and a
+further discussion of other potential applications. Overall evaluation is
+however  weak:
+
+- For grammatical correction, it is not clear what the baseline is; different
+variants of syntacticDiff are compared to each other. The task of grammatical
+correction is also not directly linked to information retrieval.
+
+- For the clustering application, the evaluation is not comprehensive. We are
+only shown five illustrative topics.
+
+- For the native language classification task, it is not clear what the
+baseline is.
+
+Without a thorough evaluation, the technical soundness of the proposed approach
+cannot be assessed.
+
+The writing is clear, but more efforts should be made to link this work to IR.
+
+-- Summary:
+An interesting variation of edit distance is applied to three NLP tasks. The
+evaluation is too weak.
+---------- End of Review from Reviewer 3 ----------
+
+
+------------- Review from Reviewer 4 -------------
+Relevance to SIGIR (1-5, accept threshold=3)  : 4
+Originality of Work (1-5, accept threshold=3) : 3
+Technical Soundness (1-5, accept threshold=3) : 4
+Quality of Presentation (1-5, accept threshold=3)  : 3
+Impact of Ideas or Results (1-5, accept threshold=3) : 3
+Adequacy of Citations (1-5, accept threshold=3) : 3
+Reproducibility of Methods (1-5, accept threshold=3) : 4
+Overall Recommendation (1-6)                  : 3
+
+-- Comments to the author(s):
+In this paper, the authors propose a method called SyntacticDiff, which is an
+edit-based method for transforming sequences of words into a reference corpus.
+The proposed edit-based based method has three transformation types:
+insert/remove/substitute, which makes it very similar to other edit-based
+methods like Levinstein's distance or Soundex used, for instance, for spelling
+correction. The main novelty of the algorithm, as far as I can tell is the use
+of a reference language model approach: minimizing the perplexity of the
+generated sequence given a language model of the reference corpus. This is in
+contrast to traditional edit-based methods that operate on an exact match
+basis.
+
+While the proposed idea is interesting, I do not find the novelty argument very
+convincing. There already exist many statistical and probabilistic methods for
+matching and aligning text sequences. For instance, many of the statistical
+machine translation methods like IBM models fall into this category. In
+addition, IR literature provides many examples of using n-gram language models
+for matching between text segments and document corpora. Therefore, I have
+difficulty appreciating the novelty of the proposed approach.
+
+For instance, a related (and in my opinion much more generalizable) approach
+was recently proposed for query refinement (but could be used for any other
+text alignment tasks) that considers edit-based transformations in the context
+of a statistical discriminative model: "A Unified and Discriminative Model for
+Query Refinement", by Guo et al.
+
+In addition, while the authors claim that the approach can be generalized to
+many different types of tasks, the use case that is repeated across all tasks
+is removal/insertion of stopwords and stemming variations. This kind of
+automatic detection of stylistic change (stylometry) is already well studied
+and heavily used for tasks such as genre detection, authorship attribution,
+cybercrime detection, etc. This again, makes it difficult to pinpoint the
+novelty of the contributions of this paper.
+
+-- Summary:
+In this paper, the authors propose a method called SyntacticDiff, which is an
+edit-based method for transforming sequences of words into a reference corpus.
+The main novelty of the algorithm is the use of a reference language model
+approach in contrast to traditional edit-based methods that operate on an exact
+match basis.
+
+While the proposed idea is interesting, I do not find the novelty argument very
+convincing. There already exist many statistical and probabilistic methods for
+matching and aligning text sequences.
+
+In addition, while the authors claim that the approach can be generalized, the
+use case that is repeated across all tasks is removal/insertion of stopwords
+and stemming variations. This kind of automatic detection of stylistic change
+(stylometry) is already well studied and heavily used for tasks such as genre
+detection, authorship attribution, cybercrime detection, etc.
+---------- End of Review from Reviewer 4 ----------
+
+
+------------- Review from Reviewer 5 -------------
+Relevance to SIGIR (1-5, accept threshold=3)  : 4
+Originality of Work (1-5, accept threshold=3) : 4
+Technical Soundness (1-5, accept threshold=3) : 2
+Quality of Presentation (1-5, accept threshold=3)  : 4
+Impact of Ideas or Results (1-5, accept threshold=3) : 4
+Adequacy of Citations (1-5, accept threshold=3) : 4
+Reproducibility of Methods (1-5, accept threshold=3) : 3
+Overall Recommendation (1-6)                  : 3
+
+-- Comments to the author(s):
+The authors present a method to characterize texts based on transformation
+edits and a reference corpus. Although the idea was simple, it was creative and
+I liked how they used a language model to score transformations. I can see how
+such features can be used in various other tasks. In addition, the paper was
+well-written. However, the paper should substantially be improved on the
+motivation and evaluation.
+
+- Motivation/Introduction:
+
+The authors motivate the need for a comparative approach using multiple
+examples (MOOC, authorship attribution, native language detection) where the
+task is about capturing style rather than content. They argue that a
+comparative approach is needed, since content words do not capture style well
+enough. However, there is a lot of work on capturing style in NLP, for example
+in the field of stylometry, and features that are found to be effective are for
+example features based on POS patterns and character n-grams.
+
+'the minimum set of edits would be very meaningful because they are precisely
+the corrections we must make'. This is a hard claim, this assumes that all
+sentences different than the original one are wrong.
+
+- Evaluation
+
+I found the evaluation based on the grammar correction task nice and insightful.
+
+Although the authors should be complimented by testing their approach on 3
+different tasks, I wasn't convinced by the evaluation based on the other 2
+tasks.
+
+First, the topic modeling tasks was only evaluated in an informal, qualitative
+way by providing some examples and showing selected topics. I found the topics
+by the syntactic model a bit hard to interpret. Are the topics itself
+meaningful? Especially the remove operations make it hard to interpret the
+coherence of a topic. The evaluation could be improved, for example by manual
+judging by experts whether the topics make sense, or using the obtained
+clusters in some task.
+
+Secondly, for native language identification the authors compare against two
+weak baselines (unigram and bigram words). They should also compare with other
+features found to be effective for capturing style (e.g. based on POS
+sequences).
+
+Section 4.2: 'and showed superior performance of such a text representation in
+comparison to existing text representation methods for the task of native
+language identification'. I don't think the authors should make this claim
+given the methods they compare to.
+
+The feature analysis in the native language identification I found insightful.
+
+- Small comments:
+
+* Section 4: Although I like it when authors look forward to potential
+applications of their method, spending a full page on future work is too much.
+I found it too much speculation, and wasn't convinced by some of the scenario's
+(for example, the sentiment analysis one).
+
+* How was V_INS selected (short list of function words?). How many words were
+there?
+
+* LDA: how was the number of topics selected.
+
+* LDA: Unigrams, topic 4. I wouldn't call this 'overuse' of pronouns.
+
+This could be a topic capturing people talking about their own experiences or
+opinions.
+
+-- Summary:
+I found the proposed approach interesting and in general, the paper was
+well-written. While promising, the paper needs substantial work on improving
+the motivation and evaluation. I would also suggest reducing the amount of text
+on future work.
+---------- End of Review from Reviewer 5 ----------

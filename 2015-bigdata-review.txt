@@ -1,0 +1,292 @@
+  --========  Review Reports  ========--
+
+The review report from reviewer #1:
+
+*1: Is the paper relevant to Bigdata?
+  [_] No
+  [X] Yes
+
+*2: How innovative is the paper?
+  [_] 5 (Very innovative)
+  [X] 4 (Innovative)
+  [_] 3 (Marginally)
+  [_] 2 (Not very much)
+  [_] 1 (Not)
+  [_] 0 (Not at all)
+
+*3: How would you rate the technical quality of the paper?
+  [_] 5 (Very high)
+  [_] 4 (High)
+  [X] 3 (Good)
+  [_] 2 (Needs improvement)
+  [_] 1 (Low)
+  [_] 0 (Very low)
+
+*4: How is the presentation?
+  [_] 5 (Excellent)
+  [X] 4 (Good)
+  [_] 3 (Above average)
+  [_] 2 (Below average)
+  [_] 1 (Fair)
+  [_] 0 (Poor)
+
+*5: Is the paper of interest to Bigdata users and practitioners?
+  [_] 3 (Yes)
+  [X] 2 (May be)
+  [_] 1 (No)
+  [_] 0 (Not applicable)
+
+*6: What is your confidence in your review of this paper?
+  [_] 2 (High)
+  [X] 1 (Medium)
+  [_] 0 (Low)
+
+*7: Overall recommendation
+  [_] 5 (Strong Accept: top quality)
+  [_] 4 (Accept: a regular paper)
+  [X] 3 (Weak Accept: could be a poster or a short paper)
+  [_] 2 (Weak Reject: don't like it, but won't argue to reject it)
+  [_] 1 (Reject: will argue to reject it)
+  [_] 0 (Strong Reject: hopeless)
+
+*8: Detailed comments for the authors
+  This paper proposes an edit based technique for representing sequences of
+textual data with respect to a reference collection. The proposed approach is
+applied to three different tasks: grammar error correction, student essay
+clustering, and native language identification.
+
+The proposed method is well motivated since a comparable analysis of a document
+with a reference text enables the discovery of subtle patterns in the document.
+To the best of my knowledge, the proposed edit based transformation technique
+is novel. Text representation beyond bag-of-word is a fundamental problem in
+text mining. Therefore, the proposed method would have many applications that
+involve text data. The experiments demonstrate the effectiveness of the
+proposed approach on three applications. The paper is well organized in
+general.
+
+One concern about the proposed approach is its scalability as this conference
+is on Big data. The sizes of the datasets used in the experiments are quite
+small, i.e., 1,036 training sentences in grammar error correction, 2,800
+documents in student essay clustering, and 5,600 essays in native language
+identification. For an index j in each iteration, there are V_INS+V^SUB(W_J)+1
+candidate edits, which could be a large number. The complexity also depends on
+k, the number of iterations, which was set to small values in the experiments
+(e.g., k=1 in essay clustering). The authors should investigate the efficiency
+of the proposed method on large-scale testbeds.
+
+The performance of SYNTACTICDIFF seems quite modest. In the task of grammar
+error correction, the system would place the 7th in the CoNLL shared task, only
+better than 11 other teams. The paper should report the results of the best
+teams and also the state-of-the art methods on the task. In native language
+identification, the features extracted by SYNTACTICDIFF yield worse results
+than the unigram words features. By combining the two sets of features, the
+performance has modest improvement over unigram words (it is unclear whether
+the improvement is statistically significant).
+
+
+========================================================
+The review report from reviewer #2:
+
+*1: Is the paper relevant to Bigdata?
+  [_] No
+  [X] Yes
+
+*2: How innovative is the paper?
+  [_] 5 (Very innovative)
+  [_] 4 (Innovative)
+  [X] 3 (Marginally)
+  [_] 2 (Not very much)
+  [_] 1 (Not)
+  [_] 0 (Not at all)
+
+*3: How would you rate the technical quality of the paper?
+  [_] 5 (Very high)
+  [_] 4 (High)
+  [X] 3 (Good)
+  [_] 2 (Needs improvement)
+  [_] 1 (Low)
+  [_] 0 (Very low)
+
+*4: How is the presentation?
+  [_] 5 (Excellent)
+  [_] 4 (Good)
+  [X] 3 (Above average)
+  [_] 2 (Below average)
+  [_] 1 (Fair)
+  [_] 0 (Poor)
+
+*5: Is the paper of interest to Bigdata users and practitioners?
+  [_] 3 (Yes)
+  [X] 2 (May be)
+  [_] 1 (No)
+  [_] 0 (Not applicable)
+
+*6: What is your confidence in your review of this paper?
+  [X] 2 (High)
+  [_] 1 (Medium)
+  [_] 0 (Low)
+
+*7: Overall recommendation
+  [_] 5 (Strong Accept: top quality)
+  [X] 4 (Accept: a regular paper)
+  [_] 3 (Weak Accept: could be a poster or a short paper)
+  [_] 2 (Weak Reject: don't like it, but won't argue to reject it)
+  [_] 1 (Reject: will argue to reject it)
+  [_] 0 (Strong Reject: hopeless)
+
+*8: Detailed comments for the authors
+  This paper introduces SyntacticDiff which is an edit based method for
+transforming sequences of words given a reference text collection. The paper
+overall is well written and the approach for transforming one piece of text
+into another using a language modelling approach is fairly general. The authors
+have shown that such a method can be used in different application areas with
+limited dependence on linguistics resources.
+
+The one problem that I see with this paper is that the authors claim that this
+approach is general and can scale to big text data, however the tests were done
+only on a small scale data set. So the authors should either show how well
+their method scales on 1 large dataset or refrain from making this claim which
+undermines the quality of the work.
+
+There are a few typos throughout the paper for example: page 1 column 2
+"Syntacticdiffis". Please proof read to weed out the typos.
+
+
+========================================================
+The review report from reviewer #3:
+
+*1: Is the paper relevant to Bigdata?
+  [_] No
+  [X] Yes
+
+*2: How innovative is the paper?
+  [_] 5 (Very innovative)
+  [X] 4 (Innovative)
+  [_] 3 (Marginally)
+  [_] 2 (Not very much)
+  [_] 1 (Not)
+  [_] 0 (Not at all)
+
+*3: How would you rate the technical quality of the paper?
+  [_] 5 (Very high)
+  [X] 4 (High)
+  [_] 3 (Good)
+  [_] 2 (Needs improvement)
+  [_] 1 (Low)
+  [_] 0 (Very low)
+
+*4: How is the presentation?
+  [X] 5 (Excellent)
+  [_] 4 (Good)
+  [_] 3 (Above average)
+  [_] 2 (Below average)
+  [_] 1 (Fair)
+  [_] 0 (Poor)
+
+*5: Is the paper of interest to Bigdata users and practitioners?
+  [X] 3 (Yes)
+  [_] 2 (May be)
+  [_] 1 (No)
+  [_] 0 (Not applicable)
+
+*6: What is your confidence in your review of this paper?
+  [X] 2 (High)
+  [_] 1 (Medium)
+  [_] 0 (Low)
+
+*7: Overall recommendation
+  [X] 5 (Strong Accept: top quality)
+  [_] 4 (Accept: a regular paper)
+  [_] 3 (Weak Accept: could be a poster or a short paper)
+  [_] 2 (Weak Reject: don't like it, but won't argue to reject it)
+  [_] 1 (Reject: will argue to reject it)
+  [_] 0 (Strong Reject: hopeless)
+
+*8: Detailed comments for the authors
+  The paper presents SyntacticDiff, a general edit-based method for
+transforming sequences of words given a reference text collection. The
+transformation can then be used directly or as features to represent text data
+in a wide range of application. To showcase the usefulness of the method, the
+paper describes the promising results from a series of extensive experimental
+studies based on three different text-related tasks.
+
+Overall, this is a well-written paper, with very interesting novel ideas along
+with convincing experimental results. It can be used to enhance wide range of
+existing text-related applications.
+
+It would be nice if the authors could make the software package of
+SyntacticDiff for public usage.
+
+Minor comments:
+
+* Section I.A. First two words of the section need to have a space in between.
+
+* Citation [17] No author information is included.
+
+* Missing citation: A Graph Approach to Spelling Correction in Domain-Centric
+Search. Zhuowei Bao, Benny Kimelfeld, Yunyao Li. ACL 2011
+
+Reference corpus is used for spell correction.
+
+========================================================
+The review report from reviewer #4:
+
+*1: Is the paper relevant to Bigdata?
+  [_] No
+  [X] Yes
+
+*2: How innovative is the paper?
+  [_] 5 (Very innovative)
+  [_] 4 (Innovative)
+  [X] 3 (Marginally)
+  [_] 2 (Not very much)
+  [_] 1 (Not)
+  [_] 0 (Not at all)
+
+*3: How would you rate the technical quality of the paper?
+  [_] 5 (Very high)
+  [_] 4 (High)
+  [_] 3 (Good)
+  [X] 2 (Needs improvement)
+  [_] 1 (Low)
+  [_] 0 (Very low)
+
+*4: How is the presentation?
+  [_] 5 (Excellent)
+  [_] 4 (Good)
+  [_] 3 (Above average)
+  [_] 2 (Below average)
+  [X] 1 (Fair)
+  [_] 0 (Poor)
+
+*5: Is the paper of interest to Bigdata users and practitioners?
+  [_] 3 (Yes)
+  [X] 2 (May be)
+  [_] 1 (No)
+  [_] 0 (Not applicable)
+
+*6: What is your confidence in your review of this paper?
+  [X] 2 (High)
+  [_] 1 (Medium)
+  [_] 0 (Low)
+
+*7: Overall recommendation
+  [_] 5 (Strong Accept: top quality)
+  [_] 4 (Accept: a regular paper)
+  [_] 3 (Weak Accept: could be a poster or a short paper)
+  [X] 2 (Weak Reject: don't like it, but won't argue to reject it)
+  [_] 1 (Reject: will argue to reject it)
+  [_] 0 (Strong Reject: hopeless)
+
+*8: Detailed comments for the authors
+  Despite the idea presented by the paper is good and can be jointly applied
+with other methods, the structure and the presentation of the paper should be
+improved. In particular, the paper contains strong claims (especially in the
+Introduction) that are not supported by any reference. The choice of presenting
+the related work only at the very end of the paper make the problem above more
+critical, also causing a lack of contextualization. Finally, a reference to the
+toolkit XXX should be provided. More space should be dedicated to the
+contextualization of the proposed research (the related work for each task
+should be provided before presenting the results) as well as to the experiment
+section. In general, the paper fails to highlight the new contribution over
+previous methods.
