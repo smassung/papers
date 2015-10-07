@@ -1,0 +1,54 @@
+% !TEX root = paper.tex
+% !TEX encoding = UTF-8 Unicode
+
+\subsection{German to English}
+
+%For German to English, we used the clause restructuring rules from \newcite{Collins2005}. 
+%
+\newcite{holmqvist-stymne-ahrenberg:2011:WMT} report improvements on German-English when modifying German text to be more like English.
+%
+%incorporating rules to remove certain morphology and change word order.
+%
+%German is a SOV language in terms of clause ordering, so some reordering needs to be done to attain English's SVO order. 
+%
+%For this, before translation we re-order the German sentence to match this pattern. 
+%
+To this end, we utilize a subset of the clause restructuring rules (rules 4 \& 6) from \newcite{Collins2005}:
+
+%Unlike~\cite{Collins2005},we were not able obtain a constituency parser which also gave subject-object tags along with the constituent nodes. Therefore we could only apply rules that do not utilize the the subject-object information, viz. rules 4 and 6 in ~\cite{Collins2005}. We re-state the rules below,
+
+\begin{itemize}
+%
+\item If a finite verb ({VVFIN}) and a particle ({PTKVZ}) are found in the same clause (subtree labeled as S), then move the particle to precede the verb.
+%
+\item Before applying rule 6, we first remove all internal {VP} nodes, and replace them by their children in the tree. 
+      Then, for every clause which dominates a finite verb, infinitival verb and a negative particle ({PTKNEG}), then the negative particle is moved to directly follow the finite verb.
+%
+\end{itemize}
+
+
+We used the Stanford Parser~\cite{manning-EtAl:2014:P14-5} for parsing German sentences and then applied the relevant rules. The reordered sentences were the yield of the transformed tree. The reordered sentences were then segmented using the jWordSplitter \footnote{http://sourceforge.net/projects/jwordsplitter/} for compound splitting.
+
+We train an English 6-gram language model on the Gigaword corpus, and a translation model on the German$^\prime$-English Europarl corpus.
+%
+Our development set for tuning was the WMT newstest data from 2008--2014.
+%
+Results for the WMT newtest-2015 data set under the baseline (de-en) and restructured (de$^\prime$-en) conditions are shown in Table~\ref{tab:deen}.
+
+
+\begin{table}[!h]
+\center 
+{
+	\begin{tabular}{|l|l|l|l|}
+	\hline
+	System        & BLEU  & BLEU-cased & TER   \\ \hline
+	%Baseline-Dev  & 20.4  & 21.5       & 0.933 \\ \hline
+	%URP-Dev       & 23.7  & 23.8       & 0.663 \\ \hline \hline
+	de-en & 21.4  & 22.2       & 0.938 \\ \hline
+	de$^\prime$-en      & 24.9  & 23.8       & 0.641 \\ \hline
+	%Best-Test     & 30.3  & 29.3       & 0.582 \\ \hline
+	\end{tabular}
+}
+\caption{Results for German and German$^\prime$ translated into English.}
+\label{tab:deen}
+\end{table}

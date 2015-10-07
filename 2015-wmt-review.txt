@@ -1,0 +1,64 @@
+============================================================================
+                            REVIEWER #1
+============================================================================
+
+
+---------------------------------------------------------------------------
+Reviewer's Scores
+---------------------------------------------------------------------------
+
+                               Relevance: 5
+                   Technical Correctness: 3
+                    Presentation/Clarity: 4
+                Comparison to Other Work: 3
+                  Overall Recommendation: 7
+
+
+---------------------------------------------------------------------------
+Comments
+---------------------------------------------------------------------------
+
+This paper presents several systems participated WMT 2015, those systems were
+developed by different group of students who enrolled in the SMT course.
+
+The main attempt of these systems are morphology processing for Finish and
+pre-reodering for German.
+
+For the students who have just taken an SMT course, these systems are not bad,
+though there is not much interesting stuff either.
+
+============================================================================
+                            REVIEWER #2
+============================================================================
+
+
+---------------------------------------------------------------------------
+Reviewer's Scores
+---------------------------------------------------------------------------
+
+                               Relevance: 5
+                   Technical Correctness: 5
+                    Presentation/Clarity: 4
+                Comparison to Other Work: 4
+                  Overall Recommendation: 9
+
+
+---------------------------------------------------------------------------
+Comments
+---------------------------------------------------------------------------
+
+This is the description of the University of Illinois submission to WMT'15
+Finnish-English task.
+The paper is well written and fits the paper guidelines.
+
+A few quick remarks and comments here:
+. dealing with a graph at the input of Moses can be tricky. Tuning of feature
+weights (and over all the weight-i) should be done carefully. Could that
+explain the results in table 3.1 or is there something else making this
+difficult?
+. section 3.2 and its sub-sections (3.2.1, 3.2.2 and 3.2.3) are overlapping.
+This could have been written more simply.
+. why baseline results in Table 1 and 2 are different?
+
+In conclusion, the paper  is well written, showing a large amount of work with
+some nice results on the targeted tasks.

@@ -1,0 +1,68 @@
+\documentclass[a0,landscape,30pt]{sciposter}
+\renewcommand{\familydefault}{\rmdefault}
+\usepackage{lipsum}
+\usepackage{graphicx}
+\usepackage{multicol}
+\usepackage[absolute]{textpos}
+\usepackage{tikz}
+\usepackage{tikz-qtree}
+\usepackage{fontspec}
+\usepackage{polyglossia}
+%\setmainfont[Mapping=tex-text]{Baskerville}
+\setmainfont[Mapping=tex-text]{Times}
+\newfontfamily\ipafont{Doulos SIL}
+
+%\definecolor{BoxCol}{rgb}{0,0.12549019607843137,0.3568627450980392}
+\definecolor{BoxCol}{rgb}{0.9098039215686274,0.4666666666666667,0.13333333333333333}
+\definecolor{UIUC_Orange}{rgb}{0.9098039215686274,0.4666666666666667,0.13333333333333333}
+\definecolor{UIUC_Blue}{rgb}{0.0,0.12549019607843137,0.3568627450980392}
+%\definecolor{UIUC_Orange}{cmyk}{0,62,99,0}
+%\definecolor{BoxCol}{cmyk}{0,62,99,0}
+\conference{Empirical Methods in Natural Language Processing 2015 --- Tenth Workshop on Statistical Machine Translation}
+
+\renewcommand{\footlogo}{%
+\resizebox{\logowidth}{!}{\includegraphics{uclogo_horz_bold.eps}}%
+}
+
+\title{The University of Illinois submission \\ to the WMT 2015 Shared Translation Task }
+
+\author{\ \\ Lane Schwartz, Bill Bryce, Chase Geigle, Sean Massung, Yisi Liu, Haoruo Peng, Vignesh Raja, Subhro Roy, Shyam Upadhyay}
+
+\institute{University of Illinois at Urbana-Champaign}
+
+\date{}
+
+
+
+\begin{document}
+\maketitle
+\begin{textblock*}{100mm}[0,0](25.4mm,25.4mm)
+%\leftlogo[2.0]{uclogo_horz_bold.eps}
+%\includegraphics[scale=2.0]{uclogo_horz_bold.eps}
+\includegraphics[scale=6.3]{imark_bold.eps}
+%ABCDEFG
+\end{textblock*}
+
+
+\begin{textblock*}{50mm}[0,0](1000.4mm,25.4mm)
+%Foo %\Tree [.NP [.NN Linguistics] [.PP [.P at] [.NNP Illiniois] ] ]
+\begin{tikzpicture}
+\tikzset{level distance=60pt}
+\tikzset{frontier/.style={distance from root=180pt}}
+\Tree [.\node{\textcolor{UIUC_Blue}{NP}}; [.\node{\textcolor{UIUC_Blue}{NN}}; \textcolor{UIUC_Orange}{\setmainfont[Mapping=tex-text]{Doulos SIL}\textipa{lɪŋˈɡwɪstɪks}}\setmainfont[Mapping=tex-text]{Times} ] [.\node{\textcolor{UIUC_Blue}{PP}}; [.\node{\textcolor{UIUC_Blue}{P}}; \textcolor{UIUC_Orange}{@} ] [.\node{\textcolor{UIUC_Blue}{NNP}}; \textcolor{UIUC_Orange}{Illiniois} ] ] ]
+\end{tikzpicture}
+\end{textblock*}
+
+%\includegraphics[scale=2.0]{uclogo_horz_bold.eps}
+\begin{multicols}{4}
+\section{Part the first}
+\lipsum
+
+\section{Part the second}
+\lipsum[1-6]
+
+\section{Part the third}
+\lipsum[1]
+
+\end{multicols}
+\end{document}

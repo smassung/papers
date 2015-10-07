@@ -1,0 +1,131 @@
+% !TEX root = paper.tex
+% !TEX encoding = UTF-8 Unicode  
+
+\subsection{Finnish tokenization using Morfessor and word-lattices}
+\label{sec:fien1}
+
+%\input{table-test}
+
+
+We begin by adapting the lattice technique of \newcite{Dyer:2009:StatMT} to Finnish. 
+%
+We train a standard phrase-based machine translation model on a new corpus: 
+%
+on the source side we concatenate the original data with its one-best segmentation according to a Morfessor~\cite{creutz} model trained on the original data, and on the target side we simply concatenate it with itself. 
+%
+The result is a corpus that is twice as long as the original data, but that aligns both segmented and unsegmented Finnish sentences with their English counterparts.
+%
+This ensures that we will have phrases in our phrase table that correspond with both the original unsegmented words as well as for individual morphemes.
+
+At tuning and test time, we then decompose our input into a word lattice input that reflects the uncertainty of the decomposition of each word in the sentence~\cite{Dyer:2008:ACL-HLT}.
+%
+We construct the lattice by considering the top five best segmentations for each word according to our Morfessor model.
+%
+The start and end of each word in the original sentence is a node, and we place edges and nodes between the two such that the edge is labeled with a string output and its target is a node that represents the partial output of the word thus far.
+%
+Each of the edges is also weighted with a certain probability, reflecting the likelihood of using that specific edge, given that we are at a specific node. 
+
+\begin{figure}[!t]
+  \begin{center}
+%  \begin{sideways}
+    \begin{tikzpicture}
+      \tikzstyle{main}=[circle, minimum size = 1mm, inner sep=0.5mm, thick, draw =black!80, node distance = 15mm]
+%      \tikzstyle{observed}=[circle, minimum size = 10mm, thick, draw=black!80, node distance = 10mm, fill = black!10]
+%      \tikzstyle{invismain}=[circle, minimum size = 10mm, thick, draw =white!100, node distance = 10mm]
+      \tikzstyle{connect}=[-latex, thick]
+
+      \node[main] (1) [] {1};
+      \node[main] (2) [right of=1] {2};
+      \node[main] (3) [above right of=1] {3};
+      \node[main] (4) [right of=3] {4};
+      \node[main] (5) [right of=4] {5};
+      \node[main] (6) [above=15mm of 4] {6};
+      \node[main] (7) [right of=5] {7};
+
+      \path (1) edge [connect] node[below] {vilp} (2)
+            (2) edge [bend right, connect] node[below=1mm] {itt\"om\"an} (7);
+
+      \path (1) edge [bend left, connect] node[left] {vilpit} (3);
+      \path (3) edge [bend left=50, connect] node[above] {t\"om\"an} (7);
+
+      \path (3) edge [bend left, connect] node[left] {t\"om\"a} (6);
+      \path (6) edge [bend left, connect] node[above] {n} (7);
+
+      \path (4) edge [connect] node[below] {\"om\"a} (5);
+      \path (5) edge [connect] node[below] {n} (7);
+
+      \path (3) edge [connect] node[below] {t} (4);
+      \path (4) edge [bend left, connect] node[above] {\"om\"an} (7);
+    \end{tikzpicture}
+%    \end{sideways}
+    \caption{A word lattice that represents the
+    top five segmentations for the Finnish word \emph{vilpitt\"om\"an}.
+%    Omitted here are the weights associated with the edges.
+    }
+    \label{fig:wordlattice}
+  \end{center}
+\end{figure}
+
+We calculate edge probabilities as follows.
+%
+Let $p(v | u, \Theta)$ be the probability of going to node $v$  given that we are at node $u$ under the trained Morfessor model $\Theta$ (we only concern ourselves with the case where $v$ is an adjacent to $u$).
+%
+Let $\mathbf{s}$ be a segmentation for the current word, represented as a set of edges $(n_1, n_2)$ through the graph.
+%
+Then, we set
+\[
+p(v \mid u, \Theta) = \frac{\sum_{\mathbf{s} : (u, v) \in \mathbf{s}}
+p(\mathbf{s} \mid \Theta)}{\sum_{\mathbf{s'} : (u, v') \in \mathbf{s'}}
+p(\mathbf{s'} \mid \Theta)},
+\]
+where the numerator is a summation of the Morfessor segmentation probabilities for segmentations that use the edge $(u, v)$, and the denominator is a summation of the Morfessor segmentation probabilities for all segmentations that pass through node $u$.
+
+However, Morfessor gives us log likelihood scores for its segmentations.
+%
+Call these $\ell_{\mathbf{s}}$.
+%
+We then compute the following, in order to avoid roundoff errors as much as possible:
+\[
+p(v \mid u, \Theta) = \frac{\sum_{\mathbf{s} : (u, v) \in \mathbf{s}}
+2^{\ell_\mathbf{s} - \ell_{max}}}{\sum_{\mathbf{s'} : (u, v') \in
+\mathbf{s'}} 2^{\ell_{\mathbf{s'}} - \ell_{max}}},
+\]
+where $\ell_{max}$ is the highest log likelihood segmentation for the current word.
+%
+This can be seen as simply multiplying the numerator and denominator by the fixed constant $2^{-\ell_{max}}$.
+%
+The code for performing this lattice generation is freely available online.%
+%
+\footnote{\texttt{https://github.com/smassung/uiuc-wmt15}
+\texttt{/tree/master/chase}}
+%
+We use a Morfessor model trained on the Finnish side of the Europarl parallel training data with $\alpha = 0.5$.
+
+Table~\ref{tab:fien1} shows the output of our systems on the testing data from WMT 2015.
+%
+We report the scores that were obtained from Moses evaluation scripts using multi-BLEU; the numbers in the shared task are slightly different as they use the NIST BLEU scripts. 
+%
+Our baseline is a phrase-based default Moses configuration with the 5-gram language model, and we found this outperformed a hierarchical phrase based configuration with the same maximum phrase length and a 6-gram language model.
+%
+Among the segmentation methods, using a single one-best segmentation with Morfessor performed the best --- the word lattice method had disappointing performance using either the top five or top two best segmentations for the lattice generation.
+%
+We were unable to combine the word lattice and hierarchical phrase-based approaches together as Moses does not yet support these two features at the same time.
+
+\begin{table}[!t]
+\center 
+{
+	\begin{tabular}{|l|l|l|l|l|}
+	\hline
+	System                 & LM & TM      & BLEU             & -cased          \\ \hline
+    Baseline               & 5  & 5       & \textbf{16.95}   & \textbf{15.09}  \\ \hline
+    Morfessor              & 5  & 8       &         15.67    &         14.88   \\ \hline
+    Hiero                  & 6  & 5       &         14.99    &         14.45   \\ \hline
+    Lattice ($n=2$)        & 6  & 8       &         14.67    &         14.00   \\ \hline
+    Lattice ($n=5$)        & 6  & 8       &         14.68    &         13.95   \\ \hline
+	\end{tabular}
+}
+\caption{Results for Finnish-English (\S\ref{sec:fien1}).}
+\label{tab:fien1}
+\end{table}
+
+

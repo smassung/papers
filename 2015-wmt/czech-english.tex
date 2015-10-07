@@ -1,0 +1,36 @@
+% !TEX root = paper.tex
+% !TEX encoding = UTF-8 Unicode
+
+For Czech-English, we train baseline phrase-based systems with no special handling of Czech morphology.
+%
+We also consider experimental variants in which Czech words are morphologically segmented.
+%
+We use Morphessor \cite{creutz} for morphological segmentation.
+
+Finally, we consider a re-ranking technique based on the degree of commonality between parts-of-speech (POS) in each source sentence and each respective translation of that source sentence.
+%
+To this end, we use MorphoDiTa \cite{morphodita} and the Stanford CoreNLP toolkit \cite{manning-EtAl:2014:P14-5} to POS tag the Czech and English sentences, respectively.
+%
+We next construct a dictionary that maps POS tags from one language to tags in the other.
+%
+After translating with Moses, each English translation in the $n$-best list is augmented with a POS intersection score, and rerank taking this new score into account.
+%
+We define the POS intersection score as simply the number of identical POS tags between a Czech sentence and the hypothesized English translation.
+
+\begin{table}[!h]
+\begin{center}
+	\begin{tabular}{| p{4cm} | l | l |}
+	\hline
+	System & BLEU & BLEU-c \\ \hline
+	Moses trained on Europarl & 18.59 & 17.72 \\ \hline
+	Moses trained on Europarl, Common Crawl and News Commentary & 20.69 & 19.83 \\ \hline
+	Stemming as pre-processing, Moses trained on Europarl & 17.88 & 17.08 \\ \hline
+	Morfessor trained on Europarl, Moses trained on Europarl & 16.48 & 15.74 \\ \hline
+	POS intersection, Moses trained on Europarl & 15.68 & 13.46 \\ \hline
+	Morfessor trained on Europarl, POS intersection, Moses trained on Europarl & 13.43 & 13.74 \\
+	\hline
+	\end{tabular}
+\end{center}
+\caption{Results for Czech into English.}
+\label{tab:ende}
+\end{table}

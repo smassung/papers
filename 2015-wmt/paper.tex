@@ -1,0 +1,215 @@
+% !TEX TS-program = xelatexmk
+% !TEX encoding = UTF-8 Unicode
+%
+\documentclass[11pt,a4paper]{article}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%                                                                              %
+%                               LaTeX Packages                                 %
+%                                                                              %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\usepackage{acl2015}
+\usepackage{thanks-nostar}
+\usepackage{fontspec}
+\usepackage{polyglossia}
+\setmainfont[Mapping=tex-text]{Times}
+\usepackage{url}
+\usepackage{latexsym}
+\usepackage{lipsum}
+\usepackage{rotating}
+\usepackage{tikz}
+\usepackage{float}
+\usetikzlibrary{fit,positioning}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%                                                                              %
+%                             Title, Author, etc                               %
+%                                                                              %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\title{The University of Illinois submission \\ to the WMT 2015 Shared Translation Task}
+
+\author{Lane Schwartz, Bill Bryce, Chase Geigle, Sean Massung, Yisi Liu, \\
+  {\bf Haoruo Peng, Vignesh Raja, Subhro Roy} and {\bf Shyam Upadhyay} \\
+  University of Illinois at Urbana-Champaign \\
+  Urbana, IL 61801, USA \\
+  {\tt lanes@illinois.edu}
+  }
+\date{}
+
+\begin{document}
+\maketitle
+\thanksnostar{The first author was the instructor, and the subsequent authors were students in the work described here.}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%                                                                              %
+%                                  Abstract                                    %
+%                                                                              %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{abstract}
+In this year's WMT translation task, Finnish-English was introduced as a language pair of competition for the first time.
+%
+We present experiments examining several variations on a morphologically-aware statistical phrase-based machine translation system for translating Finnish into English.
+%
+Our system variations attempt to mitigate the issue of rich agglutinative morphology when translating from Finnish into English.
+%
+Our WMT submission for Finnish-English preprocesses Finnish data with omorfi \cite{omorfi}, a Finnish morphological analyzer.
+%
+We also present results for two other language pairs with morphologically interesting source languages, namely German-English and Czech-English.
+\end{abstract}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%                                                                              %
+%                                Introduction                                  %
+%                                                                              %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Introduction}
+
+
+Students enrolled in the Spring 2015 graduate-level course in statistical machine translation (MT) at the University of Illinois were invited to develop MT systems within the context of the 2015 Workshop on Statistical Machine Translation (WMT) shared translation task.
+%
+Each group of 2-3 students chose one language pair, developed a baseline MT system for that language pair using Moses \cite{moses}, and chose one specific linguistic dimension along which to experiment.
+%
+In this work, we present the results of four groups of experiments --- two Finnish-English (\S\ref{sec:fien1} and \S\ref{sec:fien2}), and one each for Czech-English (\S\ref{csen}) and German-English (\S\ref{deen}). 
+
+
+\section{Methodology}
+
+We use the current stable release (v3) of Moses, a state-of-the-art statistical phrase-based machine translation system.
+
+We trained translation models using the Europarl corpus \cite{europarl}, using the latest available versions (v7 for German-English and Czech-English, and v8 for Finnish-English), as well as the Common Crawl corpus and News Commentary (v10) corpus for German-English and Czech-English, and the Wiki Headlines corpus for Finnish-English. 
+
+We trained a back-off language model (LM) with modified Kneser-Ney smoothing \cite{backoff_lm,kneser_ney_smoothing,modified_kneser_ney_smoothing} on the English Gigaword v5 corpus \cite{gigaword_v5} using \texttt{lmplz} from KenLM \cite{lmplz}.
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%                                                                              %
+%                               Finnish-English                                %
+%                                                                              %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Finnish-English}
+
+We tried various morphological tokenization schemes on the \emph{source} language (Finnish) in order to mitigate its strong agglutination.
+%
+The \emph{target} language (English) was tokenized with the default Moses tokenizer script. 
+
+\input{finnish-english}
+\input{finnish-english-omorfi}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%                                                                              %
+%                                Czech-English                                 %
+%                                                                              %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Czech-English}
+\label{csen}
+
+\input{czech-english}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%                                                                              %
+%                               German-English                                 %
+%                                                                              %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{German-English and English-German}
+\label{deen}
+
+For German-English and English-German, we focus primarily on the effects of source clause reordering transformations.
+%
+In this approach, we transform source language \textbf{s} into \textbf{s}$^\prime$, such that the clause structure of sentences in \textbf{s}$^\prime$ more closely follow the clause structure of target language \textbf{t}.
+
+\input{english-german}
+\input{german-english}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%                                                                              %
+%                                 Conclusion                                   %
+%                                                                              %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Discussion and Conclusion}
+
+%\begin{table}[h]
+%\centering
+%\label{my-label}
+%
+%\begin{tabular}{lll}
+%            & multi-BLEU  & multi-BLEU-c \\
+%Baseline    & 16.14       & 15.25        \\
+%Variation 1 & 14.79       & 14.00        \\
+%Variation 2 & 15.14       & 14.32        \\
+%Variation 3 & {\bf 16.90} & {\bf 15.98} 
+%\end{tabular}
+%\caption{BLEU scores for baseline Finnish-English system with no morphological analysis, and for three variations on a system which uses output from omorfi}
+%\end{table}
+
+Overall, tackling the rich morphology of Finnish proved to be effective in improving upon the baseline, but not by much, and only in the case where the translation model could be consulted as to whether source words in the tuning and testing data were known. 
+
+The variation of our Finnish-English system in \S\ref{sec:fienv1} breaks down the Finnish data into those components which make up the agglutinated words, treating the morphemes, rather than the original tokens, as the words.  
+%
+In teasing out the morphemes from the original data, more individual word alignments can be created between source and target tokens, but inflectional data such as the case of nouns and the person and tense of verbs, is lost.
+%
+In this case, different English tokens which may truthfully align to differently inflected forms of the same lemma may instead compete for alignment with the lemma in the translation table, thus creating confusion and resulting in evaluation below the baseline.
+
+The second variation (in \S\ref{sec:fienv2}) creates the potential for alignments between agglutinated Finnish words with groups of English words, but also between Finnish lemmas and single English words.
+%
+While there is more potential for a correct alignments --- still despite inflectional information being lost --- the approach is still brute force, and there is still confusion created in the translation table since some of the probability given to the correct alignment, whatever that may be, is taken by the alignment of some English words with the agglutinated or non-agglutinated Finnish counterpart.
+
+The third variation (in \S\ref{sec:fienv3}), while addressing the issue of over-lemmatization created in the first variation, does in fact improve on the baseline.
+%
+In this final case, inflected forms found in the training data retain their inflection, and so the first person singular form of the verb ``to be" in Finnish has greater chance of being translated into ``am" rather than the lemmatized form being translated into the most prevalent form of ``to be" in the target language training data --- ``is" for example.
+
+Still the problem of Finnish morphology is very hard for a translation system into English.
+%
+Our system has only addressed the derivational morphology of Finnish agglutination.
+%
+We have not at all addressed the inflectional morphology of Finnish, and so much information about the role of certain tokens in the source sentence is lost.
+%
+Some necessary English words, such as personal pronouns, may be lost on the system because the presence of an English pronoun such as ``I" in the best English translation may only be encoded in the inflectional morphology of the Finnish.
+
+In further research, we may try a factored model for our system which encodes not only the lemma or lemmas produced by omorfi, but also the grammatical information from the original inflectional morphology.
+%
+Further still, our system has not addressed the potential problems of reordering between the source and target languages.
+
+At the very least, a rule could be implemented which places Finnish postpositions in front of their objects as a preprocessing step.
+%
+As Finnish is a head-final language like English, it is possible that no further rule-based reordering would have to be done, but more research is warranted to make this claim.
+%
+With these complications yet to be addressed, there is certainly more that we may do in the future to improve evaluation.
+
+
+%\lipsum[7]
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%                                                                              %
+%                                 References                                   %
+%                                                                              %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\clearpage
+\bibliographystyle{acl}
+\bibliography{paper}
+
+\end{document}

@@ -1,0 +1,38 @@
+\begin{figure*}
+  \begin{center}
+    \begin{tikzpicture}
+      \tikzstyle{main}=[circle, minimum size = 5mm, thick, draw =black!80,
+      node distance = 25mm]
+      \tikzstyle{observed}=[circle, minimum size = 10mm, thick, draw=black!80, node distance = 10mm, fill = black!10]
+      \tikzstyle{invismain}=[circle, minimum size = 10mm, thick, draw =white!100, node distance = 10mm]
+      \tikzstyle{connect}=[-latex, thick]
+
+      \node[main] (1) [] {1};
+      \node[main] (2) [right of=1] {2};
+      \node[main] (3) [above right of=1] {3};
+      \node[main] (4) [right of=3] {4};
+      \node[main] (5) [right of=4] {5};
+      \node[main] (6) [above=25mm of 4] {6};
+      \node[main] (7) [right of=5] {7};
+
+      \path (1) edge [connect] node[below] {vilp} (2)
+            (2) edge [bend right, connect] node[below=1mm] {itt\"om\"an} (7);
+
+      \path (1) edge [bend left, connect] node[left] {vilpit} (3);
+      \path (3) edge [bend left=50, connect] node[above] {t\"om\"an} (7);
+
+      \path (3) edge [bend left, connect] node[left] {t\"om\"a} (6);
+      \path (6) edge [bend left, connect] node[above] {n} (7);
+
+      \path (4) edge [connect] node[below] {\"om\"a} (5);
+      \path (5) edge [connect] node[below] {n} (7);
+
+      \path (3) edge [connect] node[below] {t} (4);
+      \path (4) edge [bend left, connect] node[above] {\"om\"an} (7);
+    \end{tikzpicture}
+    \caption{An example subgraph in the word lattice that represents the
+    top five segmentations for the Finnish word \emph{vilpitt\"om\"an}.
+    Omitted here are the weights associated with the edges.}
+    \label{fig:wordlattice}
+  \end{center}
+\end{figure*}

@@ -1,0 +1,30 @@
+\begin{table*}[!h]
+    {\small
+    \begin{center}
+        \begin{tabular}{lcclllrr}
+            \hline
+            \textbf{Method} & \textbf{LM} & \textbf{Phrase} & \textbf{Train} & \textbf{Tune} &
+            \textbf{Test} & \textbf{BLEU-c} & \textbf{BLEU} \\
+            \hline
+            Baseline & 5 & 5 & Europarl & Newsdev & Newstest 2015 &
+            \textbf{15.09} & \textbf{16.95} \\
+            Morfessor $\alpha=0.5$ & 5 & 8 & Europarl & Newsdev & Newstest 2015
+            & 14.88 & 15.67 \\
+            Hierarchical phrase-based & 6 & 5 & Europarl & Newsdev &
+            Newstest 2015 & 14.45 & 14.99 \\
+            Word lattice ($n=2$) & 6 & 8 & Europarl & Newsdev & Newstest 2015
+            & 14.00 & 14.67 \\
+            Word lattice ($n=5$) & 6 & 8 & Europarl & Newsdev & Newstest 2015
+            & 13.95 & 14.68 \\
+            \hline
+            Baseline-omorfi & 5 & 5 & Europarl & Newsdev & Newstest 2015 & 15.25 & 16.14 \\
+            V1-omorfi & 5 & 5 & Europarl & Newsdev & Newstest 2015 & 14.00 & 14.79 \\
+            V2-omorfi & 5 & 5 & Europarl & Newsdev & Newstest 2015 & 14.32 & 15.14 \\
+            V3-omorfi & 5 & 5 & Europarl & Newsdev & Newstest 2015 & \textbf{15.98} & \textbf{16.90} \\
+            \hline
+        \end{tabular}
+    \caption{Results from the testing stage with Newstest2015 testing data.}
+    \label{table:test}
+    \end{center}
+    }
+\end{table*}

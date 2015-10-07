@@ -1,0 +1,38 @@
+\begin{table*}
+    {\small
+    \begin{center}
+        \begin{tabular}{lclllrr}
+            \hline
+            \textbf{Method} & \textbf{Phrase} & \textbf{Train} & \textbf{Tune} &
+            \textbf{Test} & \textbf{BLEU-c} & \textbf{BLEU} \\
+            \hline
+            Small baseline & 5 & Europarl 10k & Newsdev 1k & Goodnews &
+            7.00 & 7.17 \\
+            \hline
+            Small hard stemming & 5 & Europarl 10k & Newsdev 1k & Goodnews
+            & 4.04 & 5.13 \\
+            Small hybrid (hard+chars) & 10 & Europarl 10k & Newsdev 1k & Goodnews & 2.16
+            & 3.37 \\
+            Small default Morfessor & 6 & Europarl 10k & Newsdev 1k & Goodnews
+            & 5.07 & 5.23 \\
+            \hline
+            Medium baseline & 5 & Europarl full & Newsdev full & Goodnews &
+            13.65 & 14.27 \\
+            Medium baseline & 8 & Europarl full & Newsdev full & Goodnews &
+            12.88 & 13.55 \\
+            \hline
+            Medium default Morfessor & 6 & Europarl full & Newsdev full &
+            Goodnews & 10.97 & 11.82 \\
+            Medium default Morfessor & 8 & Europarl full & Newsdev full &
+            Goodnews & 11.76 & 12.66 \\
+            Medium $\alpha=0.5$ Morfessor & 8 & Europarl full & Newsdev full &
+            Goodnews & 11.99 & 12.66 \\
+            Medium $\alpha=1.0$ Morfessor & 8 & Europarl full & Newsdev full &
+            Goodnews & 11.73 & 12.42\\
+            \hline
+        \end{tabular}
+    \caption{Results from the development stage with Goodnews testing data.}
+    \label{table:dev}
+    \end{center}
+    }
+\end{table*}

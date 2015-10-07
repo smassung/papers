@@ -1,0 +1,53 @@
+% !TEX root = paper.tex
+% !TEX encoding = UTF-8 Unicode
+
+\subsection{English to German}
+
+With the goal of restructuring English source sentences to have more German-like structure, we define the following transformation rules:
+
+\begin{enumerate}
+%
+\item Detect all clauses in a sentence which might require transformation.
+      We selected spans of text, which were labeled as S or SBAR by the parser.
+      We do not include clauses which begin with ``to''.
+%      
+\item For each clause, we apply the following rules in order :
+%
+\begin{enumerate}
+%
+	\item If there exists a verb phrase (detected by a shallow parser) with ``to'', we move the remaining portion of the verb phrase (starting with token ``to'') to the end of the clause.
+%
+	\item If there exists a verb phrase (detected by a shallow parser) with a token with VBN part of speech tag, we move the remaining portion of the verb phrase (starting with VBN token) to the end of the clause.
+%
+	\item If there exists a verb phrase (detected by a shallow parser) starting with a modal verb, we leave the modal verb but move the rest of the verb phrase to the end of the clause.
+%
+\end{enumerate} 
+%
+\end{enumerate}
+%
+We used a state-of-the-art shallow parser \cite{PunyakanokRo01} in conjunction with a constituent parser \cite{socher-EtAl:2013:ACL2013} to implement the above transformation rules.
+%
+For the purposes of the English-German language pair, we pre-process all English data into equivalent English$^\prime$ data using the above transformation rules.
+
+We train a German language model on the German side of the Europarl, Common Crawl, and News Commentary corpora, and a translation model on the English$^\prime$-German Europarl corpus.
+%
+Our development set for tuning was the WMT newstest data from 2008--2014.
+%
+Results for the WMT newtest-2015 data set under the baseline (en-de) and restructured (en$^\prime$-de) conditions are shown in Table~\ref{tab:ende}.
+
+\begin{table}[!h]
+\center 
+{
+	\begin{tabular}{|l|l|l|l|}
+	\hline
+	System        & BLEU  & BLEU-cased & TER   \\ \hline
+%	en-de (dev)  & 15.1  & 14.6      & 0.889 \\ \hline
+%	en$^\prime$-de (dev)       & 18.9  & 19.2      & 0.686 \\ \hline \hline
+	en-de & 16.6  & 16.3      & 0.933 \\ \hline
+	en$^\prime$-de      & 17.9  & 17.2       & 0.731 \\ \hline
+%	Best-Test     & 25.2  & 24.9       & 0.665 \\ \hline
+	\end{tabular}
+}
+\caption{Results for English and English$^\prime$ translated into German.}
+\label{tab:ende}
+\end{table}

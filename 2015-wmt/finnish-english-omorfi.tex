@@ -1,0 +1,176 @@
+% !TEX root = paper.tex
+% !TEX encoding = UTF-8 Unicode 
+
+
+\subsection{Finnish tokenization using omorfi}
+\label{sec:fien2}
+
+In addition to the experiments described above, we build three variations utilizing omorfi \cite{omorfi} to morphologically segment the Finnish data.
+%  
+We use omorfi to decompose each agglutinated Finnish word into its component morphemes and each morpheme to a default case or form.
+%
+Inflectional morphemes which capture information such as the person, number, tense, voice, and mood of verbs as well as the number and case of nouns is lost in the lemmatization, and therefore, when lemmatization has taken place, all of this information is lost to the system.
+%
+%We initially consider this loss to be acceptable given the poor morphology of the target language.
+%
+%\subsubsection{An example of processing with omorfi}
+\begin{figure}[!t]
+%If we pass the first word of the Finnish Europarl corpus to omorfi, we get the following output:\newline
+%\begin{table}
+%\begin{tabular}{ll}
+%& Istuntokauden \\
+%& Istuntokauden   Istunto\#kausi N Gen Sg
+%\end{tabular}
+%\end{table}
+%\vspace{1mm}
+%\begin{center}
+%\newline
+\indent {\tt \footnotesize Istuntokauden}\newline
+\indent {\tt \footnotesize Istuntokauden   Istunto\#kausi N Gen Sg}\newline
+%\newline
+%\vspace{1mm}
+%\end{center}
+\caption{The first word of Finnish Europarl corpus, as processed by omorfi.}
+\label{fig:omorfi}
+\end{figure}
+%
+Figure~\ref{fig:omorfi} illustrates this process;
+%
+the token ``Istuntokauden" is broken into two morpheme lemmas, separated by a ``\#" sign.
+%
+We discard the inflectional information, which here denotes that the original token was a singular noun in genitive case.
+%
+%The remaining information is inflectional rather than derivational: 
+%
+%The word is a singular noun in the Genitive case.
+%
+%For our system, we take the lemmatized morphemes returned by omorfi, but do not take into account the inflectional information.
+%
+%Therefore, while we take into account whether a token in the original text was an agglutination of more than one atomic morpheme, we do not take into account any information about the role of the word in the sentence in its original form.
+
+
+As a baseline, we build a system using Moses and provided the data described above with none of the Finnish data having been processed by omorfi.
+%
+Tuning was done using MERT \cite{mert}.
+
+In the first variation (V1), all Finnish data is first segmented by omorfi.
+%
+The intuition behind this technique is simply that there are more words in the target text than would align well with agglutinative words in the source text.
+%
+By using the morphemes of the source language rather than the unsegmented words, the output source tokens might more easily align with the target tokens.  
+
+In the second variation (V2), the omorfi-segmented Finnish data from the first variation is concatenated with the unprocessed Finnish.
+%
+Target language data is concatenated with itself in training to align each target sentence with both the unprocessed and morphologically-analyzed variations of its source sentence.  
+%
+The intuition here is that any Finnish tokens which are their own lemmas (i.e. do not inflect) will potentially align with the same target token twice, and will bear a stronger alignment probability than with other tokens in the translation model.
+%
+Function words and adpositions would be among those which undergo such double alignment, and which may serve as anchors for the alignment of the entire sentence.  
+
+In the third variation (V3), the translation table created during the second variation is consulted during segmentation of the tuning and test data.
+%
+If an original token could be found in the table before being broken into morphemes by omorfi, then that token is left unprocessed.
+%
+If a token could not be found, then it was passed to omorfi and the morphemes returned replaced the token in the data.
+%
+The resulting tuning and testing datasets are thus partially analyzed for morphemes.
+%
+In this way, more common Finnish agglutinations are retained while less common ones are broken into potentially more common individual morphemes.
+
+Results are shown in Table~\ref{tab:fien2}.
+%
+Only V3 performed better than the baseline of using default Moses tokenization for Finnish.  
+%
+This variation comes closest to a balance between alignment with shorter target phrases --- achieved by breaking down agglutinative words into morphemes --- and retaining what inflectional information can be retained --- since unprocessed and therefore unlemmatized words retain all grammatical inflection.
+
+
+%\subsubsection{Data and baseline BLEU scores}
+
+
+
+
+
+\begin{table}[!t]
+\center 
+{
+	\begin{tabular}{|l|l|l|l|l|}
+	\hline
+	System                 & LM & TM &         BLEU   &         -cased          \\ \hline
+    Baseline               & 5  & 5  &         16.14  &         15.25           \\ \hline
+    V1-omorfi              & 5  & 5  &         14.79  &         14.00           \\ \hline
+    V2-omorfi              & 5  & 5  &         15.14  &         14.32           \\ \hline
+    V3-omorfi              & 5  & 5  & \textbf{16.90} & \textbf{15.98}          \\ \hline
+	\end{tabular}
+}
+\caption{Results for Finnish-English (\S\ref{sec:fien2}).}
+\label{tab:fien2}
+\end{table}
+
+\subsubsection{Variation 1: All data fully processed by omorfi}
+\label{sec:fienv1}
+
+For the first variation on our system, we pass to omorfi all of the Finnish data described above used for training, tuning, and testing.
+%
+Therefore, for each token in the text, either the lemma of the original token was returned by omorfi if the token was not found to be an agglutination of stem and morphemes, or, if the token was found to be an agglutination, a lemmatized token of each morpheme was returned, and these new tokens stood in place of the agglutinative token found in the original text.
+
+The intuition behind this technique is simply that there are more words in the target text than would align well with agglutinative words in the source text.
+%
+By creating more tokens out of the original source tokens, the smaller source tokens might more easily align with the target tokens.
+%
+The new tokens returned by omorfi were always present in the source text in their non-lemma forms, but because the same morpheme could be added to different stems, the unique word formation may hide a relation between the appearance of that morpheme in a source sentence and a single word of English in the target sentence.
+
+Using only source data which has been fully processed by omorfi in the training, tuning, and testing stages, BLEU scores were 14.00 (case-sensitive) and 14.79 (case-insensitive), that is 1.25 and 1.35 points below the baseline respectively.
+
+
+\subsubsection{Variation 2: Concatenated original source data and omorfi-processed data}
+\label{sec:fienv2}
+
+For the second variation on our system, we used the same omorfi-processed Finnish data which was used for the first variation.
+%
+This time, however, the omorfi-processed training, tuning, and testing data was concatenated with the original training, tuning, and testing data respectively.
+%
+So for example, the data used for training was the original set of sentences from Europarl, followed by the same set of sentences but processed by omorfi as described above.
+%
+Each of the training, tuning, and testing sets therefore contained exactly twice as many sentences as the original testing data.
+%
+Likewise, the set of target sentences in each case was twice as many, but the target data was not processed for morphology, such that the second half of the target language training, tuning, and testing sets was exactly the same as the first half.
+
+Designing the datasets in this way effected that, in the case of alignment for example, both the original Finnish sentence was aligned with the English as well as the omorfi-processed Finnish sentence.
+%
+The intuition here is that Finnish tokens which are their own lemmas (i.e. do not inflect) will potentially align with the same target token twice, and will bear a stronger alignment proability than other tokens in the translation model.
+%
+Function words and adpositions would be among those which undergo such double alignment, and which may serve as anchors for the alignment of the entire sentence.
+
+For all other words --- those for which omorfi returns morphologically analyzed output - two potentially useful alignments could be formed:
+%
+First, there would be an alignment of the unprocessed source token with several target tokens, and so a phrasal alignment in which the English word aligns with the agglutinative word containing the proper morpheme.
+%
+Second, there would be an alignment closer to one-to-one between the target word and the proper morpheme lemma returned by omorfi.
+%
+Concatenating the unprocessed training, tuning, and testing sets in the source language with the omorfi-processed training, tuning, and testing sets respectively resulted in BLEU scores of 14.32 (case-sensitive) and 15.14 (case-insensitive), that is 0.93 and 1.00 points below the baseline respectively.
+
+\subsubsection{Variation 3: Consultation of the baseline translation table}
+\label{sec:fienv3}
+
+For the third and final variation of our system, we preprocess the tuning and testing sets in the source language by consulting the translation table created for the second variation.
+%
+For each token in the Finnish tuning and testing data, the translation table was consulted for the presence of that token as a unigram.
+%
+If the token was found in the translation table, then it was rendered as is in the output of this step.
+%
+If the token was not found in the translation table, then the token was passed to omorfi and the resulting morpheme lemmas were rendered as output.
+%
+The resulting tuning and testing sets, therefore contained either an agglutinative form as found in the original Finnish or a processed string of morpheme lemmas (or perhaps simply the lemma) returned by omorfi from the original token, but not both.
+
+The intuition here was to overcome the lemmatization process which occurs from passing all of the data through omorfi.
+%
+It may be the case that different inflections of the same lemma tune better to different English words, but the lemmatization process effects that different English words tune to the same Finnish lemma, causing confusion.
+%
+Leaving known inflected forms in the tuning and testing data gives this variation an advantage over the first variation.
+%
+By tuning and testing on known tokens and morphologically analyzing unknown tokens in these datasets, the resulting BLEU scores were 15.98 (case-sensitive) and 16.90 (case-insensitive), 0.73 and 0.76 points above the baseline respectively.
+
+
+
+
+%\end{document}
