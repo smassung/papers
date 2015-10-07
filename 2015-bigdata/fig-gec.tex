@@ -1,0 +1,23 @@
+\begin{figure}[t]
+\begin{center}
+    \begin{tabular}{llrrrrr}
+        \hline
+        \textbf{Weight} & \textbf{LM} & \textbf{No-op} & $P$ & $R$
+        & $F_1$ & $t$ \\
+        \hline
+        No & No & $0.0\%$ & 2.96 & 4.49 & 3.57 & 120s \\
+        No & Yes & $0.8\%$ & 3.22 & 4.47 & 3.74 & \textbf{11s} \\
+        Yes & No & $25.5\%$ & 18.78 & \textbf{19.40} & 19.09 & 123s \\
+        Yes & Yes & $57.4\%$ & \textbf{35.20} & 17.55 & \textbf{23.42} &
+        \textbf{11s}\\
+        \hline
+    \end{tabular}
+    \caption{Grammar correction task: the table shows
+        whether edit weights are used, whether insertions are done based on
+        perplexity, how many final candidate sentences are unchanged (no-ops),
+        precision, recall, $F_1$ score, and runtime in seconds. This system
+        would place 7$^{th}$ in the CoNLL shared task.}
+    \label{fig-gec}
+\end{center}
+\vskip-20pt
+\end{figure}

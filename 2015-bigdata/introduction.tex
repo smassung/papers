@@ -1,0 +1,197 @@
+\section{Introduction}
+\label{sec:intro}
+
+Text data, broadly including any data in the form of natural language text, play
+a very important role in many big data applications because of two reasons:
+first, text data are produced by humans and thus contain rich information about
+people's preferences and opinions, making it a unique source of data from which
+we can mine knowledge about people; such knowledge is generally hard to obtain
+from other kinds of data. Second, we may view humans as ``subjective sensors"
+and text as the data reported by such a subjective sensor about what is observed
+in the world. For example, tweets can be regarded as realtime data reported by
+humans as subjective sensors about whatever they observe in their environment.
+This means text data is useful for {\em any} predictive modeling task where we
+can enhance any existing data-based predictive model with additional predictors
+that we can extract from text data.
+
+However, unlike structured data that conform to a well-specified schema, text
+data are unstructured and thus challenging for mining and analysis. In general,
+natural language processing (NLP) techniques are needed in order to convert raw
+text data to meaningful semantic representations. Unfortunately, the current NLP
+techniques are not yet robust enough to support large-scale text mining
+applications in arbitrary domains; a significant amount of manual effort is
+often needed to create high-quality training data for effective machine
+learning. Unsupervised approaches---notably probabilistic topic models---have
+recently emerged as promising techniques for text analysis, but they are only
+effective for discovering major topics from text data based on word
+co-occurrences, and thus inadequate for revealing subtle syntactic and semantic
+differences such as the differences in the language uses by non-native and
+native speakers of English.
+
+In this paper, we propose a novel, general, and efficient edit-based method for
+transforming sequences of words given a reference text collection called \sd,
+and show that these transformations can be used directly or can be employed as
+features to represent text data in a wide variety of text mining applications.
+The proposed \sd~is a general framework for text mining that can both function
+independently of any NLP techniques and leverage NLP techniques to enrich
+transformation-based analysis. It is thus very robust and flexible, and can be
+used for mining any text data in any natural language for multiple interesting
+tasks.
+
+\subsection{Motivation of \sd}
+
+\sd~was primarily motivated by arguably the most important fundamental question
+in text data mining: how can we go beyond the bag-of-words representation in a
+general and robust way? Text representation plays a crucial role in virtually
+all the text data applications since an inadequate representation always
+inevitably limits the capacity of a system in performing a mining or analysis
+task. The most popular text representation used in many applications is the
+simplest bag-of-words representation, which tends to work reasonably well for
+many content-processing tasks despite its simplicity. One reason for its
+popularity is its robustness---it is very general and can be applied to any
+natural language text. However, such a simple representation is clearly
+insufficient; for example, it cannot distinguish different orders of words.
+Improvement over bag-of-words representation has thus been attempted, including
+$n$-grams or phrase-based representations, and mixed representations based on
+part-of-speech tags and words (see section~\ref{sec:related} for a detailed
+review of this).
+
+Virtually all the existing work on text representation has assumed that the
+representation of a text object such as a document would be derived based on
+{\em solely the document itself}. Unfortunately, such an ``independent
+representation'' strategy is insufficient for many tasks, particularly those
+that require discrimination that goes beyond pure content analysis.
+
+For example, to support learning a second language at scale in Massive Open
+Online Courses (MOOCs), it is often necessary to cluster student essays based on
+their grammar mistakes to enable ``batch grading'' of a whole cluster
+together~\cite{scaling-mooc}. Since all the students may have been asked to
+write about similar topics, a content-based representation would clearly not
+work well. To effectively cluster text documents for this application, we would
+need a representation of each document based on how far it deviates from some
+reference text data (\emph{e.g.} writing by native speakers). A comparative
+analysis of a document with a reference text would be necessary in this case,
+allowing for the discovery of many subtle differences in the document from
+comparable native writing. Such a comparative analysis can reveal frequent
+article errors or incorrect verb form uses, among others. We can use the set of
+all such mistakes to represent the document in which they occurred, allowing us
+to cluster essays where similar mistakes are made.
+
+Consider an authorship attribution variant with the goal of identifying the
+native language of a document's author, a shared task in 2013~\cite{nli-task}.
+In essence, this is a text categorization problem, so it is common to apply a
+supervised learning approach. As in the case of clustering, text representation
+plays a critical role here. Since different authors may have written about the
+same topic, pure content-based representations again would not work well.
+Instead, we would need to represent a document based on features that can
+characterize and distinguish the writing styles. Once again, comparative
+analysis of the document with a reference corpus of writings by native speakers
+on similar topics can be very useful for generating more discriminative features
+to characterize style differences; since writers speaking different native
+languages tend to have somewhat different writing styles, such features derived
+from comparative analysis of text are likely much more effective than ordinary
+content-based features for this categorization task.
+
+In both examples above, we see a clear need for deriving a representation of a
+text object based on comparative analysis involving another reference text; such
+a comparative analysis approach to text representation has not been studied in
+any existing work. In this paper, we conduct the first study of such a new
+strategy for generating text representation via comparative analysis of text
+data. Specifically, we propose \sd, a novel edit-based method for transforming
+sequences of words given a reference corpus (model) and use these
+transformations directly as features or to derive useful features based on them
+for improved text representation. In addition, the proposed transformation
+method can be used directly to solve many interesting application problems
+involving text transformation or comparative analysis of text such as
+grammatical error correction.
+
+\subsection{Basic idea of \sd}
+
+The basic idea of \sd~is to define three basic (and therefore general) edit
+operations: \texttt{insert} a word, \texttt{remove} a word, and
+\texttt{substitute} one word for another. These edits are used to transform a
+given sentence. With a source sentence $S$ and a reference text collection $R$,
+we can ask the following question: what's the minimum set of edits that we have
+to apply to $S$ in order to transform it into a sentence in $R$? This question
+is interesting because the ``minimum set of edits'' can be used to measure the
+deviation of $S$ from sentences in $R$; what is most interesting is that this
+``measure'' is not a numerical one, but a set of edits that can be features for
+text representation.
+
+Suppose $S$ is a sentence with potential grammatical errors written by a
+non-native speaker, and $R$ is a set of sentences written by native speakers on
+similar topics which includes a very similar sentence to $S$ with no grammatical
+errors. The minimum set of edits would be very meaningful because they are
+precisely the {\em corrections} we must make in order to correct the grammatical
+errors in $S$ (making it look like it was written by a native). Thus, we can
+represent the original sentence $S$ with a minimum set of edits, instead of with
+the words or other content-based features derived from $S$. Such a
+transformation-based representation would be much more effective than a
+content-based representation for generating clusters of sentences that share
+similar grammatical errors, a task useful for ``batch grading'' as discussed
+before.
+
+However, there is one caveat here: what if there is no sentence in $R$ that is
+very similar to $S$? We solve this problem by relaxing the requirement of
+transforming $S$ to a sentence in $R$ and simply requiring the new sentence
+$S^*$, resulted from applying a set of edits to $S$, to ``look like'' sentences
+in $R$. Formally, this can be quantified by estimating an $n$-gram language
+model $\theta$ based on $R$, and maximizing the probability of observing $S^*$
+from this language model, \emph{i.e.}, seeking $S^*$ that would maximize
+$P(S^*|\theta)$, or equivalently, minimizing the perplexity of $S^*$ according
+to $\theta$. This is a very general and robust strategy, as it allows us to
+compute the minimum set of edits (subject to some constraints on the edits, such
+as the maximum number of edits allowed) for {\em any} sentence $S$ with respect
+to {\em any} reference text data $R$. This is similar to likelihood-based
+methods, but these methods are not created with such rigorously defined
+operations.
+
+The obtained minimum set of edits can then be used as features to represent text
+in a context-sensitive way ($R$ as context), which can be used as either an
+alternative or supplement to the existing content-based representation. By
+varying the constraints on the edits in interesting ways (\emph{e.g.}
+restricting the words to be inserted or deleted to only function words or
+varying $R$), we can naturally obtain many interesting variations of text
+representation that are not possible to generate by any existing methods.
+
+It becomes clear that when restricted to insertion of function words and
+substitutions involving only lexical transformations, such an edit-based
+transformation method can be directly useful for grammatical error correction.
+However, it is important to note that the proposed method can have many other
+interesting applications also besides generating interesting features for
+representing text. For instance, the method can also be used for performing
+comparative analysis of opposite opinions about an issue in a debate. This can
+reveal the differences between the opinions since the edits that have to be
+applied to transform one group of opinions to the other (or vice versa) can
+potentially reveal the details of their differences. Furthermore, when comparing
+an article with a reference collection with only deletion edits allowed, we
+would obtain a set of deletion edits that represent the main topic of the
+article, since deleting words that are frequent in the article but not frequent
+in the reference collection is encouraged to make the article conform to the
+language model induced by the reference collection (those topical words likely
+have smaller probabilities in the reference collection, thus deleting them in
+the original article helps increase the likelihood).
+
+\subsection{Applications of \sd}
+
+Using the generic framework of \sd, we further propose general methods for
+applying it to three quite different tasks and show that it is beneficial in
+each case. In the first task, we use weighted word edits with likelihood scoring
+for grammatical error correction. The method is compared against systems in an
+grammar correction shared task, and we find that \sd~edits perform
+comparably while being much more general than the other methods. In the
+second task, we create clusters of student essays with similar errors via
+topic modeling, and find that the interpretability is significantly higher
+than an $n$-gram words approach. The third task is native language
+identification: a classification problem predicting the native language of a
+student writer based on English essays. We represent documents as vectors of
+edits, and show that a combination of unigram words and \sd~edits
+outperforms each representation individually. In all tasks, we consider
+\sd's efficiency and scalability, showing that is a strong, viable candidate
+for alternative methods of text representation.
+
+The rest of the paper is structured as follows: section~\ref{sec:syndiff}
+details the \sd~algorithm; \ref{sec:experiments} contains experiments and
+evaluation; \ref{sec:discuss} is a discussion on \sd's interpretability and
+generality; \ref{sec:related} describes related work; finally,
+section~\ref{sec:conclusion} contains our conclusions.

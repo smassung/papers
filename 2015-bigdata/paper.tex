@@ -1,0 +1,46 @@
+\documentclass[10pt, conference, compsocconf]{IEEEtran}
+\usepackage{cite,graphicx}
+\usepackage{amssymb,algpseudocode,algorithm,amsmath}
+\usepackage[hidelinks]{hyperref}
+\hypersetup{draft}
+\newcommand{\sd}{\textsc{SyntacticDiff}}
+\DeclareMathOperator*{\argmax}{arg\,max}
+\DeclareMathOperator*{\argmin}{arg\,min}
+\begin{document}\sloppy % sloppy necessary here
+
+\bstctlcite{IEEEexample:BSTcontrol} % activate removing dashes in bib
+\def\ignore#1{}
+
+\title{SyntacticDiff: Operator-Based Transformation for Comparative Text Mining}
+
+\author{%
+    \IEEEauthorblockN{Sean Massung\hspace{1.2in} ChengXiang Zhai}
+        \vspace{.08in}
+    \IEEEauthorblockA{%
+        Department of Computer Science, College of Engineering \\
+        University of Illinois at Urbana-Champaign \\
+        \emph{\texttt{\{massung1,czhai\}@illinois.edu}}
+    }
+}
+\maketitle
+
+\input{abstract}
+\input{introduction}
+\input{syntactic-diff}
+\input{experiments}
+\input{discussion}
+\input{related}
+\input{conclusion}
+
+\section*{Acknowledgments}
+
+This material is supported in part by the National Science Foundation under
+grants CNS-15­13939 and CNS-1027965.
+
+\newcommand{\BIBdecl}{\setlength{\itemsep}{0.2 em}}
+\bibliographystyle{./IEEEtranBST/IEEEtran}
+%\IEEEtriggeratref{21}
+%\newpage
+\bibliography{./bib}
+
+\end{document}

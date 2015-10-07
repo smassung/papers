@@ -1,0 +1,19 @@
+\begin{figure}[t]
+\begin{center}
+    \begin{tabular}{lrrll}
+        \hline
+        \textbf{Features} & $|V|$ & $DL_{avg}$ & $F_1$ & $Acc$. \\
+        \hline
+        Unigram words & 9,021 & 129 & 80.1 & 81.8 \\
+        \sd & 12,279 & 56 & 73.1 & 75.4 \\
+        Combined & 21,300 & 185 & \textbf{84.5}$^*$ & \textbf{85.9}$^*$ \\
+        \hline
+    \end{tabular}
+    \caption{Classification task: comparison between the three methods on the
+    ICNALE essays. Displayed are vocabulary size, average document length, $F_1$
+score, and accuracy. $^*$Combined results are significantly higher with $p <
+0.001$. Each experiment completed in less than 10 seconds.}
+    \label{fig-nli}
+\end{center}
+\vskip-20pt
+\end{figure}

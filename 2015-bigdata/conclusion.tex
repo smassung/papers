@@ -1,0 +1,30 @@
+\section{Conclusion}
+\label{sec:conclusion}
+
+We presented \sd, a novel, efficient, and  general framework for many text
+mining tasks that examines syntactic differences between current text and a
+reference background collection. These differences are captured in weighted edit
+operations. These text edits can not only be used to generate an alternative
+representation of text data that is complementary with the content-based
+representation, but also support a wide range of interesting novel applications.
+
+We evaluated the generality and effectiveness of \sd~using three distinct tasks:
+grammatical error correction, corpus summarization, and classification. In all
+areas, \sd~provided concrete advantages, clearly demonstrating its empirical
+benefit. In the first, we achieved remarkable performance considering our
+generality compared to other systems. In the second, we summarized grammatical
+errors better than baseline systems. Lastly, we increased the accuracy of a
+baseline native language identification system by augmenting with \sd~edit
+features. Despite its increased performance, \sd~comes with no runtime
+performance penalty, and in some cases is faster than the baseline. While the
+experiments we have conducted in this paper all involve relatively small data
+sets, the {\bf relatively low computational complexity} of \sd~and its support
+for {\bf flexibility scalability and accuracy tradeoffs} make it an appealing
+novel approach to analysis of {\bf big text data}.
+
+Our exploration in this paper was only the tip of the iceberg concerning \sd's
+great potential; there are many interesting future directions to further
+explore, particularly in leveraging such a new representation in many other
+applications, exploring different configurations for comparative text analysis,
+and further generalizing the framework to capture more semantic meaning---moving
+from \sd~to \textsc{SemanticDiff}.

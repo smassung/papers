@@ -1,0 +1,289 @@
+\section{Applications and Experiments}
+\label{sec:experiments}
+
+The proposed \sd~is useful for a wide range of interesting applications as we
+will further discuss in Section~\ref{sec:discuss}.  As specific case studies in
+this section, we apply it to three different and representative text mining
+tasks related to non-native text analysis in a MOOC or any other online learning
+scenario. Please note though, that \sd~could be used in virtually any text
+mining environment.
+
+{\bf First}, we show that \sd~can be used to {\em search for a transformation}
+of a sentence with grammatical errors  into one with no errors by using native
+writing as a reference corpus, thus performing {\em grammatical error
+correction} as monolingual translation. This application could be a tool that
+students use to correct or grade their own writing. {\bf Second}, we show that
+the edits found by \sd~for each sentence can be used {\em as new tokens} to
+replace the original text for topical analysis using topic models. When applied
+to student essays, this would allow course instructors to find groups of similar
+essays that share common errors. These clusters can be viewed as a form of {\em
+summary of the corpus} and can be used to form teams, pair complementary
+students, or allow batch grading. {\bf Third}, we show that the edits found by
+\sd~can be used {\em as features} to improve text representation for the {\em
+classification task} of native language identification, for which pure
+content-based features tend not to be very effective. Once a student's native
+language is known, that information could be used as a fluency score with a
+confidence level.
+
+Since our goal is to demonstrate the benefit of \sd~in a variety of different
+tasks, and due to the space limit, we do not attempt to optimize the performance
+for any of these tasks and thus do not report detailed results for parameter
+variations.
+
+All experiments and algorithms \ignore{(including \sd)} are open source and
+freely available online as part of the toolkit
+\textsc{MeTA}\footnote{\url{https://meta-toolkit.org}}. The NUCLE
+corpus\footnote{\url{http://www.comp.nus.edu.sg/~nlp/corpora.html}} (for grammar
+correction) and the ICNALE
+corpus\footnote{\url{http://language.sakura.ne.jp/icnale/download.html}} (for
+summarization and classification) are also freely available online. All
+experiments were run on a laptop with an eight-threaded processor and eight
+gigabytes of memory.
+
+\subsection{Monolingual Translation}
+
+We use the NUCLE corpus~\cite{nucle} to investigate \sd's performance in
+correcting grammatical errors. It is evaluated with precision, recall, and $F_1$
+score using the same framework and testing and training data as the CoNLL-2013
+Shared Task in Grammatical Error Correction~\cite{conll-shared}.
+
+\subsubsection{Experimental Setup}
+
+We used the 1,036 training data sentences to do parameter selection on the four
+different edit penalties and maximum step size. Since the runtime of \sd~is
+quite fast on the NUCLE corpus training data, we easily applied grid search on
+the weights and $k$ (the maximum number of edits), optimizing the $F_1$ score.
+The $n$-gram value was fixed at $n=3$, a standard value for sentence fluency
+scoring purposes. As the reference corpus, we used 50,000 sentences from the
+Wall Street Journal that are part of the Penn Treebank, since this text is a
+staple of well-formed English.
+
+The selected edit weights from the training data were 0.0 for substitute and
+base penalties, 0.07 for insert, and 0.30 for remove. This shows that the
+default \sd~needs to remove fewer words to get better performance, while
+inserting slightly less. The selected value of $k$ was 3.
+We set $V^{INS}$ to be a short list of function words, since the omission of
+these is a common error. We used a modified version of the Porter2
+stemmer\footnote{\url{http://snowball.tartarus.org}} for $V^{SUB}(w)$ that
+focuses only on reducing plurals and possessives to the same root.
+
+We tested with the designated 345 testing data sentences and used the evaluation
+scripts from the shared task. Given a candidate sentence $S$, the predicted corrected
+form is a new sentence $S^*$ that has the lowest perplexity (see Section~\ref{sec:weighted}).
+
+\input{fig-gec}
+
+\subsubsection{Results}
+
+Fig.~\ref{fig-gec} shows the results of \sd~used for grammatical error
+correction, including the precision ($P$), recall ($R$), $F_1$ score, the
+running time ($t$), and the percentage of sentences that are unchanged
+(\emph{No-op}).  We also included results without edit positions selected by the
+language model and results without tuned edit weights. Without edit points
+selected, edits are performed at every position in the sentence, generating many
+more candidates. Without edit weights, each edit type is treated equally with no
+distinction between many or few edits in scoring.
+
+Lack of weighted edits and language model insertion is similar to Lee and
+Seneff~\cite{lee-seneff-2006}. Of course, the language model is still used to
+score the candidates in all cases. As seen in Fig.~\ref{fig-gec}, compared with this baseline, the intelligent
+edit points greatly decrease the run time and the learned edit weights contribute
+significantly to the performance improvement.
+
+For a more direct comparison, we can look at the results from the CoNLL shared
+task where the teams were judged by $F_1$ score. \sd's score of 23.42 would
+place it in seventh overall, beating out $65\%$ (eleven) of the other teams. Not
+only does our method place fairly in the shared task standings, but \sd~is a
+much more general system than its competitors. The other systems specifically
+targeted five error types: article/determiner, preposition, noun number, verb
+form, and subject-verb agreement. The standard system first classified errors
+into one of the five types. Then, a specific module was run on each error type
+in order to produce candidates. Finally, the set of candidates were scored, and
+results from each of the five modules was combined into the final corrected
+sentence.
+
+\sd~has no concept of different error types and doesn't rely on classifiers to
+select particular modules to run. Thus, it is a more general solution than
+required for the shared task and can be considered \emph{fluency correction}.
+
+\subsection{Corpus Summarization}
+
+Summarizing student essays can give insight into how they are written.
+Comparable essays will have similar deviances from fluent English. Does a group
+of students make similar errors? Can we target specific problem areas depending
+on the group of students we speak to? Or, can we pair students with
+complementary strengths and weaknesses?
+
+Topic models such as latent Dirichlet allocation~\cite{lda} are a powerful text
+analysis tool. After running a topic modeling algorithm, each document in a
+corpus is assigned a distribution over a fixed number of topics. A topic itself
+is a distribution over the corpus vocabulary.
+
+We can use the power of topic models to simultaneously cluster and summarize
+errors in non-native English essays and will show that the bag-of-edits
+representation enabled by \sd~is much more useful than the standard bag-of-words
+representation for this task. \ignore{As we will see, unigram (and even bigram)
+words will not be sufficient to understand common fluency differences between
+documents. Instead, using \sd~edit features as new tokens to replace the
+original words in text captures what we'd like to see: is a group of students
+confused about article use? A bag-of-words method only shows the presence of a
+term being useful; a bag-of-edits representation shows presence, absence, and
+substitution. For each cluster (collection of documents with a concentration of
+a particular topic), we are delivered the common differences between the essays
+and the native English essays. For a semi-supervised method, these native essays
+could be a small subset judged acceptable by the instructors. For a completely
+unsupervised method, the reference language model could be from a similar corpus
+or a previous semester.} For this task, we use the native English essays on a
+similar topic as the reference corpus; this enables us to use \sd~to obtain
+edits more likely related to the usage of English language by the students,
+which are presumably more useful for this application task than bag-of-words
+representation.
+
+\subsubsection{Experimental Setup}
+
+We compare \sd~edit tokens with unigram and bigram words using the 2,800
+ICNALE essays debating public smoking. We hypothesize that the edit tokens
+will be more interpretable than the competing methods.
+
+Each document is treated as a ``bag-of-edits'', where \sd~is run on each
+sentence in every document. A small feature vector for a document could be
+$$\{insert(the): 3,\: substitute(a\rightarrow an): 1,\: remove(of): 2\}.$$
+
+We run \textsc{MeTA}'s LDA on this feature set, examining the resulting
+distributions of edits and topics. Hyperparameters were set to 0.1, encouraging
+sparse distributions.
+
+Since the summarization task is unsupervised, we have no clear objective for
+parameter selection. Thus, we leave the weights at zero. However, based on the
+observed output, the user is free to adjust the penalties in order to perturb
+the results in a direction he or she chooses. Perhaps only substitutions are
+currently of interest. Due to space constraints, we do not investigate further
+than all zeroed weights. We set $k=1$ to get the most likely change to the
+original sentence, and set $n=3$.  We set $V^{INS}$ to the same function word
+list as the error correction task and used the full Porter2 stemmer for
+$V^{SUB}(w)$ since there was no requirement for such precise substitutions. The
+LDA inference is run with a maximum of one thousand iterations, though all three
+representations converged before this limit.
+
+\input{fig-topic-vocab}
+\input{fig-topics}
+
+\subsubsection{Results}
+
+Fig.~\ref{fig-topic-vocab} compares vocabulary sizes and iteration runtime for
+the LDA inference. Since the \sd~edits have much lower dimensionality than the
+word vectors, inference is significantly faster, even on this relatively small
+dataset. Fig.~\ref{fig-topics} shows a sample of topics learned from the ICNALE
+smoking corpus.
+
+We can see the $n$-gram representations capture more content-based themes while
+the edit tokens capture syntactic similarities. For unigram words, topic 1
+deals with the physiological concerns of smoking. Topic 12 discusses banning
+smoking in restaurants, while topic 15 is more nationally-focused. Topic 4 may
+be of some use, suggesting an overuse of personal pronouns.
+
+Bigram words have almost the same interpretability as unigram words. Topic 4 is
+similar to topic 12 from the unigram model. Each topic is more of a theme,
+rather than a collection of grammatical differences. We only see positive essay
+tokens in each topic, as opposed to lacking (missing) ones.
+
+On the other hand, the \sd~edits give some insight into the syntactic structure
+of the student essays. For example, consider these excerpts from three different
+documents: ``\emph{Because it is so bad to mom with baby}'', ``\emph{In
+restaurant when people...}'', ``\emph{...go to restaurant to have meal}''. Each
+student has article use errors which \texttt{insert(a)} from topic 4 would fix.
+The word $a$ would never appear in an $n$-gram topic model because it is absent
+in each of these documents. Such results can also be used to retrieval sample sentences
+where the errors occurred.
+
+The same three essays also have an overuse of the word \emph{so}, which
+\texttt{remove(so)} from topic 4 would make more fluent: \emph{so bad, so
+scared, so dead}. In fact, the first essay contains the phrase \emph{so bad}
+five times in about fifteen sentences. The third essay contains the sentence
+``\emph{The smoke make many people feel so bad.}'' Aside from the \emph{so}
+issue as before, there is a subject-verb disagreement between \emph{the smoke}
+and \emph{make}. While other essays may correctly use the verb \emph{make},
+these particular essays use it in an incorrect way such that
+\texttt{sub(make->makes)} is a correction.
+
+\subsection{Machine Learning}
+
+We use the ICNALE native language identification corpus~\cite{icnale} to test
+the effectiveness of using the \sd~edits as features to represent text for
+classifying English essays based on the native language of the author. This
+corpus contains 5,600 total essays on two prompts. We hypothesize that the
+\sd~features capture the grammatical differences in writing styles of the eleven
+different native backgrounds.
+
+\subsubsection{Experimental Setup}
+
+The same bag-of-edits representation as the summarization task is used as input
+for a classifier to predict the native language of the student essay writer. The
+Wall Street Journal sentences from the Penn Treebank are used for the
+reference language model as they were for the monolingual translation task.
+
+As a baseline, we use a standard unigram words feature representation with
+stemming and stop word removal. Additionally, we combine the unigram words
+representation with the \sd~features to see if the performance increases
+compared to using only one method.
+
+The ICNALE corpus is split in half, based on whether the essay is a smoking
+essay or a part-time job essay. We use the part-time job subcorpus as a
+development set to do parameter selection on $n$ and $k$, for the $n$-gram
+language model and maximum number of edits respectively. Once the parameters
+($k=5,n=5$) were chosen, we evaluated with five-fold cross validation on the
+smoking testing set. Each fold of the cross validation is used to do an unpaired
+$t$-test for statistical significance. For both development and testing, we use
+the default SVM classifier that is part of \textsc{MeTA}. \ignore{The unigram
+words baseline and feature combination are also part of the same toolkit.}
+
+Since adding edit weights will always decrease the score of candidate sentences,
+we set them all to zero for the classification task. We want the learned
+\sd~model to have full control over the generated edits that appear as features.
+In contrast to the monolingual translation task, we prefer to \emph{minimize}
+the number of no-ops, since each edit operation is used as a feature; more
+no-ops means less information is represented. The edit weights are easily set if
+the user requires, $e.g.$ to ignore a particular operation. Finally, we leave
+$V^{INS}$ and $V^{SUB}(w)$ the same as the summarization task.
+
+\input{fig-nli}
+%\input{fig-matrix} % not enough space
+
+\subsubsection{Results}
+
+Fig.~\ref{fig-nli} shows a comparison between the three methods: unigram words
+baseline, \sd, and a combination. While unigram words does outperform edit
+features in $F_1$ and accuracy, a combination is able to increase both measures
+at a significance level of $p < 0.001$. This shows that the syntactic edit
+features capture an orthogonal perspective of the student essays compared to
+the lexical features as we expected.
+
+%Fig.~\ref{fig-matrix} shows a confusion matrix of the eleven classes using the
+%combined features. Each row is a distribution over which class label was chosen
+%for the given row name; the diagonal represents a correct categorization. From
+%this, we see that Japanese and Pakistani students are confidently modeled.
+%Students from Hong Kong and Taiwan and more easily confused with native
+%Chinese speakers, which is logical.
+
+The most informative features for some selected classes are shown in
+Fig.~\ref{fig-class-features} according to information
+gain~\cite{feature-selection}. Information gain is a commonly-used feature
+selection metric in the machine learning and information retrieval communities.
+It describes the difference in entropy by knowing the presence or absence of a
+specific term appearing in a class.
+
+Some features are obvious and not as informative to the human reader: Chinese
+and Korean students overuse \emph{China} and \emph{Korea} compared to the
+reference language model. Less apparent (yet still useful) edits are the
+Chinese students' overuse of \emph{etc}, the Hong Kong students' underuse of
+\emph{the}, the Japanese students' mixup between \emph{so} and \emph{be}, and
+the Korean students' differentiation between \emph{fair} and \emph{fairly}. We
+also notice that the native English-speaking students have \emph{unmodified} as
+a main feature, meaning the perplexity-based candidate scoring preferred their
+original sentences over edited ones.
+
+There are also a few artifacts of the tokenization method; the sentence marker
+\texttt{<s>} appears as a top feature, implying that English and Korean speakers
+tend to have shorter sentences, at least compared to the reference model.
+
+\input{fig-class-features}

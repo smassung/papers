@@ -1,0 +1,77 @@
+\section{Related Work}
+\label{sec:related}
+
+Lee and Seneff~\cite{lee-seneff-2006} describe a method to correct non-native
+English sentences.
+Compared with work in this line, our work, \sd,
+is much more general, since it performs all the basic edit operations
+(insert, remove, substitute) on real, second language-learner data.
+\sd~is also more efficient as it only
+modifies words in unlikely positions based on a background language model (see
+section~\ref{sec:syndiff}).
+
+Wong and Dras' contrastive analysis~\cite{wong-contrastive} uses an
+off-the-shelf grammar checker to generate error-based features. There is no
+reference corpus or edit-based operations, and it is restricted to a small class
+of grammatical errors.
+
+\sd~is related to several other fields, but none of the fields provide full
+support for all the operations that \sd~offers. Statistical machine
+translation~\cite{smt-survey} is a related field because one use is to translate
+non-native language into more fluent language.
+Unlike
+our work, comparison of subcorpora is not a natural byproduct of the translation
+from one sentence to another. Parse tree kernel functions~\cite{tree-kernels}
+can be viewed as assigning a similarity score between a source sentence and
+target sentence. While this similarity score is quite
+useful for machine learning problems, it does not provide steps for how to
+translate the first sentence into the second while maintaining correct syntax.
+Like tree kernels, DNA sequence alignment from
+bioinformatics~\cite{seq-align-survey} records the similarity between two or
+more sequences. When applied in an NLP domain, it is to usually solve alignment
+problems for machine translation~\cite{paraphrase} or word
+sense~\cite{lexical-choice}. Again, there is no viable method to offer the
+translation steps while preserving the original structure of the sentence.
+Additionally, comparing documents using these sequences is not well-defined.
+
+Comparative Text Mining (CTM)~\cite{ctm}
+uses a mixture model to compare subcorpora.
+The comparative analysis enabled by this
+approach is very coarse; in contrast, \sd~enables very detailed comparative
+analysis at the level of subtle syntactic and lexical differences.
+
+\sd~provides a general way to generate new text representations based on a bag
+of edits, which can be used as alternative or supplementary tokens to feed into
+{\em any} topic model as we have explored in the second task. In this sense,
+\sd~is {\em orthogonal to any other text processing techniques}. This opens up
+many interesting new opportunities for applications and research in text mining.
+
+\ignore{
+A limitation to this method is its unigram word representation. It may be
+acceptable to compare different laptop manufacturers in a review dataset, but no
+syntactic information is captured. If we wished to compare writers with varying
+levels of competence, a unigram words approach would only relay word usage
+information (\emph{i.e.} which words are likely to be inserted). In \sd, we are
+able to see which words are inserted, removed, and substituted, with tunable
+weights for each action.
+%
+In an unsupervised setting, aside from CTM, clustering and topic
+modeling~\cite{lda} create groups of similar documents based on some
+representation, usually unigram words. These groups may be compared with one
+another based on their feature vectors (for vanilla clustering) or their topical
+word distributions (for topic modeling). However, this comparison suffers from
+the same issues as CTM, in that unigram words do not sufficiently capture
+syntactic choice and omission. Furthermore, there is no readily-available
+mechanism to translate from one cluster to another, as \sd~is able to do.
+%
+In a supervised setting, feature selection~\cite{feature-selection} can capture
+omission, but this is only if the document labels are known beforehand. While
+running feature selection on clusters of documents is possible, the feature
+selection and cluster choices are not created jointly. Lastly, we again have no
+way to modify documents in one cluster to naturally sound like documents in
+another cluster.
+%
+\sd~simultaneously delivers translation, summarization, and machine learning
+capabilities at a syntactic level, which is not possible with existing
+comparative text mining methods.
+}

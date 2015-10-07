@@ -1,0 +1,19 @@
+\begin{figure}[t]
+\begin{center}
+    \begin{tabular}{lrrrr}
+        \hline
+        \textbf{Features} & $|V|$ & $DL_{avg}$ & Iteration $t$ & $500t$ \\
+        \hline
+        Unigram words & 11,580 & 256 & 3.2s & 26.7m \\
+        Bigram words & 130,411 & 255 & 5.4s & 45.0m \\
+        \sd & 2,079 & 15 & 0.4s & 3.3m \\
+        \hline
+    \end{tabular}
+    \caption{Summarization task: different tokenization methods for 16 topics on
+    the ICNALE smoking corpus. Displayed are vocabulary size, average document
+length, LDA inference iteration time, and the time for 500 iterations for
+comparison.}
+    \label{fig-topic-vocab}
+\end{center}
+\vskip-20pt
+\end{figure}

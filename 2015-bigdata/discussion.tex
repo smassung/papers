@@ -1,0 +1,132 @@
+\section{Discussion}
+\label{sec:discuss}
+
+This section addresses various questions and hypotheses brought up in our study,
+particularly the generality of \sd~and the new application and research
+directions it can potentially open up.
+
+\subsection{Generality}
+
+As a new way of representing text, \sd~is very general and robust; just like the
+bag-of-words representation, the bag-of-edits representation can be applied to
+{\em arbitrary} text data to obtain interesting variations of text
+representation. Note that the bag-of-edits representation is {\em not} meant to
+compete with the bag-of-words representation, but rather to supplement it to
+improve text representation since they capture different perspectives of
+representation.
+
+The applications of \sd~are not restricted to improving text representation.
+\sd~is a general framework, rather than a particular algorithm. Virtually all
+the components in \sd~are configurable; most obviously, edit weight values,
+$n$-gram settings, and the reference corpus. Edit weights and $n$-gram values do
+not necessarily contribute to any specific syntactic meaning. Rather, these
+settings are for tuning a model against some objective function, which can vary
+according to applications (\emph{e.g.}, in the grammatical error correction
+case, we set edit weights to optimize $F_1$ score).
+
+The reference language model from the reference corpus plays a more important
+role in the meaning of each edit. It steers the edit transformations in a
+particular direction, coaxing each candidate sentence to align with the
+reference. In our experiments, we considered the reference to be gold standard
+language, since our tasks dealt with non-native English speakers. Modifying each
+sentence to minimize its distance with well-formed English makes sense. However,
+there are many ways to choose and set the reference, enabling the support of
+other interesting tasks.
+
+For example, suppose we operate on a sentiment analysis dataset. We have a
+reference model of very positive sentences, and use \sd~to translate candidate
+sentences to match the reference. Depending on the sentiment polarity of the
+candidate sentences, do negative sentences have a different pattern of edits
+than positive ones? It is in this way that the reference language model choice
+influences the significance of each edit.
+
+In our experiments, we defined four edit weight penalties. In practice, these
+could be almost anything the user desires. Returning to the sentiment analysis
+task, imagine an edit weight penalty that is imposed if the words \emph{no} or
+\emph{not} are inserted. Or, if a word has a positive sentiment affiliation a
+penalty is also triggered. Finally, what if at each iteration, a penalty is
+imposed if the edit operation changes the polarity of the sentence? Some of
+these suggestions require a classifier in the candidate generation stage;
+alternatively, sentiment valence scores~\cite{sentiment} could be used as a
+crude (yet effective) judgement.
+
+Sentence edit features themselves are also configurable; for instance, we could
+include the previous word or word index. Then \texttt{insert(the)} could be come
+\texttt{insert(the|in)} meaning add \emph{the} after \emph{in} or
+\texttt{insert(4, the)} representing add \emph{the} in the fourth position in
+the sentence.
+
+Due to space constraints, we could not investigate all possible variations
+described above, but we envision much future work in this direction.
+
+\subsection{Applications}
+
+The three tasks that we have applied \sd~to only represent a few of the many
+possible uses, but even these already have a very broad scope:
+
+\noindent
+{\bf Text transformation:} In the first task, the edits
+are used directly to search for an optimal transformation of an original
+sentence. This represents a general new retrieval model that allows us
+to use the original sentence as a query to ``retrieve" a relevant sentence that
+best matches the query, where ``matching" is based on the edits that we allow.
+By varying the edits allowed, their weights, and the choice of reference
+language model, this can potentially support many interesting text
+transformations that can easily go beyond grammatical error correction (like
+improvement of coherence, retrieval of opposite opinions, or text
+summarization).
+
+\noindent
+{\bf Comparative text mining:} In our second task, we used the edits to
+represent the original text in an unsupervised learning setting (\emph{i.e.},
+topic modeling), which enabled discovery of interesting clusters of related
+edits. It is very easy to imagine the use of this strategy for many other
+unsupervised learning methods such as matrix factorization. Also, there are many
+variants of the basic topic models that can perform more sophisticated topic
+analysis. All these algorithms can be combined with \sd~to open up interesting
+new opportunities for comparative text mining.
+
+\noindent
+{\bf Improving text representation for machine learning:} In our third task,
+we used edits to represent text in a supervised learning setting, and showed
+superior performance of such a representation in comparison to existing
+text representation methods for the task of native language identification.
+Supervised learning is widely applied in many text processing tasks. Thus
+\sd~can be potentially useful for improving text representation for many of
+these tasks. Note that we do not have to solely rely on edits for text
+representation, and can in general combine edit-based representation with
+content-based representation. This would provide an interesting general and
+robust way to represent text.
+
+We anticipate many more creative uses of this framework in other
+text mining tasks to be possible.
+
+\subsection{Semantic Diff}
+
+Using a customized \sd~for each task allows researchers to gain insight into
+the differences between subsets of a corpus. How much customization is required
+to push \sd~to \textsc{SemanticDiff}?
+
+We have already seen how edit penalty types can be imposed in an ad hoc manner,
+and how their weights can be chosen intuitively. Although we set $V^{SUB}(w)$
+to be a stemmer, it could just as easily be a thesaurus or negator, focused on
+word sense disambiguation.
+
+We can get even more creative knowing the parts of speech of each word. What if
+we only insert articles and determiners instead of a list of common function
+words? We can even design penalty weights for the part of speech. Is it more
+important to remove a determiner than it is a verb? It depends on the
+application, and can be learned automatically. Although these many possibilities
+greatly expand the search space, more advanced candidate selection algorithms
+such as beam search~\cite{ai} can easily be applied.
+
+With a basis for penalty creation, it would be possible to create penalty types
+on the fly during a training phase. We can break the definition of a penalty
+into context and an argument. For instance, one context could be surrounding
+part of speech tags, and the argument is the current word examined in an edit
+operation. Once \sd~operates in this format, we can arbitrarily create
+penalties.
+
+Given all these modifications enabling increased generality, we assert that
+\textsc{SemanticDiff} is not only attainable, but will form the landscape of
+edit-based rich text meaning.
