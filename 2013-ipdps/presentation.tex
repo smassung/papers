@@ -1,0 +1,293 @@
+% rubber: setlist arguments --shell-escape
+
+%\documentclass[handout]{beamer}
+\documentclass[table]{beamer}
+\usepackage{minted}
+\usetheme{Luebeck}
+\usepackage[utf8]{inputenc}
+
+\newminted{cpp}{fontsize=\small}
+
+\title[Visualizing Parallelism in CS 2]{Visualizing Parallelism in CS 2}
+\author{Sean Massung \& Cinda Heeren}
+\date{May 20th 2013}
+\institute{University of Illinois at Urbana-Champaign}
+
+\begin{document}
+\frame{\titlepage}
+
+\section{Introduction}
+
+\begin{frame}
+    \frametitle{A Spring 2012 Early Adopter}
+    \begin{itemize}
+         \item IEEE-TCPP Curriculum Initiative for CS 2 at UIUC
+         \item Three main parallel programming concepts,
+             each delivered during a two hour discussion/lab section
+         \item Material is graded, and key topics are evaluated on exams
+         \item Three lessons explore the basics of parallelism in a
+             \textbf{visual} manner: using OpenMP, race conditions,
+             and reductions
+         \item Tethering images to understanding parallelism enhances
+             student interest and provides an alternative route to
+             mastery of the material
+    \end{itemize}
+\end{frame}
+
+\section{New Labs}
+
+\subsection{Lab 1: Intro to Parallelism}
+
+\begin{frame}[fragile]
+    \frametitle{Image manipulation}
+    \begin{columns}
+    \column{.45\textwidth}
+    \begin{itemize}
+        \item In the coding portion of the lab, we expose students
+            to computation across threads
+        \item For one task, students simply write a function that
+            removes the green color component from an image
+    \end{itemize}
+    \column{.55\textwidth}
+    \begin{cppcode}
+#pragma omp parallel for
+for(int i = 0; i < width; ++i)
+{
+   for(int j = 0; j < height; ++j)
+   {
+      *output(i,j) = *source(i,j);
+       output(i,j)->green = 0;
+   }
+}
+    \end{cppcode}
+    \end{columns}
+\end{frame}
+
+\begin{frame}
+    \frametitle{A visual partition of work}
+    \begin{columns}
+        \column{.5\textwidth}
+        \includegraphics[width=2.2in]{semi-processed-remove.png}
+        \column{.5\textwidth}
+        \begin{itemize}
+        \item Students are given augmented code that stops execution midway
+            through the operation
+        \item They see four threads operating on the
+            image removing the green component
+        \item The threads are partitioning the image along the width as
+            shown in the code snippet
+        \end{itemize}
+    \end{columns}
+\end{frame}
+
+\subsection{Lab 2: Race Conditions}
+
+\begin{frame}[fragile]
+    \frametitle{Something's wrong with this image...}
+    \begin{columns}
+        \column{.5\textwidth}
+        \begin{itemize}
+            \item Students learn that correctly parallelizing
+            programs does not just consist of blindly pasting a
+            \verb|#pragma| on an outer for loop
+            \item Image output from the provided code is shown to the right
+        \end{itemize}
+        \column{.5\textwidth}
+        \includegraphics[width=2.2in]{flipped.png}
+    \end{columns}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{The buggy code}
+        \begin{cppcode}
+RGBAPixel temp;
+#pragma omp parallel for
+for(int i = 0; i < width; ++i)
+{
+   for(int j = 0; j < height / 2; ++j)
+   {
+      temp = *image(i, j);
+      *image(i, j) = *image(i, height - 1 - j);
+      *image(i, height - 1 - j) = temp;
+   }
+}
+        \end{cppcode}
+        Moving the declaration of \verb|temp| inside the for loop
+        fixes the problem, creating a local \verb|temp| variable for each
+        thread.
+\end{frame}
+
+\subsection{Lab 3: Reductions}
+
+\begin{frame}[fragile]
+    \frametitle{We want to create a color histogram}
+    \begin{columns}
+        \column{.5\textwidth}
+        \begin{itemize}
+            \item The last lab section introduces a paradigm for solving complex
+                data dependency issues, namely {\em reductions}
+            \item We present reductions as a general algorithmic technique, so
+                as to  provide a stepping stone to understanding the MapReduce
+                programming model
+        \end{itemize}
+        \column{.5\textwidth}
+        \includegraphics[width=2.2in]{chart.png}
+    \end{columns}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Creating the histogram}
+    \begin{minted}[fontsize=\tiny]{cpp}
+map<RGBAPixel, int> ret_freq;
+
+#pragma omp parallel
+{
+   map<RGBAPixel, int> local_freq;
+#pragma omp for
+   for(int i = 0; i < width; ++i)
+   {
+      for(int j = 0; j < height; ++j)
+          ++local_freq[ *image(i,j) ];
+   }
+#pragma omp critical
+   {
+      map<RGBAPixel, int>::iterator curr;
+      for(curr = local_freq.begin(); curr != local_freq.end(); ++curr)
+      {
+         int count = curr->second;
+         ret_freq[ curr->first ] += count;
+      }
+   }
+}
+
+return ret_freq;
+    \end{minted}
+\end{frame}
+
+\section{Evaluation}
+
+\begin{frame}
+    \frametitle{Evaluating the students}
+    \begin{itemize}
+        \item Student performance on lab exercises was exemplary with average
+            scores of 95\% on all three assignments
+        \item Besides grading lab work, questions regarding parallelism were
+            included on exams
+        \item The following slides contain examples of the questions we have
+            included on various tests over the past two semesters
+    \end{itemize}
+\end{frame}
+
+\subsection{Question 1}
+
+\begin{frame}[fragile]
+    \frametitle{Pop quiz!}
+
+    \begin{columns}
+
+    \column{.5\textwidth}
+    \begin{minted}[fontsize=\tiny]{cpp}
+// (i)
+
+#pragma omp parallel for
+for (int i = 1; i < 100; i++)
+    colorArray[i] = colorArray[i-1];
+
+// (ii)
+
+#pragma omp parallel for
+for (int i = 0; i < width; i++)
+{
+    for (int j = 0; j < height/2; j++)
+    {
+        RGBAPixel temp = *img(i, j);
+        *img(i,j) = *img(i, height-1-j);
+        *img(i, height-1-j) = temp;
+    }
+}
+
+// (iii)    
+
+#pragma omp parallel for
+for(int i = 0; i < 10; i++)
+    for(int j = 0; j < 10; j++)
+        table[i][j] = (i+1)*(j+1); 
+    \end{minted}
+
+    \column{.5\textwidth}
+    Which of the code examples is/are NOT correctly parallelized?
+    {\small
+    \begin{enumerate}[(a)]
+        \item Only item (i) is incorrect.
+        \item Only item (ii) is incorrect.
+        \item Only item (iii) is incorrect.
+        \item Two of the above examples are incorrect.
+        \item All statements (i), (ii), and (iii) are correct.
+    \end{enumerate}
+    }
+    \end{columns}
+
+\end{frame}
+
+\subsection{Question 2}
+
+\begin{frame}
+    \frametitle{Reductions}
+    What is the definition of the term \emph{reduction}?
+
+    \begin{enumerate}[(a)]
+        \item A reduction performs the same instructions on data
+            across multiple threads.
+        \item A reduction occurs when private data on individual
+            threads is assembled into a general solution.
+        \item Reduction is a technique wherein parallelism is
+            applied to the portion of a program that requires
+            the most computation. 
+        \item Reduction is just another term for {\em speedup}.
+        \item None of these is the correct choice.
+    \end{enumerate}
+\end{frame}
+
+\subsection{Question 3}
+
+\begin{frame}
+    \frametitle{Amdahl's Law}
+    Suppose an algorithm takes 7 seconds to run serially, and 2 seconds to run
+    in parallel.  Then the {\em speedup} for the parallelized code is:
+
+    \begin{enumerate}[(a)]
+        \item $\frac{2}{7}$
+        \item $\frac{7}{2}$
+        \item $\frac{7-2}{7}$
+        \item The speedup cannot be determined because the number of processors is not known.
+        \item None of these answers is correct.
+\end{enumerate}
+\end{frame}
+
+\section{Conclusions and Future Work}
+
+\begin{frame}
+    \frametitle{Conclusions}
+    \begin{itemize}
+    \item Foundations for including parallelism in introductory and second-level
+        courses exist, but should be presented in a more approachable way
+    \item Applying parallelism to images gives a useful purpose to students’
+        work and immediate, visual feedback
+    \item Watching threads work on images increases student understanding and
+        allows them to connect with the assignment on a tangible level
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Future Work}
+    \begin{itemize}
+        \item Due to course reform, we will have more space added to the class:
+            this time can be used to deepen the parallel concentration of the
+            course in addition to examining existing topics in more depth
+        \item A fourth lab section is under development that deals with OpenMP
+            tasks and their use in parallel sorting algorithms
+    \end{itemize}
+\end{frame}
+
+
+\end{document}
