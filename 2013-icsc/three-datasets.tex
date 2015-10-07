@@ -1,0 +1,112 @@
+\begin{figure*}[ht!]
+\begin{center}
+%{\small
+
+\begin{tabular}{ccc}
+
+    \textbf{Nationality Detection} &
+    \textbf{Essay Scoring} &
+    \textbf{Sentiment Analysis} \\
+
+    % nationality
+    \begin{tabular}{|lccc|}
+    \hline
+    \emph{Method} & $n_{best}$ & $F_1$ & $A$ \\
+    \hline
+    \hline
+    Word    & 1 & .827 & .916 \\
+    POS     & 2 & .810 & .902 \\
+    FW      & 2 & .728 & .876 \\
+    \hline
+    \hline
+    RR      &   & .778 & .844 \\
+    Skel    &   & .510 & .806 \\
+    ASkel   &   & .721 & .870 \\
+    SC      &   & .703 & .844 \\
+    Branch  &   & .508 & .786 \\
+    Depth   &   & .436 & .774 \\
+    \hline
+    \hline
+    \textbf{ASkel + Word} & \textbf{1}  & \textbf{.885} & \textbf{.942} \\
+    SC + Word    & 1  & .867 & .936 \\
+    RR + Word    & 1  & .854 & .924 \\
+    ASkel + POS  & 2  & .811 & .900 \\
+    RR + POS     & 2  & .810 & .896 \\
+    Skel + Word  & 1  & .809 & .912 \\
+    ASkel + FW   & 2  & .799 & .904 \\
+    RR + FW      & 2  & .795 & .898 \\
+    \hline
+    \end{tabular}
+    &
+    % essay
+    \begin{tabular}{|lcc|}
+    \hline
+    \emph{Method} & $n_{best}$ & $\kappa$ \\
+    \hline
+    \hline
+    \textbf{Word}   & \textbf{2} & \textbf{.889} \\
+    POS    & 2 & .765 \\
+    FW     & 1 & .845 \\
+    \hline
+    \hline
+    RR     &   & .702 \\
+    Skel   &   & .356 \\
+    ASkel  &   & .658 \\
+    SC     &   & .431 \\
+    Branch &   & -.087 \\
+    Depth  &   & -.098 \\
+    \hline
+    \hline
+    SC + Word    & 2 & .834 \\
+    ASkel + FW   & 1 & .822 \\
+    RR + Word    & 2 & .807 \\
+    ASkel + Word & 2 & .791 \\
+    RR + FW      & 1 & .786 \\
+    ASkel + POS  & 2 & .782 \\
+    Skel + POS   & 2 & .768 \\
+    RR + POS     & 2 & .761 \\
+    \hline
+    \end{tabular}
+    &
+    % sentiment
+    \begin{tabular}{|lccc|}
+    \hline
+    \emph{Method} & $n_{best}$ & $F_1$ & $A$ \\
+    \hline
+    \hline
+    Word   & 1 & .820 & .820 \\
+    POS    & 3 & .662 & .662 \\
+    FW     & 1 & .687 & .687 \\
+    \hline
+    \hline
+    RR     &   & .650 & .650 \\
+    Skel   &   & .556 & .557 \\
+    ASkel  &   & .654 & .654 \\
+    SC     &   & .555 & .568 \\
+    Branch &   & .493 & .499 \\
+    Depth  &   & .533 & .535 \\
+    \hline
+    \hline
+    \textbf{Skel + Word}  & \textbf{1 } & \textbf{.828} & \textbf{.828} \\
+    RR + Word    & 1  & .824 & .824 \\
+    ASkel + Word & 1  & .824 & .824 \\
+    SC + Word    & 1  & .822 & .822 \\
+    ASkel + FW   & 1  & .704 & .704 \\
+    RR + FW      & 1  & .686 & .686 \\
+    ASkel + POS  & 3  & .685 & .685 \\
+    Skel + FW    & 1  & .682 & .682 \\
+    \hline
+    \end{tabular}
+
+\end{tabular}
+\caption{
+{\normalsize Comparison of single and combined features across data sets.  RR, Skel,
+    ASkel, and SC refer to Rewrite Rules, Skeleton, Annotated Skeleton, and
+    Syntactic Category respectively.
+}}
+\label{fig:three-datasets}
+%}
+
+\end{center}
+\end{figure*}
+

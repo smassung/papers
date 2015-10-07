@@ -1,0 +1,167 @@
+\begin{frame}
+    \frametitle{Best Features via Correlation Coefficient}
+    \begin{center}
+    {\tiny
+
+    \textbf{English}
+
+    \begin{tabular}{|l|l|l|l|l|}
+        \hline
+        \textbf{Words} & \textbf{Skel} & \textbf{ASkel} & \textbf{RR }& \textbf{SC }\\
+        \hline
+        educ     & ()             &  VBG()     &  NP$\rightarrow$(NP)(VP)      &  VBG  \\
+        financi  & (()()())       &  DT()      &  VP$\rightarrow$(MD)(ADVP)(VP)&  DT   \\
+        individu & (()()()())     &  JJ()      &  NP$\rightarrow$(NP)(PP)      &  :    \\
+        believ   & (()(()()()())) &  NNS()     &  S$\rightarrow$(VP)           &  -RRB-\\
+        right    & (()())         &  NP(()()())&  PP$\rightarrow$(TO)(NP)      &  -LRB-\\
+        \hline
+    \end{tabular}
+
+    \vspace{.2in}
+    \textbf{Chinese}
+
+    \begin{tabular}{|l|l|l|l|l|}
+        \hline
+        \textbf{Words} & \textbf{Skel} & \textbf{ASkel} & \textbf{RR }& \textbf{SC }\\
+        \hline
+        china &  (()(()(()(()(()(()))))))                  & JJR()
+        & ADVP$\rightarrow$(DT)       &  JJR \\
+        knowledg &  (((()())(()(())))()()((()())(()(())))) &  RBR()
+        &  ADVP$\rightarrow$(DT)(RBR)  &  RBR \\
+        partjob &  ((())(()(())((())((())(())))))          &
+        ADVP(()()(()((())(()(())))))&  NP$\rightarrow$(NP)(,)(SBAR)& \$   \\
+        chines &  (()((()()()()())(()(()()))))             &
+        SBAR(()((()(()(()(()))))))  &  ADJP$\rightarrow$(JJR)      &  DT  \\
+        hold &  (()(()(()()))(()((()())(()(()(()()))))))   &
+        VP(()(()(()(()(()(()))))))  &  NP$\rightarrow$(JJR)        &  FRAG\\
+        \hline
+    \end{tabular}
+
+    \vspace{.2in}
+    \textbf{Japanese}
+
+    \begin{tabular}{|l|l|l|l|l|}
+        \hline
+        \textbf{Words} & \textbf{Skel} & \textbf{ASkel} & \textbf{RR }& \textbf{SC }\\
+        \hline
+        think & (())                      &  PRP() &  NP$\rightarrow$(PRP)         &  PRP\\
+        smoke &  (()(()))                 &  NP(())&  VP$\rightarrow$(VBP)(NP)     &  VBP\\
+        seat &  ((())(()(()())))          &  VBP() &  NP$\rightarrow$(NN)          &  .  \\
+        money &  (()(())(()(()(()())))()) &  .()   &  VP$\rightarrow$(VBP)(S)      &  LS \\
+        japan &  ((())(()(()()))())       &  LS()  &  S$\rightarrow$(CC)(NP)(VP)(.)&  '' \\
+        \hline
+    \end{tabular}
+
+}
+\end{center}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Best Features via Correlation Coefficient}
+    {\tiny
+    \begin{center}
+    \textbf{English}
+
+    \begin{tabular}{|l|l|l|}
+        \hline
+        \textbf{Skel} & \textbf{RR }& \textbf{SC }\\
+        \hline
+        ()             &  NP$\rightarrow$(NP)(VP)      &  VBG  \\
+        (()()())       &  VP$\rightarrow$(MD)(ADVP)(VP)&  \textbf{DT}   \\
+        (()()()())     &  NP$\rightarrow$(NP)(PP)      &  :    \\
+        (()(()()()())) &  S$\rightarrow$(VP)           &  -RRB-\\
+        (()())         &  PP$\rightarrow$(TO)(NP)      &  -LRB-\\
+        \hline
+    \end{tabular}
+
+    \vspace{.1in}
+    \textbf{Chinese}
+
+    \begin{tabular}{|l|l|l|}
+        \hline
+        \textbf{Skel} & \textbf{RR }& \textbf{SC }\\
+        \hline
+        (()(()(()(()(()(())))))) & ADVP$\rightarrow$(DT)       &  JJR \\
+         (((()())(()(())))()()((()())(()(())))) & ADVP$\rightarrow$(DT)(RBR)  &  RBR \\
+        ((())(()(())((())((())(())))))  & NP$\rightarrow$(NP)(,)(SBAR)& \$   \\
+        (()((()()()()())(()(()())))) &  ADJP$\rightarrow$(JJR)      &
+        \textbf{DT}  \\
+        (()(()(()()))(()((()())(()(()(()()))))))   & NP$\rightarrow$(JJR)        &  FRAG\\
+        \hline
+    \end{tabular}
+
+    \vspace{.1in}
+    \textbf{Japanese}
+
+    \begin{tabular}{|l|l|l|}
+        \hline
+        \textbf{Skel} & \textbf{RR }& \textbf{SC }\\
+        \hline
+         (())                      & NP$\rightarrow$(PRP)         &  PRP\\
+          (()(()))                 & VP$\rightarrow$(VBP)(NP)     &  VBP\\
+         ((())(()(()())))          & NP$\rightarrow$(NN)          &  .  \\
+          (()(())(()(()(()())))()) & VP$\rightarrow$(VBP)(S)      &  LS \\
+        ((())(()(()()))())       & \textbf{S$\rightarrow$(CC)(NP)(VP)(.)}&  '' \\
+        \hline
+    \end{tabular}
+    \end{center}}
+
+    {\normalsize
+    \emph{``And if there are unexpected expenses, material for their lesson, for
+    example, they may not be able to pay money to it only with monthly
+    allowance."}}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Best Features via Correlation Coefficient}
+    {\tiny
+    \begin{center}
+    \textbf{English}
+
+    \begin{tabular}{|l|l|l|}
+        \hline
+        \textbf{Skel} & \textbf{RR }& \textbf{SC }\\
+        \hline
+        ()             &  NP$\rightarrow$(NP)(VP)      &  VBG  \\
+        (()()())       &  VP$\rightarrow$(MD)(ADVP)(VP)&  \textbf{DT}   \\
+        (()()()())     &  NP$\rightarrow$(NP)(PP)      &  :    \\
+        (()(()()()())) &  S$\rightarrow$(VP)           &  \textbf{-RRB-}\\
+        \textbf{(()())}         &  PP$\rightarrow$(TO)(NP)      &  \textbf{-LRB-}\\
+        \hline
+    \end{tabular}
+
+    \vspace{.1in}
+    \textbf{Chinese}
+
+    \begin{tabular}{|l|l|l|}
+        \hline
+        \textbf{Skel} & \textbf{RR }& \textbf{SC }\\
+        \hline
+        (()(()(()(()(()(())))))) & ADVP$\rightarrow$(DT)       &  JJR \\
+         (((()())(()(())))()()((()())(()(())))) & ADVP$\rightarrow$(DT)(RBR)  &  RBR \\
+        ((())(()(())((())((())(())))))  & NP$\rightarrow$(NP)(,)(SBAR)& \$   \\
+        (()((()()()()())(()(()())))) &  ADJP$\rightarrow$(JJR)      &  DT  \\
+        (()(()(()()))(()((()())(()(()(()()))))))   & NP$\rightarrow$(JJR)        &  FRAG\\
+        \hline
+    \end{tabular}
+
+    \vspace{.1in}
+    \textbf{Japanese}
+
+    \begin{tabular}{|l|l|l|}
+        \hline
+        \textbf{Skel} & \textbf{RR }& \textbf{SC }\\
+        \hline
+         (())                      & NP$\rightarrow$(PRP)         &  PRP\\
+          (()(()))                 & VP$\rightarrow$(VBP)(NP)     &  VBP\\
+         ((())(()(()())))          & NP$\rightarrow$(NN)          &  .  \\
+          (()(())(()(()(()())))()) & VP$\rightarrow$(VBP)(S)      &  LS \\
+          ((())(()(()()))())       & S$\rightarrow$(CC)(NP)(VP)(.)&  '' \\
+        \hline
+    \end{tabular}
+    \end{center}}
+
+    {\normalsize
+    \emph{``Indeed, students who have a part-time job (like I did) quickly
+change their perspective."}}
+\end{frame}

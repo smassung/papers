@@ -1,0 +1,708 @@
+\documentclass[conference]{IEEEtran}
+\usepackage{url}
+\usepackage{algpseudocode,algorithm}
+\usepackage{./parsetree}
+\usepackage{cite}
+\usepackage{latexsym}
+
+% options for parsetree.sty
+%\ptnodefont{\normalsize\rm}{10pt}{2pt}  % font and strut height/depth: nodes
+%\ptleaffont{\normalsize\it}{10pt}{2pt}  % font and strut height/depth: leaves
+
+\begin{document}
+\title{Structural Parse Tree Features \\ for Text Representation}
+
+\author{%
+    \IEEEauthorblockN{Sean Massung}
+    \and
+    \IEEEauthorblockN{ChengXiang Zhai}
+    \IEEEauthorblockA{%
+        \\
+        \emph{Department of Computer Science, College of Engineering} \\
+        \emph{University of Illinois at Urbana-Champaign} \\
+        \texttt{\{massung1,czhai,juliahmr\}@illinois.edu}
+    }
+
+    \and
+    \IEEEauthorblockN{Julia Hockenmaier}
+}
+
+\maketitle
+
+\begin{abstract}
+We propose and study novel text representation features created from parse tree
+structures. Unlike the traditional parse tree features which include all the
+attached syntactic categories to capture linguistic properties of text, the new
+features are solely or primarily defined based on the tree structure, and thus
+better reflect the pure structural properties of parse trees. We hypothesize
+that these new complex structural features capture an orthogonal perspective of
+text even compared to advanced syntactic ones. Evaluation based on three
+different text categorization tasks (\emph{i.e.}, nationality detection, essay
+scoring, and sentiment analysis) shows that the proposed new tree structure
+features complement the existing ones to enrich text representation. Experiment
+results further show that a combination of the proposed new structure features
+with word $n$-grams can improve $F_1$ score and classification accuracy.
+\end{abstract}
+
+\section{Introduction}
+
+Text representation is a fundamental issue in many text processing applications
+such as information retrieval, text clustering, and text categorization. Text
+representation is also critical for generating useful features to be used in
+many machine learning algorithms to support natural language processing
+applications. In general, we can represent text by a set of extracted features;
+the simplest features can be just the words in the text. 
+
+The issue of text representation is complicated because different tasks tend to
+require a somewhat different perspective of representation---thus a different
+feature set.  For example, while functional words are generally not useful for
+topic categorization, they may be useful for the author attribution
+categorization task, which may also benefit from features capturing sentence
+structures.  It is therefore important to develop a rich set of potential
+features that can represent text from different perspectives and to understand
+what kind of features are most effective for which tasks. 
+ 
+By far, the most common way to generate features is to segment text into words
+and record their $n$-grams; indeed, unigrams are quite common for information
+retrieval and text classification applications.
+
+In addition to content features, functional words and syntactic features have
+also been considered, notably for tasks such as author attribution or essay
+scoring. Complementary with content features, syntactic features can better
+reflect the writing style of an article.  For example,  simple syntactic
+features such as $n$-grams of part-of-speech tags and unigram function words
+were used for authorship attribution in \cite{jasist-stamatatos-2009} and
+\cite{jasist-koppel-2009}.  To further capture syntactic structures,
+grammatical productions (rewrite rules) were also discussed as potential
+features in \cite{allc-baayen-1996}, where the authors showed that rule
+frequencies were significantly different across classes and used them as
+features in some simple classification tasks. Later work used syntactic tree
+features for scoring non-native speech \cite{acl-chen-2011}, authorship
+attribution in \cite{acl-raghavan-2010} and \cite{sigir-kim-2011},
+deception detection in \cite{acl-feng-2012}, relation extraction in
+\cite{naacl-jiang-2007}, and even tree kernel methods in
+\cite{lsm-agarwal-2011} and \cite{jis-zhou-2010}.
+
+In this paper, we propose to investigate a new dimension of text representation
+based on parse trees with more emphasis on structural representation.
+Specifically, we propose to define structural features solely based on
+structural properties of a parse tree by ignoring all of the syntactic
+categories in the tree. More specifically, we call such new features skeletons
+to indicate their emphasis on pure structures rather than rewrite rules. A
+skeleton is defined as any subtree of a parse tree without including any
+syntactic categories. Compared with syntactic rewrite rules, skeletons can
+better capture the structural properties of a whole parse tree. Indeed, an
+important advantage of skeletons over regular syntactic features is that they
+can capture ``global tree structures" without causing problems of data
+sparseness or overfitting. Because of the focus on pure structures, even
+relatively large skeletons can be observed multiple times in a reasonably large
+set of text articles; in contrast, if we are to attach the syntactic categories,
+we would end up having far more specialized features that may not be observed
+multiple times in a data set.  We thus hypothesize that skeletons can capture a
+new additional dimension of text that cannot be easily captured by either
+content features or regular syntactic features, and thus may serve well as
+complementary features with the existing ones.
+
+We evaluate the proposed skeleton-based features using three different
+categorization tasks that likely would benefit from structural representation of
+text: nationality detection, essay grading, and sentiment analysis. We compare
+feature combinations of the proposed new features with three common simple
+features ($n$-grams of words, part-of-speech tags, and function words). We also
+investigate existing tree features (rewrite rules, syntactic categories,
+production branching factors, and tree depth), showing that the new
+skeleton-based features provide orthogonal information compared to the simpler
+features and validating their usefulness for text representation.
+
+\section{Related Work}
+
+Tree structure has been explored before, though not in a text representation
+perspective. A treebank described in \cite{coling-black-1996} allows
+grammatical parse trees to be browsed based on structure alone, but does not
+provide any sort of classification component. In \cite{acl-wang-2007}, the
+authors use dependency tree structure in a sentence similarity metric for
+textual entailment. A sentence similarity measure could possibly be generalized
+to an entire document, though a purely-structural sentence similarity measure
+has not been presented before.
+
+Although both these works consider tree skeletons, they are not used as a
+feature for text representation, and thus have not been used as features for
+classification, clustering, or information retrieval.
+
+In previous studies of features for text representation, the authors only
+examined a small subset of feature competitors: in \cite{acl-raghavan-2010},
+unigrams, bigrams, and trigrams of words; in \cite{sigir-kim-2011}, unigram
+and bigram part-of-speech (POS) tags and bag-of-words function words (FW); in
+\cite{acl-feng-2012}, unigram and bigram words and unigram, bigram, and
+trigram parts-of-speech.  In addition to a limited comparison set, each paper
+only considered one domain; authorship attribution in the first two, and
+deception detection in the second. In this paper, we compare these existing
+features with the proposed new features on three additional tasks: nationality
+detection, essay scoring, and sentiment analysis.
+
+\cite{acl-chen-2011} examines tree features at a much higher level in the
+form of nonterminals per sentence, \emph{e.g.} number of noun phrases per
+sentence and mean number of prepositional phrases per sentence. The work was
+mainly focused on investigating potential features so no classification tasks
+were performed.
+
+\cite{sigir-kim-2011} mines discriminative frequent PCFG tree patterns for
+each author. Features used were the rewrite rules and a new pattern,
+$k$-embedded-edge ($ee$) subtrees: subtrees that share a set of $k$
+ancestor-descendant subtrees.  Therefore, a 0-$ee$ subtree would be one
+arbitrarily-sized subtree, and a 1-$ee$ subtree would be one subtree and one
+descendant subtree anywhere in the parse tree.  This creates an exponential
+number of potential patterns, and the authors define algorithms in order to
+process this large amount of data before pruning the number of $ee$ trees to be
+used as features. In fact, the algorithms were run on a petascale supercomputer,
+which justified the implication that their method is quite computationally
+intensive. Besides the concern of computational complexity, another concern is
+the high susceptibility of the large number of patterns to overfitting.  In
+contrast,  the skeleton features proposed  in this paper are efficient to
+compute and systematically capture the major structures in a parse tree. 
+
+\cite{naacl-jiang-2007} explores feature extraction from sequence (words),
+syntactic (grammatical parse trees), and dependency (dependency parse trees)
+subspaces. Features used were $n$-grams for the word sequences, grammar
+productions for PCFGs, and dependency paths for the dependency parse trees. They
+concluded that adding all these features together versus separately only
+slightly increases performance. We suspect that this is because the structural
+information encoded in the parse trees is not taken into account.
+
+Grammatical parse tree features have also been explored in classification tasks
+as tree kernels in \cite{acl-collins-2002}, \cite{emnlp-kudo-2004}, and
+\cite{eacl-moschitti-2006}. Again, none of this previous work takes into account
+the structure of the trees themselves, but rather focuses on the syntactic
+categories as the main avenue of information. \cite{acl-collins-2002} mainly
+focuses on reducing the feature space of ``all subtrees'' for the perceptron
+algorithm using rewrite-rule features. \cite{emnlp-kudo-2004} explores a
+boosting method over ``subtree stumps'' (common subtree sequences). Finally,
+\cite{eacl-moschitti-2006} provides yet another tree kernel method, focusing on
+efficient algorithms. They use parse tree substructures, a somewhat larger
+feature space than rewrite rules, but still consider only the node labels in
+addition to their order.
+
+We evaluate our proposed skeleton features with three applications: nationality
+detection, essay scoring, and sentiment analysis. These tasks were previously
+studied in many papers, including, \emph{e.g.},
+\cite{icassp-kamel-2010},    % nationality detection, very hard to find a paper like we want
+\cite{coling-burstein-1998}, \cite{shermis-2003},    % essay scoring
+\cite{ftir-pang-2008}, and \cite{esa-tang-2009}    % sentiment analysis
+. Our experiments show that the proposed new features can
+help  improve performance for all these tasks, and potentially many others.  
+ 
+\section{Existing Text Representation Methods}
+
+We now discuss existing text representation methods and their motivation. For
+this section and the next, a parse tree of the sentence ``\emph{They have many
+theoretical ideas.}'' is used for examples and given below.
+
+\begin{center}
+\begin{parsetree}
+  (.S. (.NP. (.PRP. `They')) (.VP. (.VBP. `have')
+    (.NP. (.JJ. `many') (.JJ. `theoretical') (.NNS. `ideas')))
+    (.$\bullet$. `$\bullet$') )
+\end{parsetree}
+\end{center}
+
+The parse tree is rooted with $S$, denoting $Sentence$; the sentence is composed
+of a noun phrase ($NP$) followed by a verb phrase ($VP$) and period. The leaves
+of the tree are the words in the sentence, and the preterminals (the direct
+parents of the leaves) are part-of-speech tags.
+
+\subsection{Words}
+
+Words are the simplest, most intuitive textual features. Although not a
+grammatical feature such as rewrite rules or function words, we include them
+because of their prevalence and accuracy. Besides, we expect words will be a
+very useful feature to combine with more advanced methods.
+
+Stemming and stop word removal are optimizations often applied to word features.
+Both these methods greatly reduce the feature space, omitting irrelevant words
+(stop word removal) and grouping words with the same meaning together, such as
+``player" and ``playing" (stemming).
+
+$n$-grams of words and all the following simple features are also collected and
+utilized. This is quite a common practice, with $n$-grams of words first
+described in \cite{misc-furnkranz-1998}.
+
+\subsection{Part-of-Speech Tags}
+
+Part-of-speech tags are a common grammatical feature. Their small, finite number
+lends them to be simple features for a classifier. When expanding to $n$-grams
+of part-of-speech tags, their small number also ensures that there are still a
+relatively low number of features generated (opposed, mainly, to words).
+
+POS tags are perhaps the syntactic analog of basic words, in that they are
+simple and robust. They capture grammar usage at its most basic level. High
+accuracy POS taggers ($\geq97\%$) ensure cleanly processed data.
+
+\subsection{Syntactic Categories}
+
+Syntactic category features can be thought of as an extension of POS tags to
+parse trees.  This creates a distribution of non-terminal productions over each
+class.  The trees are simply traversed, tallying the labels of internal nodes:
+S:1, NP:2, VP:1, PRP:1, VBP:1, JJ:2, and NNS:1.
+
+The goal of syntactic categories is to observe phrase structure occurrence at a
+level above POS tags and words. This feature is similar to POS tags in that
+sense, and it even records them when examining nodes near the leaves of the
+tree. We hope this feature does at least as well as unigram POS tags, since they
+are a strict subset of this feature.
+
+\subsection{Function Words}
+
+Function words are a well-performing feature for authorship attribution as noted
+by \cite{jasist-stamatatos-2009} and \cite{jasist-koppel-2009}. They attempt to
+capture nuances in text that remain largely an unconscious byproduct of
+individual authors. In our experiments, we see if our 320 function words also
+distinguish between nationality, essay grades, or positive or negative
+sentiment.
+
+Since the $n$-gram feature generation tools in our toolkit already existed for
+POS tags and words, we ran the function words collected from the
+text through this part of the system as well, mainly out of curiosity if bigram
+function words or higher turned out to be useful.
+
+\subsection{Tree Depth}
+
+Tree depth simply measures the maximum number of productions to travel to reach
+a leaf. In the example above, this would be four (including the word terminals).
+The depth is tallied for all trees in a label, creating a distribution of
+depths.
+
+Since tree depth is approximately proportional to sentence length, it may prove
+to be a useful feature since sentence length is often used as a feature for
+distinguishing texts. Depth was explored in \cite{acl-chen-2011} and found to be
+positively correlated to scores in \emph{spoken} exams.
+
+\subsection{Production Branch Factors}
+
+This creates a histogram of ``branching factors" at each non-terminal.  For
+example, the $S$ production in the example has three productions, therefore
+contributing one to the branch count value ``3". Remember, we ignore the
+terminal productions. In this feature case, it would inflate the counts for a
+branch factor of 1 anyway.
+
+Statistics for the example parse are as follows: one count of one branch for
+NP$\rightarrow$PRP; one count of two branches for VP$\rightarrow$VBP, NP; and
+two counts for three branches in S$\rightarrow\dots$ and NP$\rightarrow\dots$
+
+Counting branches attempts to capture the complexity of a production (and the
+overall sentence). Generating more labels usually results in a longer, more
+involved sentence, perhaps indicative of specific classes.
+
+\subsection{Rewrite Rules}
+
+This method tallies subtrees from each sentence's parse and was one of the tree
+features in \cite{sigir-kim-2011} and others. The following subtrees
+would be recorded from the example sentence \emph{``They have many theoretical
+ideas."}:
+
+\begin{center}
+\begin{tabular}{ll}
+    \begin{parsetree}
+        (.S..NP..VP..$\bullet$.)
+    \end{parsetree} &
+    \begin{parsetree}
+        (.NP..PRP.)
+    \end{parsetree} \\
+     &  \\ % add space
+    \begin{parsetree}
+        (.VP..VBP..NP.)
+    \end{parsetree} &
+    \begin{parsetree}
+        (.NP..JJ..JJ..NNS.)
+    \end{parsetree} \\
+\end{tabular}
+\end{center}
+
+This process is repeated for all sentences in all texts belonging to a given
+class, so each class has a distribution of these subtrees. It can be thought of
+as a ``bag-of-trees" method.
+
+This feature is desirable, as particular parse trees could be common for any
+particular category. For example, in age detection, more complicated tree
+structures could be scarce for younger writers.  Similarly, authors whose native
+language is not English may only select sentence structures from a relatively
+small learned collection, or repeat similar practiced patterns.
+
+\section{Novel Skeleton-Based Features}
+
+\subsection{Skeletons}
+
+The skeleton method is a novel procedure that recursively descends into
+subtrees, recording the internal structure with disregard to internal node
+labels. This attempts to capture the flow or phrasal structure of sentences
+while being agnostic to actual labels.
+
+The simple \textsc{CountSkeletons} function is described below. \textsc{Skeleton}
+returns the skeletal structure of the tree rooted at the parameter.
+
+\begin{algorithm}
+\caption{Counting different skeletons in a parse tree}
+\begin{algorithmic}
+    \Procedure{CountSkeletons}{$T$}
+    \State $token$ $\leftarrow$ \textsc{Skeleton}($T$)
+    \State \textsc{incrementCount}($token$)
+    \For{each subtree $t\in T$}
+        \State \textsc{CountSkeletons}($t$)
+    \EndFor
+    \EndProcedure
+\end{algorithmic}
+\end{algorithm}
+
+As with the previous feature, simple frequency counts are kept for each tree
+skeleton in each sentence in the entire class data set as indicated by the
+function \textsc{IncrementCount}. The skeleton structure representations can be
+recorded as sets of parenthesis: \texttt{((())(()(()))())}.
+
+For example, here are the skeletons generated from the sentence \emph{They have
+many theoretical ideas}:
+
+\begin{center}
+\begin{tabular}{ll}
+    \begin{parsetree}
+        (.x.
+          (.x..x.)
+          (.x..x.
+          (.x..x..x..x.)).x.)
+    \end{parsetree} &
+    \begin{parsetree}
+        (.x..x.(.x..x..x..x.))
+    \end{parsetree} \\
+    \begin{parsetree}
+        (.x..x.)
+    \end{parsetree} &
+    \begin{parsetree}
+        (.x..x..x..x.)
+    \end{parsetree} \\
+\end{tabular}
+\end{center}
+
+\subsection{Annotated Skeletons}
+
+Annotated skeletons are a compromise between rewrite rules and raw skeletons.
+They hope to form a middle ground between the specificity of rewrite rules and
+the generality of skeletons.  The algorithm to generate these features is almost
+exactly the same as skeleton's, except the topmost internal node's label is
+retained (the annotation).
+
+Again, the pseudocode for obtaining annotated skeletons is given below. The
+function \textsc{Category} returns the syntactic category of its parameter,
+\emph{e.g.} $VP$ or $CC$.
+
+\begin{algorithm}
+\caption{Counting annotated skeletons in a parse tree}
+\begin{algorithmic}
+    \Procedure{CountAnnotatedSkeletons}{$T$}
+    \State $token$ $\leftarrow$ \textsc{Category}($T$) + \textsc{Skeleton}($T$)
+    \State \textsc{incrementCount}($token$)
+    \For{each subtree $t\in T$}
+        \State \textsc{CountAnnotatedSkeletons}($t$)
+    \EndFor
+    \EndProcedure
+\end{algorithmic}
+\end{algorithm}
+
+An annotated skeleton feature could be as follows: \texttt{(S(())(()(()))())}.
+Given the example sentence, each subtree above would be given a frequency count
+of one.
+
+\begin{center}
+\begin{tabular}{ll}
+    \begin{parsetree}
+        (.S.
+          (.x..x.)
+          (.x..x.
+          (.x..x..x..x.)).x.)
+    \end{parsetree} &
+    \begin{parsetree}
+        (.VP..x.
+        (.x..x..x..x.))
+    \end{parsetree} \\
+    \begin{parsetree}
+        (.NP..x.)
+    \end{parsetree} &
+    \begin{parsetree}
+        (.NP..x..x..x.)
+    \end{parsetree} \\
+\end{tabular}
+\end{center}
+
+A key difference between the skeleton-based features and the existing rewriting
+rules features is that the skeleton-based features emphasize pure structural
+properties by intentionally ignoring the syntactic labels.  Thus they can
+represent text data from an orthogonal perspective to what existing features can
+capture. Furthermore, an advantage of such features as compared with rewrite
+rules is that they are generally more frequent, therefore less likely to suffer
+from data sparseness.
+
+From another perspective, we may also view a skeleton feature as a cluster of
+syntactically annotated tree structures that share the same underlying
+structure. An annotated skeleton is simply a more restricted cluster with the
+root node fixed to a phrasal category.
+
+\section{Evaluation}
+
+\subsection{Data Sets}
+
+We evaluate the proposed features using three different text categorization
+tasks that likely benefit from using structural features.
+
+The \cite{ceeaus} data set consists of 1008 essays written in English by
+native Chinese, Japanese, and English students. Essays were classified by their
+writers' native language. In attempts to keep content uniform, each essay is a
+response to one of two writing prompts: 1) \emph{It is important for college
+students to have a part-time job} or 2) \emph{Smoking should be completely
+banned at all restaurants in the country}. Categorizing text based on assumed
+nationality would be a useful way to rate one's mastery of a second language. It
+would also aid in authorship profiling when combined with other methods trained
+on age and gender.
+
+The \cite{kaggle-essay} data set is 10,686 scored student essays on a range
+of 0 to 12. Essays were relatively short, all between 150 and 550 words. These
+essays were originally used as data for a contest in essay scoring. Scores for
+the essays are an average of three human graders' scores in an attempt to
+portray the most accurate human judgement.
+
+The data set from \cite{acl-maas-2011} consists of 50,000 movie reviews from
+the International Movie Database, classified as either positive or negative. All
+movie reviews are scored out of 10, but only clearly negative (score $\leq 4$)
+or clearly positive (score $\geq 7$) are included in the data set for
+data polarization.
+
+\input{three-datasets.tex}
+
+\subsection{Measures}
+
+To assess classification accuracy for nationality detection and sentiment
+analysis, we employ the commonly used information retrieval measurements $F_1$
+score and accuracy \cite{rocai-caruana-2004}.
+
+The essay data set is evaluated differently. As in the original contest,
+performance is calculated with the quadratic weighted $\kappa$ metric, described
+in \cite{pb-cohen-1968}.  In short, the $\kappa$ metric measures agreement
+between two raters using a fixed scale, where usually $\kappa\in [0.0, 1.0]$,
+with 0.0 indicating random agreement and 1.0 indicating exact agreement. For
+very poor features, it is possible that the score drops below 0.0. The contest's
+own evaluation script was run on our output.
+
+\subsection{Experiment Design}
+
+The main questions we strive to answer are $Q_1)$ Are the new features
+orthogonal to the existing ones? and $Q_2)$ Can we combine the new features with
+old ones to improve accuracy?
+
+In order to conduct fair experiments, we created a modular testing framework
+that easily allows us to exchange features and data sets. Source texts were
+preprocessed with the Stanford parser \cite{stanford-parser} and
+part-of-speech tagger \cite{stanford-pos}, then features were generated
+based on the preprocessed data. The feature files are then passed to liblinear
+\cite{liblinear} (an SVM library), where it learns a classifier and performs
+five-fold cross-validation to evaluate the results. We used the parameter
+\texttt{-s 1} for all runs, referring to \emph{L2-regularized L2-loss support
+vector classification (dual)}. This configuration has $C=1,B=-1,\epsilon =
+0.1$.
+
+In reference to authorship attribution, \cite{jasist-stamatatos-2009} notes
+that the ``SVM model is able to avoid overfitting problems even when several
+thousands of features are used and is considered one of the best solutions of
+current technology". Hence we chose to use SVMs as our classification method,
+though of course any classifier could be used.
+
+For word features, 433 stop words based on the Lemur toolkit's \cite{lemur}
+stop word list are removed.  Then, the words are stemmed according to the
+Porter2 stemmer \cite{porter2}.
+
+We compare the three baseline features (words, POS tags, function
+words) with the tree features (rewrite rules, skeletons, annotated
+skeletons, syntactic categories, tree branch factors, and tree depth).
+
+We partition each data set into two parts; on the first, we perform parameter
+selection via five-fold cross-validation to find the best $n$ for words,
+part-of-speech tags, and function words. Then, we select the best-performing $n$
+from this set and run it, the tree features, and tree features + best $n$-grams
+on the second part, again with five-fold cross-validation.
+
+Software used to run all experiments presented in this paper is open-source and
+freely available online.\footnote{https://bitbucket.org/smassung/meta}
+
+\subsection{Results}
+
+Figure~\ref{fig:three-datasets} shows the evaluation results on the three data
+sets. Each column is split into three parts; the top records performance for the
+best-performing single methods for all $n$-grams. The middle section shows
+tree-based method results, and the bottom section shows the best-performing
+combined methods.
+
+On the nationality data set, we see that of the single methods, word unigrams
+performed the best with an $F_1$ score of .827, where the best tree feature (RR)
+had .778. Combining features showed annotated skeletons and unigram words proved
+most effective ($F_1 = .885$). 
+
+The contest that originated the essay data set ended before this work was begun;
+the first place finisher ended up with a score of $\kappa =.8141$, but this
+score is not directly comparable to our results since we believe the contest
+scored entries based on a withheld testing set. For this task, word features
+performed the best, with none of the structural features being beneficial. In
+fact, both tree depth and tree branch factors did so poorly that their scores
+ended up negative.  This shows that the effectiveness of features clearly
+depends on the task. Perhaps the essay scoring is more dependent on content
+rather than writing style.
+
+Similarly to the nationality detection experiment, word unigrams performed the
+best in the sentiment analysis task ($F_1 = .820$). For combined features,
+skeleton and unigram words performed the best with ($F_1 = .828$).
+\cite{acl-maas-2011} uses this data set, testing with two folds. They achieved
+$A=88.89$. \cite{acl-wang-2012} also cites using this data set, with $A = 91.22$
+on what we assume to be two folds. We note that our results are significantly
+less, due to using half the data set for $n$-gram parameter selection before
+running the experiments on the other half.
+
+\section{Discussion}
+
+\subsection{The Best Features to Combine}
+
+Without a doubt, adding additional tree features enhances performance. But which
+tree features are most effective when combined? We hypothesize that the skeletal
+features (skeleton and annotated skeleton) result in the best combined
+performance.
+
+In order to further investigate these hypotheses,
+Figure~\ref{fig:multiple-features} shows the relative gain obtained by adding
+the tree features skeleton, annotated skeleton, rewrite rules, and syntactic
+categories to the four original methods.
+
+\input{multiple-features.tex}
+
+We find that annotated skeleton provides the best performance boost across all
+three domains. This confirms our suspicions that structural tree information
+provides the most useful information.
+
+Other interesting results were the performance of non-unigram function words and
+tree depth. Although previously shown to be a relevant feature
+in \cite{acl-chen-2011}, tree depth was one of the worst performers (at least
+in our data sets).
+
+We do not believe $n$-grams of function words have seriously been considered as
+a feature, but bigrams of function words worked well when combined with tree
+features for the nationality and essay data sets. 
+
+\subsection{Validity of Tree Features}
+
+We use the correlation coefficient as described in \cite{sigir-ng-1997}
+to explore the efficacy of the tree features. Looking at the highest weighted
+features, we should be able to rationalize their appearance. We choose to leave
+tree depth and branch factor out of these comparisons since they performed so
+poorly previously.
+
+Given the following metrics for a term $t$ and a category $c_i$ we can define
+the probabilities:
+
+\begin{enumerate}
+    \item $P(t,c_i)$: presence of $t$, membership in $c_i$
+    \item $P(t, \overline{c_i})$: presence of $t$, non-membership in $c_i$
+    \item $P(\overline{t}, c_i)$: absence of $t$, membership in $c_i$
+    \item $P(\overline{t}, \overline{c_i})$ absence of $t$, non-membership in
+        $c_i$,
+\end{enumerate}
+
+Then, with $N$ total documents, the correlation coefficient (CC) can be written
+as follows: \\
+
+$CC(t, c_i) = $ \\
+$$ \frac{\sqrt{N}[P(t,c_i)P(\overline{t},\overline{c_i}) - 
+    P(t,\overline{c_i})P(\overline{t},c_i))]}
+    {\sqrt{P(t)P(\overline{t})P(c_i)P(\overline{c_i})}} $$ \\
+
+The correlation coefficient can be viewed as a one-sided Chi-square metric
+\cite{sigkdd-zheng-2004}. That is, the features selected by CC are most
+indicative of class membership only (as opposed to membership and
+non-membership).
+
+\input{validity.tex}
+
+The highly-ranked word features are intuitive, especially interesting are
+``china'' and ``chines'' for $c_i$ = Chinese, and ``japan'' for $c_i$ =
+Japanese.
+
+We have a few observations regarding the syntactic features:
+
+\begin{enumerate}
+    \item Somewhat surprisingly, structural tree features are significantly
+        \emph{shorter} for native speakers
+    \item Native speakers use parenthesis (-RRB- and -LRB-) and colons (but not
+        semicolons) much more than non-native speakers do
+    \item Non-native speakers more often start phrases with conjunctions
+    \item Native speakers use more obscure rewrite rules such as
+        VP$\rightarrow$MD, ADVP, VP
+\end{enumerate}
+
+For example, the sentence \emph{``And if there are unexpected expenses, material
+for their lesson, for example, they may not be able to pay money to it only with
+monthly allowance"} shows it beginning with a conjunction, and containing a
+relatively complex (or convoluted) structure.
+
+Another sentence by a native speaker \emph{``Indeed, students who have a
+part-time job (like I did) quickly change their perspective"} shows a
+non-standard sentence beginning and the (seemingly) popular parentheses.
+
+These observations are intuitive and lend credibility to the tree features,
+rationalizing their excellent performance when combined with simple features.
+
+\section{Conclusions and Future Work}
+
+We compared combinations of simple $n$-gram text representation models with new
+and existing tree features. We showed that the novel structural tree features
+are most effective and when combined with a simpler lexical model, capturing
+multiple perspectives of the same text.
+
+Using these new methods, we display performance gains on existing corpora
+across domains. This demonstrates the generality and usefulness of our features.
+We showed that the new structural features combine better with simple features
+than existing tree representations such as rewrite rules and tree depth.
+
+Additionally, the structural tree features introduced are not restricted to
+probabilistic context-free grammars as mainly discussed here; they could be
+applied to other tree structures as well: abstract syntax trees for source code
+analysis, dependency parses for more linguistic analysis, and even HTML or XML
+data for Web page or structured document comparisons.
+
+We aimed to answer $Q_1)$ Are the new features orthogonal to the existing ones?
+and $Q_2)$ Can we combine the new features with old ones to improve accuracy?
+Based on our experimental results, we can answer \emph{yes} to both. We assert
+the new features are orthogonal due to lack of syntactic information and
+positive $F_1$ score gain after adding them to the lexical features as shown in
+Figure~\ref{fig:multiple-features}. We answer $Q_2$ affirmatively with
+Figure~\ref{fig:three-datasets}.
+
+In the future we would like to explore these features in tree structures other
+than PCFGs, as well in other domains such as clustering and information
+retrieval.  Using structural tree features in a topic modeling context would
+allow distributions of structures to be obtained for each class more easily than
+with machine learning algorithms such as SVM\@. This leads to better
+interpretability of features, offering clearer explanations of why some classes
+favor certain structures.
+
+We would also like to compare these new methods with the $k$-embedded-edge
+subtrees discussed in \cite{sigir-kim-2011}, as well as using their proposed
+feature reduction frequent tree pattern pruning. Additionally, we would be
+interested in seeing how the features respond to dimensionality reduction
+techniques, as the number of skeleton and annotated skeleton features is usually
+quite large.
+
+\section*{Acknowledgments}
+
+The authors would like to thank Chase Geigle for his collaborative effort on the
+toolkit used to run the experiments as well as helpful discussion regarding this
+work. This material is based upon work supported in part by the National Science
+Foundation under Grant Number CNS-1027965.
+
+\newpage
+
+\bibliographystyle{IEEEtran}
+\IEEEtriggeratref{17}
+\newpage
+\bibliography{./bib}
+
+\end{document}

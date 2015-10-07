@@ -1,0 +1,510 @@
+% rubber: setlist arguments --shell-escape
+\documentclass[handouti]{beamer}
+\usepackage{verbatim}
+\usepackage{multirow,bigdelim}
+\usepackage{graphicx}
+\usepackage{./parsetree}
+\usetheme{Luebeck}
+\usepackage[utf8]{inputenc}
+
+\newcommand\MyLBrace[2]{%
+      \left.\rule{0pt}{#1}\right\}\text{#2}}
+\newcommand\groups{%
+    $\begin{array}{l}
+    \MyLBrace{5ex}{best non-tree features} \\ 
+    ~ \\
+    \MyLBrace{7ex}{best tree features} \\
+    ~ \\
+    \MyLBrace{11ex}{best combined features} 
+    \end{array}$
+}
+
+\setbeamerfont{frametitle}{size={\fontsize{22}{22}}}
+\setbeamerfont{title}{size={\fontsize{22}{22}}}
+
+\ptnodefont{\footnotesize\rm}{9pt}{2pt}  % font and strut height/depth: nodes
+\ptleaffont{\footnotesize\it}{9pt}{2pt}  % font and strut height/depth: leaves
+
+\setbeamertemplate{frametitle}[default][center]
+
+%gets rid of bottom navigation bars
+\setbeamertemplate{footline}[page number]{}
+
+%gets rid of navigation symbols
+\setbeamertemplate{navigation symbols}{}
+
+\title[Structural Parse Tree Features for Text Representation]
+{Structural Parse Tree Features \\ for Text Representation}
+\author{Sean Massung $\cdot$ ChengXiang Zhai $\cdot$ Julia Hockenmaier \\
+{\scriptsize University of Illinois at Urbana-Champaign}}
+\date{~\\~\\16th September 2013}
+\institute{~\\~\\ 7$^{th}$ International Conference on Computational Semantics
+    \\ Irvine, California}
+
+\begin{document}
+\frame{\titlepage}
+\Large % darp
+
+\begin{frame}
+    \frametitle{Essay Scoring}
+    \emph{``Computers these days have made positive changes to all of our every
+        day lives. People have made better connections with family and friends,
+        and even have the ability to make new ones. But with that in mind, is
+        the computer truly a harmful or helpful device?''}
+
+        \vspace{.3in}
+        \begin{center}
+        {\normalsize How would you score this essay on a scale of 0 to 12?}
+        \end{center}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Movie Reviews}
+    \emph{``I saw this movie last night after being coaxed to by a few
+        friends of mine. I'll admit that I was reluctant to see it because from
+        what I knew of Ashton Kutcher he was only able to do comedy.  I was
+    wrong.''}
+
+        \vspace{.3in}
+        \begin{center}
+        {\normalsize Was the opinion of this movie positive or negative?}
+        \end{center}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Nationality Detection}
+    \emph{``I agree this opinion that part-time job is important for college
+    school students, because I studied a lot of thing with my part-time job.
+    At first, the communication skill is necessary to work.''}
+
+        \vspace{.3in}
+        \begin{center}
+        {\normalsize Was this essay written by a Chinese, Japanese, or English
+        student?}
+        \end{center}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Text Representation}
+    \begin{itemize}
+        \itemsep1.5em
+        \item[] Text representation is a fundamental issue; we can represent any
+            text by a set of extracted features
+
+        \vspace{.5in}
+        {\normalsize
+        \begin{tabular}{ccl}
+            & $\rightarrow$ & \emph{clustering} \\
+            \emph{document} $\rightarrow$ \emph{feature vector} & $\rightarrow$
+            & \emph{classification} \\
+            & $\rightarrow$ & \emph{information retrieval} \\
+            & $\rightarrow$ & \emph{data mining} \\
+            & $\rightarrow$ & \emph{recommendation} \\
+            & $\rightarrow$ & $\ldots$\\
+        \end{tabular}}
+
+        \vspace{.3in}
+        \begin{center}
+        It all starts with a feature vector!
+        \end{center}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Standard Features}
+    \begin{itemize}
+        \itemsep1.5em
+        \item Word $n$-grams {\normalsize (Furnkranz 1998) }
+                \begin{center}
+                {\normalsize
+                $\{ they:1,  have:1,  mani:1,  theoret:1,  idea:1  \}$
+                }
+                \end{center}
+            \item Function words {\normalsize (Stamatatos 2009)}
+                \begin{center}
+                {\normalsize
+                    $\{ they:1, have:1, mani:1 \}$
+                }
+                \end{center}
+            \item POS tag $n$-grams {\normalsize (Argamon et al, 1998)}
+                \begin{center}
+                {\normalsize
+                    $\{ PRP:1, VBP:1, JJ:2, NNS:1, .:1 \}$
+                }
+                \end{center}
+     \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Nationality Detection}
+
+    {\small
+    $<s>$ PRP VBP DT NN WDT JJ NN VBZ JJ IN NN NN NNS , IN PRP VBD DT NN IN NN IN
+    PRP\$ JJ NN . $</s>$
+
+    \vspace{.3in}
+    $<s>$ IN RB , DT NN NN VBZ JJ TO VB . $</s>$
+
+    \vspace{.3in}
+    $<s>$ PRP MD VB TO NN CC NN , IN PRP VBZ RB RB JJ TO VB TO NNS IN NN NN .
+    $</s>$
+    }
+
+    \vspace{.3in}
+    \begin{center}
+    {\normalsize Was this essay written by a Chinese, Japanese, or English
+    student?}
+    \end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Features from Parse Trees}
+    {\small
+    \begin{tabular}{cc}
+        \emph{ Example parse tree of a sentence } 
+        &
+        \emph{ ~~~ Rewrite rule features} \\
+    \end{tabular}
+     \begin{columns}[c]
+        \begin{column}{.5\textwidth}
+            \begin{parsetree}
+              (.S. (.NP. (.PRP. `They')) (.VP. (.VBP. `have')
+              (.NP. (.JJ. `many') (.JJ. `theoretical') (.NNS. `ideas')))
+              (.$\bullet$. `$\bullet$') )
+            \end{parsetree}
+            \vfill
+        \end{column}
+        \begin{column}{.5\textwidth}
+            \begin{tabular}{ll}
+                \begin{parsetree}
+                    (.S. .NP. .VP. .$\bullet$.)
+                \end{parsetree} &
+                \begin{parsetree}
+                    (.NP. .PRP.)
+                \end{parsetree} \\
+                ~ & ~ \\ % add space
+                \begin{parsetree}
+                    (.VP. .VBP. .NP.)
+                \end{parsetree} &
+                \begin{parsetree}
+                    (.NP. .JJ. .JJ. .NNS.)
+                \end{parsetree} \\
+            \end{tabular}
+        \end{column}
+    \end{columns}
+    }
+\end{frame}
+\begin{frame}[fragile]
+    \frametitle{Standard Tree Features}
+    \begin{itemize}
+        \itemsep1em
+        \item Syntactic categories {\normalsize (Stamatatos 2009)}
+    
+            \begin{center}
+            {\small
+                \{ $S:1, NP:2, PRP:1, VP:1, VBP:1, JJ:2, NNS:1$ \}
+            }
+            \end{center}
+        \item Rewrite rules {\normalsize (Kim 2011)}
+
+             \begin{center}
+            {\small
+                $\{ S\rightarrow NP,VP,.$:$1, NP \rightarrow PRP$:$1,$ \\$
+                VP\rightarrow VBP,NP$:$1, NP \rightarrow JJ,JJ,NNS$:$1 \}$
+            }
+            \end{center}
+            \item Branching factors {\normalsize (Chen 2011)}
+            
+            \begin{center}
+            {\small
+                \{ 1:7, 2:1, 3:2 \}
+            }
+            \end{center}
+    \item Tree depth {\normalsize (Chen 2011)}
+            
+    %%%%%%  \begin{center}
+    %%%%%%  {\small
+    %%%%%%      \{ 4:1 \}
+    %%%%%%  }
+    %%%%%%  \end{center}
+
+        \item $k$-ee trees {\normalsize (Kim 2011)}
+    \end{itemize}
+\end{frame}
+
+%%  \begin{frame}
+%%      \frametitle{Existing Feature: $k$-ee Trees {\normalsize (Kim 2011)}}
+%%      \begin{itemize}
+%%          \itemsep1.3em
+%%          \item 0-ee tree: simple rewrite rules
+%%          \item $k$-ee tree: $k$ connected ancestor subtrees
+%%          \item Frequent pattern mining to find relevent features in huge feature
+%%              space
+%%          \item Overfitting? Computationaly feasible?
+%%      \end{itemize}
+%%  \end{frame}
+
+\begin{frame}
+    \frametitle{Nationality Detection}
+
+    {\small
+    (S(NP(PRP))(VP(VBP)(NP(DT)(NN))(SBAR(IN)(S(NP(JJ)(NN))
+    (VP(VBZ)(ADJP(JJ)(PP(IN)(NP(NN)(NN)(NNS)))))))(,)(SBAR(IN)
+    (S(NP(PRP))(VP(VBD)(NP(NP(DT)(NN))(PP(IN)(NP(NN))))
+    (PP(IN)(NP(PRP\$)(JJ)(NN)))))))(.))
+
+    \vspace{.3in}
+    (S(PP(IN)(NP(JJ)))(,)(NP(DT)(NN)(NN))(VP(VBZ)(ADJP(JJ)
+    (S(VP(TO)(VP(VB))))))(.))
+
+    \vspace{.3in}
+    (S(NP(PRP))(VP(MD)(VP(VB)(PP(TO)(NP(NN)(CC)(NN)))(,)(SBAR(IN)
+    (S(NP(PRP))(VP(VBZ)(RB)(ADJP(RB)(JJ)(S(VP(TO)(VP(VB)(PP(TO)
+    (NP(NP(NNS))(PP(IN)(NP(NN)(NN))))))))))))))(.))
+    }
+
+        \vspace{.3in}
+        \begin{center}
+        {\normalsize Was this essay written by a Chinese, Japanese, or English
+        student?}
+        \end{center}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Motivation}
+    \begin{itemize}
+        \itemsep1.5em
+        \item Simple lexical features + deep syntactic features = best
+            performance {\normalsize (Stamatatos, 2009)}
+        \item Can we generalize the ``deep syntactic features'' even more?
+        \item Making a more general feature would help with overfitting and data
+            sparseness
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{This Paper}
+    \begin{itemize}
+        \itemsep1.5em
+        \item Investigate \textbf{new dimension} of text representation based on
+            parse trees with emphasis on structure
+        \item Define features solely based on \textbf{structural patterns} by
+            ignoring all or almost all of the syntactic categories
+        \item Evaluate \textbf{skeleton-based features} using three different
+            categorization tasks
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{New Structural Features}
+    \begin{itemize}
+        \itemsep1.5em
+        \item \textbf{Skeleton}: ignore all syntactic categories in parse trees
+        \item \textbf{Annotated Skeleton}: ignore all syntactic categories
+            \emph{except} the root
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Skeleton}
+    \begin{center}
+    \begin{tabular}{cc}
+        \begin{parsetree}
+            (.x. (.x. .x.) (.x. .x. (.x. .x. .x. .x.)) .x.)
+        \end{parsetree} &
+        \begin{parsetree}
+            (.x. .x. (.x. .x. .x. .x.))
+        \end{parsetree} \\
+        ~ & ~ \\
+        \begin{parsetree}
+            (.x. .x.)
+        \end{parsetree} &
+        \begin{parsetree}
+            (.x. .x. .x. .x.)
+        \end{parsetree} \\
+    \end{tabular}
+
+    \vspace{.2in}
+    {\normalsize
+    No syntactic categories or part-of-speech tags are retained}
+    \end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Annotated Skeleton}
+    \begin{center}
+    \begin{tabular}{ccc}
+        \begin{parsetree}
+            (.S. (.x. .x.)(.x. .x.(.x. .x. .x. .x.)) .x. )
+        \end{parsetree} &
+        \begin{parsetree}
+            (.VP. .x. (.x. .x. .x. .x.))
+        \end{parsetree} \\
+        ~ & ~ \\
+        \begin{parsetree}
+            (.NP. .x.)
+        \end{parsetree} &
+        \begin{parsetree}
+            (.NP. .x. .x. .x.)
+        \end{parsetree} \\
+    \end{tabular}
+
+    \vspace{.2in}
+    {\normalsize
+    Only the topmost syntactic category is retained}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Questions to Answer}
+    \emph{Are the new features orthogonal to existing ones?}
+
+    \vspace{.5in}
+    \emph{Can we combine the new features with existing ones to improve
+    classification accuracy?}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Data Sets}
+    \begin{itemize}
+        \itemsep1.5em
+        \item Foundation (2012) data set is scored student essays on a range of
+            0 to 12
+        \item Maas et al. (2011) consists of movie reviews from the
+            International Movie Database
+        \item Ishikawa (2009) data set consists of essays written in English by
+            native Chinese, Japanese, and English students
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Methodology}
+    \begin{itemize}
+        \itemsep1.5em
+        \item Features generated with the Stanford Parser
+        \item Compare lexical and semantic single features (with varying $n$
+            where applicable)
+        \item Compare all lexical + semantic pairings for combined feature sets
+        \item SVM classifier (liblinear) with five-fold cross-validation
+    %%  \item $F_1$ and accuracy for nationality detection and quadratic
+    %%      weighted kappa scoring ($\kappa$) for the essay grades
+    %%  \item Correlation coefficient to explore feature validity
+    \end{itemize}
+\end{frame}
+
+%\include{three-datasets}
+
+\begin{frame}
+    \frametitle{Essay Scoring}
+    \begin{itemize}
+        \itemsep1.5em
+        \item Standard features: \textbf{bigram words} performed the best
+            ($\kappa=0.889$)
+
+        \item New and existing tree features: \textbf{rewrite rules} won with
+            $\kappa=0.702$
+
+        \item Of all combined features, \textbf{syntactic categories + unigram
+            words} performed best overall with $\kappa=0.834$
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Poor Performance}
+    \begin{itemize}
+        \itemsep1.5em
+        \item Objective \emph{vs} subjective
+        \item Content \emph{vs} style
+        \item Average of three \emph{human} ratings
+        \item Negative $\kappa$ scores for tree depth and branching factor
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Sentiment Analysis}
+    \begin{itemize}
+        \itemsep1.5em
+        \item Standard features: \textbf{unigram words} performed the best
+            ($82\%$ accuracy)
+
+        \item New and existing tree features: \textbf{rewrite rules} won with
+            $65\%$ accuracy
+
+        \item Of all combined features, \textbf{annotated skeleton + unigram
+            words} performed best overall with $82.8\%$ accuracy
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Nationality Detection}
+    \begin{itemize}
+        \itemsep1.5em
+        \item Standard features: \textbf{unigram words} performed the best
+            ($91.6\%$ accuracy)
+
+        \item New and existing tree features: \textbf{rewrite rules} won with
+            $84.4\%$ accuracy
+
+        \item Of all combined features, \textbf{annotated skeleton + unigram
+            words} performed best overall with $94.2\%$ accuracy
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{The Correlation Coefficient}
+
+    \begin{itemize}
+        \item We want to justify that the top-ranked features are intuitively
+            useful
+        \item For each (class, term) pair, we calculate the correlation
+            coefficient:
+    \end{itemize}
+
+    \vspace{.2in}
+
+$$CC(t, c_i) = \frac{P(t,c_i)P(\overline{t},\overline{c_i}) - 
+    P(t,\overline{c_i})P(\overline{t},c_i)}
+    {\sqrt{P(t)P(\overline{t})P(c_i)P(\overline{c_i})}} $$ \\
+\end{frame}
+
+\input{validity-pres}
+
+\begin{frame}
+    \frametitle{Questions to Answer}
+    \emph{Are the new features orthogonal to existing ones?}
+
+    \vspace{.5in}
+    \emph{Can we combine the new features with existing ones to improve
+    classification accuracy?}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Concluding Remarks}
+        \begin{itemize}
+        \itemsep1.5em
+        \item We compared simple $n$-gram models with new and existing tree
+            features
+        \item New structural features combine better with simple features
+        \item Structural features aren't restricted to PCFGs 
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Future Work}
+    \begin{itemize}
+        \itemsep1.5em
+        \item Explore other tree structures besides PCFGs
+        \item Use in clustering and IR
+        \item Topic modeling
+        \item Investigate dimensionality reduction
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Thank you!}
+    \begin{center}
+    Questions? Comments?
+    \end{center}
+\end{frame}
+
+\end{document}

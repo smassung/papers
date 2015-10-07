@@ -1,0 +1,56 @@
+\begin{figure}[t!]
+%{\small
+\begin{center}
+
+    \textbf{Nationality Detection $F_1$ Gain} \\
+    \begin{tabular}{|lrrrrr|}
+    \hline
+    \emph{Method} & $n$ & Skel & ASkel & RR & SC \\
+    \hline
+    Word & 1 &  -.018  & .058 & .027 & .040 \\
+    POS  & 2 &  -.045  & .001 & .000 & -.025 \\
+    FW   & 2 &  -.074  & .071 & .067 & .024 \\
+    \hline
+    $\bar{x}$ && -.046  & \textbf{.043} & .031 & .013 \\
+    $\sigma$  && .028 & .037 & .034 & .033 \\
+    \hline
+    \end{tabular} \\ ~ \\
+
+    \textbf{Essay Scoring $\kappa$ Gain} \\
+    \begin{tabular}{|lrrrrr|}
+    \hline
+    \emph{Method} & $n$ & Skel & ASkel & RR & SC \\
+    \hline
+    Word & 2 &  -.140  & -.098 & -.082 & -.055 \\
+    POS  & 2 &  .003  & .017 & -.004 & -.099 \\
+    FW   & 1 &  -.132  & -0.23 & -.077 & -.145 \\
+    \hline
+    $\bar{x}$ && -.090  & -.104 & -.054 & -.100 \\
+    $\sigma$  && .080 & .123 & .044 & .045 \\
+    \hline
+    \end{tabular} \\ ~ \\
+    
+    \textbf{Sentiment Analysis $F_1$ Gain} \\
+    \begin{tabular}{|lrrrrr|}
+    \hline
+    \emph{Method} & $n$ & Skel & ASkel & RR & SC \\
+    \hline
+    Word & 1 &  .008  & .004 & .004 & .002 \\
+    POS  & 3 &  .015  & .023 & .019 & .002 \\
+    FW   & 1 &  -.005  & .017 & -.001 & -.030 \\
+    \hline
+    $\bar{x}$ && .006 & \textbf{.015} & .007 & -.090 \\
+    $\sigma$  && .010 & .010 & .010 & .018 \\
+    \hline
+    \end{tabular}
+
+\caption{
+{\normalsize
+Adding tree features to the best-performing single
+features changes $F_1$ and $\kappa$ scores across the three data sets.
+}}
+\label{fig:multiple-features}
+\end{center}
+%}
+
+\end{figure}
