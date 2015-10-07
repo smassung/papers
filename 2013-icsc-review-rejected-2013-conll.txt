@@ -1,0 +1,158 @@
+============================================================================
+                            REVIEWER #1
+============================================================================
+
+
+---------------------------------------------------------------------------
+Reviewer's Scores
+---------------------------------------------------------------------------
+
+                         Appropriateness: 5
+               Special Topic of Interest: No
+              Originality/Innovativeness: 3
+                   Soundness/Correctness: 3
+                 Impact of Ideas/Results: 3
+                  Meaningful Comparisons: 2
+                            Thoroughness: 3
+                           Replicability: 1
+                                 Clarity: 2
+         Impact of Accompanying Software: 1
+         Impact of Accompanying Datasets: 1
+                                 Overall: 3
+                              Confidence: 4
+             Suggested Presentation Mode: Poster
+                             Best paper?: No
+
+
+---------------------------------------------------------------------------
+Comments
+---------------------------------------------------------------------------
+
+The paper suggests a new kind of structural feature for text categorization
+tasks - the shape of parse trees - and argues that this feature provide
+orthogonal benefits to existing ones.
+
+The paper is well written and covers a lot of the previous work.
+I would have liked to see a reference (and comparison?) to "A Boosting
+Algorithm for Classification of Semi-Structured Text" by Kudo and Matsumoto
+2004, who also considered subtrees as features through boosting. While they
+considered fully labeled subtrees, the overall motivation is very similar, and
+it is not clear to me that unlabeled trees (skeletons) are indeed better than
+labeled ones.
+
+As one of the main claims of the paper is that trees without categories are
+better as features than trees in which the non-terminal categories are fully
+specified, this should be tested.
+
+I have one major issue with the paper, and that is that the description of the
+main idea, the skeleton features, is not informative enough, and I do not
+understand how the features are actually defined:
+
+- Is each skeleton representing an entire tree? if so, how do you get really
+short ones like (()), and how does this generalize? Also, how do you get ASkel
+trees rooted with VP or NP?
+- If you consider arbitrary subtrees, how do you choose which ones? there are
+in general exponentially many such subtrees.
+- Or maybe you traverse the nodes of the sentence tree and take the entire tree
+rooted at each node?
+
+This important detail must be discussed, otherwise it is very hard to judge the
+merit of the work, and it is impossible to replicate it.
+
+============================================================================
+                            REVIEWER #2
+============================================================================
+
+
+---------------------------------------------------------------------------
+Reviewer's Scores
+---------------------------------------------------------------------------
+
+                         Appropriateness: 5
+               Special Topic of Interest: No
+              Originality/Innovativeness: 2
+                   Soundness/Correctness: 4
+                 Impact of Ideas/Results: 2
+                  Meaningful Comparisons: 1
+                            Thoroughness: 3
+                           Replicability: 3
+                                 Clarity: 4
+         Impact of Accompanying Software: 1
+         Impact of Accompanying Datasets: 1
+                                 Overall: 2
+                              Confidence: 5
+             Suggested Presentation Mode: Poster
+                             Best paper?: No
+
+
+---------------------------------------------------------------------------
+Comments
+---------------------------------------------------------------------------
+
+This paper presents features to represent text based on subtrees extracted from
+phrase-structure syntactic trees.
+
+Unfortunately, it ignores the work on tree kernels initiated by Collins and
+Duffy and extensively studied by Moschitti.
+
+The features proposed in the current paper essentially follow the same
+principle: have one dimension for each subtree observed in the phrase-structure
+tree, satistying that the rewrite rules appear complete in a subtree. The
+current paper proposes to consider or not the syntactic labels on the nodes,
+but these variations are rather trivial (but worth trying experimentally).
+
+There may be some slight variation of the representations presented here with
+respect to the actual feature space that tree kernels define. Nonetheless, I
+think that ignoring that work is a major weakness of the current paper, and
+that authors should reformulate the writing and the experiments in light of the
+work on tree kernels. For this reason I recommend rejection.
+
+The references by Collins and Duffy are papers at NIPS-2001 and ACL-2002.
+
+Moschitti has published extensively about tree kernels and their performance on
+different NLP tasks. He has also software to use tree kernels elsewhere. From
+his papers, some that are worth checking are those at ACL-2004 and EACL-2006,
+and the one at ACL-2010 (where they get primal relevant features from the
+kernel).
+
+============================================================================
+                            REVIEWER #3
+============================================================================
+
+
+---------------------------------------------------------------------------
+Reviewer's Scores
+---------------------------------------------------------------------------
+
+                         Appropriateness: 5
+               Special Topic of Interest: No
+              Originality/Innovativeness: 3
+                   Soundness/Correctness: 2
+                 Impact of Ideas/Results: 2
+                  Meaningful Comparisons: 2
+                            Thoroughness: 5
+                           Replicability: 4
+                                 Clarity: 4
+         Impact of Accompanying Software: 2
+         Impact of Accompanying Datasets: 1
+                                 Overall: 2
+                              Confidence: 4
+             Suggested Presentation Mode: Poster
+                             Best paper?: No
+
+
+---------------------------------------------------------------------------
+Comments
+---------------------------------------------------------------------------
+
+This paper represents a lot of work on evaluation of parse tree features as
+part of text representations. Three tasks are attempted and many options
+explored. Unfortunately, almost all the comparisons are relative to the
+authors' own work, and when there are comparisons to the state-of-the-art these
+are not
+favorable.
+
+I don't fully understand the testing  methodology for task 2, using the Hewlett
+Foundation's essay scoring dataset, but it seems as if the reported very high
+figure is based on a development set and may be the result of repeated
+submissions and tuning.

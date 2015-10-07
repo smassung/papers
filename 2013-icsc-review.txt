@@ -1,0 +1,107 @@
+----------------------- REVIEW 1 ---------------------
+PAPER: 53
+TITLE: Structural Parse Tree Features for Text Representation
+AUTHORS: Sean Massung and Chengxiang Zhai and Julia Hockenmaier
+
+
+----------- REVIEW -----------
+In this paper the authors propose a new text-feature for the purpose of text
+representation. The introduced feature is based on parse tree feature. The main
+idea is to remove the syntactic labels from the parse tree and use the
+structure of the tree as a new feature. Beside this feature, which is called
+skeleton, a new one is also proposed, namely annotated skeleton, the only
+difference of which is that the syntactic label of the root is kept. By
+focusing on the structure of the text, this feature is able to provide a more
+generalized representation of the text.
+
+The paper is well written and organized. The experiments are presented properly
+and provide a faire explanation of the advantages of the introduced feature,
+which offers a different way to capture different aspects of the text.
+
+
+----------------------- REVIEW 2 ---------------------
+PAPER: 53
+TITLE: Structural Parse Tree Features for Text Representation
+AUTHORS: Sean Massung and Chengxiang Zhai and Julia Hockenmaier
+
+
+----------- REVIEW -----------
+This paper devises some interesting new text features based on parse trees for
+nationality detection, essay scoring, and sentiment analysis. The paper is well
+written and the experiments are convincing. Not every environment is shown to
+respond to the new features, and when they do, there is mostly
+epsilon-improvement. The authors don't discuss dimensional reduction techniques
+at all, a distinct weakness in their approach.
+
+
+----------------------- REVIEW 3 ---------------------
+PAPER: 53
+TITLE: Structural Parse Tree Features for Text Representation
+AUTHORS: Sean Massung and Chengxiang Zhai and Julia Hockenmaier
+
+
+----------- REVIEW -----------
+This paper propose to use structural parse tree features for text
+representation. Evaluation based on three different text categorization tasks
+including nationality detection, essay scoring and sentiment analysis, were
+conducted to show the effectiveness of this new feature.
+
+Overall, the paper is well written with a clear explanation of the new feature.
+The only thing that feel is missing is the explanation of those acronyms for
+the figure above Section III (A) (e.g. S, NP, VP, etc.).
+
+The experiments are also well conducted.
+
+
+----------------------- REVIEW 4 ---------------------
+PAPER: 53
+TITLE: Structural Parse Tree Features for Text Representation
+AUTHORS: Sean Massung and Chengxiang Zhai and Julia Hockenmaier
+
+
+----------- REVIEW -----------
+This paper focuses on an augmented representation of textual documents that is
+derived from the parse structure of sentences but without actually considering
+the constituents or the internal nodes of the production grammar. The results
+of using this augmented representation show minor improvements in two of the
+three tasks.
+
+While this representation is commented as orthogonal, it is instead
+complementary. Furthermore, I found several other issues which needs to be
+clarified.
+
+1. The basic assumption here is that a sentence parse skeleton is a generic
+template which is populated with words at the leaf level and grammar production
+rules at intermediate levels. While this may provide a complementary view of
+the document and *may* provide for slightly better classification accuracy, I
+fail to see a critical analysis of the class conditional variance of the
+skeletal features. For all we know, these variances can be very similar for the
+different classes and contribute little to explaining the observed target at
+the sample points --- actually Fig. 1 supports this critique. This paper can be
+improved to a great extent if an analysis can be done on the identification of
+the improvement to the VC dimension given an augmented hypothesis space
+consisting of functions that depend on a base hypotheses class e.g. what impact
+does h*({skeleton = f(word,POS sequence), word,POS sequence}) have on the
+VC-dim of a linear SVM instead of just h({word,POS sequence})? Does it lower
+the VC dimension?
+
+2. The accuracies in Fig. 1 and the gains in Fig. 2 lack any significance
+testing. Without any statistical significance testing no conclusions about the
+efficacy of the new features can be drawn. One also has to do a comparison with
+L1 regularized classification to see whether the new features are at all
+considered significant w.r.t minimizing a loss function. I don't understand
+Fig. 3 -- the skeletons or the annotated skeletons point to what kinds of
+surface realizations i.e. sentences? A skel of () is indicative of proper
+punctuation style as segmented by a parser that might be completely disregarded
+by Chinese writers. It is very difficult to draw any qualitative conclusions
+about writing styles based on this table. The task of sentiment analysis using
+this scheme is not appropriate.
+
+3. The observation that native speakers use more obscure rewrite rules (Section
+4 A) is not right. What is observed is the output of an automatic probabilistic
+parser which has been trained on a corpus different from the one used here. No
+conclusion can be drawn about writing styles without ground truth annotation.
+
+As such this paper is not ready for publication and needs many more revisions.
+Considering character n-grams with punctuations can be useful for nationality
+detection as well as authorship attribution task.
