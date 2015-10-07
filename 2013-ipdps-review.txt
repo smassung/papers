@@ -1,0 +1,104 @@
+----------------------- REVIEW 1 ---------------------
+PAPER: 17
+TITLE: Visualizing Parallelism in CS 2
+AUTHORS: Sean Massung and Cinda Heeren
+
+OVERALL EVALUATION: 2 (accept)
+novelty: 5 (excellent)
+impact: 4 (good)
+relevance: 4 (good)
+evaluation (for experience papers): 3 (fair)
+presentation: 4 (good)
+
+----------- REVIEW -----------
+In this paper, the authors have described a novel approach of integrating parallelism into the CS2 course in a visual manner. They first briefly discussed the shortcoming of standard approaches used in parallel-related curriculum, and introduced the instructional tools used in the course. In the curriculum, they have presented three discussion/lab sessions for basic concepts, race conditions and reductions, respectively. For each specific topic, they have designed an image manipulation example to illustrate the speedup and potential pitfalls of parallelism. Finally, they have placed a few questions regarding parallelism in the exam to assess student performance. The pedagogy used by the authors may shed some light on other researchers in the community, as it is interesting and capable of elaborating the related concepts clearly.
+
+A couple of minor revisions are needed to improve the completeness of the paper:
+
+1) How and why to use keywords "#pragma omp critical" should be explained.
+
+2) In Section V, the correct answers to the second and third questions should be stated and explained briefly for completeness.
+
+3) The reason of relatively poor performance in questions should be further analyzed.
+
+
+----------------------- REVIEW 2 ---------------------
+PAPER: 17
+TITLE: Visualizing Parallelism in CS 2
+AUTHORS: Sean Massung and Cinda Heeren
+
+OVERALL EVALUATION: 3 (strong accept)
+novelty: 4 (good)
+impact: 5 (excellent)
+relevance: 5 (excellent)
+evaluation (for experience papers): 6 (Not Applicable)
+presentation: 4 (good)
+
+----------- REVIEW -----------
+'Visualizing Parallelism' proposal is very relevant to teaching student the concepts of PDC in Computer Science and related engineering areas.  The reason for this support is the notion of applying data parallelism to images as another approach of teaching students.
+
+
+----------------------- REVIEW 3 ---------------------
+PAPER: 17
+TITLE: Visualizing Parallelism in CS 2
+AUTHORS: Sean Massung and Cinda Heeren
+
+OVERALL EVALUATION: -1 (weak reject)
+novelty: 3 (fair)
+impact: 2 (poor)
+relevance: 4 (good)
+evaluation (for experience papers): 3 (fair)
+presentation: 3 (fair)
+
+----------- REVIEW -----------
+I tend to agree with the authors' viewpoint that visualizable algorithms help some students grasp what their programs are doing.  The work decomposition apparent in Figure IV-A is a good example, although the noisy errors in Figure IV-B are not quite so intuitive.
+
+The material presented to students is quite simple.  Which makes it, as the authors note, a little disappointing that test scores show students did not retain a great deal of knowledge from these labs.  I agree with the authors assessment that this probably reflects too little time spent on parallelism for students to really develop a strong grasp of the ideas.  I'd be interested to see the results of what happens when the ideas are presented in a little more depth.
+
+A few minor comments:
+
+Section II points out that the material focuses on parallelism rather than concurrency.  That's a good choice.  But that also makes it seem a little odd that 1 of the 3 topics is race conditions, which are an artifact of concurrent programs.  A more strictly parallel approach, say one that maps functions over inputs to produce outputs, wouldn't be subject to these problems.  Perhaps it would be better to focus on such programming models that are not susceptible to race conditions.
+
+Section IV.A mentions how useful the CPU performance graphs are.  It would be nice to show an example.
+
+The histogram reduction is not scalable.  In my personal opinion, it's not even quite a reduction since it completely serializes the combination of the histograms -- there's no longer any parallelism at that point, only concurrent threads.  A more scalable, more truly parallel approach, might be a better thing to teach here.
+
+
+----------------------- REVIEW 4 ---------------------
+PAPER: 17
+TITLE: Visualizing Parallelism in CS 2
+AUTHORS: Sean Massung and Cinda Heeren
+
+OVERALL EVALUATION: 2 (accept)
+novelty: 5 (excellent)
+impact: 4 (good)
+relevance: 5 (excellent)
+evaluation (for experience papers): 3 (fair)
+presentation: 4 (good)
+
+----------- REVIEW -----------
+This paper describes a 3-lab sub-piece of an introductory algorithm class.  These labs introduce some basic parallel concepts into a class that is primarily for the design and analysis of sequential algorithms and data structures.  For non-majors, this may be the only algorithm design-and-analysis class they have.
+
+The primary innovation of these labs is the use of image manipulations as the lab exercises.  The authors use image analysis for the serial assignments too, but the visual aspects seem particularly relevant for teaching parallelism.  The paper includes two figures illustrating the authors points.  One shows a suspended computation where it is clear what regions each of the 4 threads processed and how far each progressed.  The second shows the output from buggy code that clearly shows that the top part of the image is correct and the bottom is not.  It was an illustration of a race condition.  The third lab involves reduction (separate threads counting the number of pixels of each color in partitions of the image, and then a reduction).  Here the visual part was not so much the image as the histograms illustrating the counts by processor.  That could probably have been done with any kind of reduction application.
+
+The authors had one question per lab on an exam.  The students did poorly on the first question asking which, if any, of 3 code snippets was (in)correct.  I think I would have gotten that question wrong too since (i) does not actually show a variable defined outside the loop being incorrectly used inside.  The authors were a bit discouraged that the students didn't do as well on 2 of the 3 parallelism questions as on the other questions.  They mostly attribute this to lack of practice.  For students new to algorithms, it does take some time and practice to  really understand parallel computing.  To judge the importance of the visual debugging, etc, it would make more sense to compare performance with a control group that uses non-image data.
+
+The authors plan to consider newsgroup comments for future improvements in addition to the per-lab course evaluations they currently use and they are working on a 4th lab on sorting they can add when students arrive better prepared in programming and data structure fundamentals.
+
+The paper is easy to read.  It's short and has one point with a couple of illustrations, but I think the point is interesting and this could be an interesting talk.
+
+
+----------------------- REVIEW 5 ---------------------
+PAPER: 17
+TITLE: Visualizing Parallelism in CS 2
+AUTHORS: Sean Massung and Cinda Heeren
+
+OVERALL EVALUATION: 2 (accept)
+novelty: 4 (good)
+impact: 4 (good)
+relevance: 4 (good)
+evaluation (for experience papers): 6 (Not Applicable)
+presentation: 4 (good)
+
+----------- REVIEW -----------
+There are generic strong points to this work: the weaving of parallelism into a standard course, the use of a simple but real parallel syntax (in order to focus on concepts). Beyond these, the use of visual examples is excellent.
