@@ -1,0 +1,187 @@
+\section{Non-Native Corpora}
+\label{sec:datasets}
+
+\begin{table}[t]
+\begin{center}
+    \begin{tabular}{lrrccl}
+    \hline
+    \hline
+    \textbf{Dataset} & \textbf{Docs} & \textbf{Len$_{avg}$} &
+    \textbf{NLI} & \textbf{GEC} & \textbf{L1 Languages} \\
+    \hline
+    \hline
+    CEEAUS & 1,008 & 128 & $\checkmark$ & & CHN, ENG, JPN (3) \\
+    \hline
+    CLEC & (1M & sent.) & & $\checkmark$ & CHN (1) \\
+    \hline
+    FCE & 1,244 & 200 & $\checkmark$ & $\checkmark$ & CAT, CHN, FRA, GER,\\
+        & & & & & GRC, ITA, JPN, KOR,\\
+        & & & & & NL, POL, PRT, RUS, SPA,\\
+        & & & & & SWE, THA, TUR (16) \\
+    \hline
+    ICLE & 3,640 & 700 & $\checkmark$ & & BUL, CZE, FIN, FRA, \\
+         & & & & & GER, ITA, NL, POL, \\
+         & & & & & RUS, SPA, SWE (11) \\
+    \hline
+    ICLEv2 & 6,085 & 617 & $\checkmark$ & & BUL, CHN, CZE, FIN \\
+           & & & & & FRA, GER, ITA, JPN, \\
+         & & & & & NL, NOR, POL, RUS, SPA \\
+         & & & & & SWE, TSW, TUR (16) \\
+    \hline
+    ICNALE & 5,600 & 129 & $\checkmark$ & $\checkmark$ & CHN, ENG, FIL, HKG, \\
+           & & & & & IND, JPN, KOR, PAK, \\
+           & & & & & SIN, THA, TWN (11) \\
+    \hline
+    NUCLE  & 1,397 & 863 & & $\checkmark$ & unknown \\
+    \hline
+    ETS & 12,100 & 348 & $\checkmark$ & $\checkmark$ & ARA, CHN, FRA, GER, \\
+            & & & & &  IND, ITA, JPN, KOR, \\
+            & & & & & SPA, TEL, TUR (11) \\
+    \hline
+    \hline
+    \end{tabular}
+\end{center}
+    \caption{Comparison of non-native English datasets: corpus statistics, and
+    whether they can be used for NLI or GEC\@. Web links to each dataset are
+included in the text. Note that average document length may vary depending on
+tokenization method.}
+    \label{table:datasets}
+\end{table}
+
+All the work on non-native text analysis uses some kind of non-native text
+corpus. In this section, we give an overview of the major datasets used in
+existing work, which we will survey in the next few sections. As shown in
+Table~\ref{table:datasets}, the sizes of these corpora vary from around one
+thousand to twelve thousand documents with an average length of 128 to over 800
+words. They cover a wide L2 range, geographically focused in Europe and Asia.
+Abbreviations used in the table are ARA (Arabic), BUL (Bulgarian), CAT
+(Catalan), CHN (Chinese), CZE (Czech), ENG (English), FIL (Filipino), FIN
+(Finnish), FRA (French), GER (German), GRC (Greek), HKG (Hong Kong Cantonese),
+IND (Indian languages), ITA (Italian), JPN (Japanese), KOR (Korean), NL (Dutch),
+NOR (Norwegian), PAK (Urdu), POL (Polish), PRT (Portuguese), RUS (Russian), SIN
+(Singapore languages), SPA (Spanish), SWE (Swedish), TEL (Telugu), THA (Thai),
+TSW (Tswana), TUR (Turkish), and TWN (Taiwanese). We now give a detailed
+description of each dataset.
+
+ICLE~\cite{icle}, the International Corpus of Learner English, is an early
+popular dataset used to investigate NLI\@. Its popularity is mostly due to the
+fact that no other large NLI corpora existed at the time the ICLE was released.
+It is a collection of essays on ``extremely varied'' topics written by
+undergraduate students studying English. Additional metadata for each essay is
+part of the ICLE---such as gender and age---though these features are rarely
+used by researchers. Commonly, a five-language subset of Russian, Czech,
+Bulgarian, French, and Spanish languages is used, popularized
+by Koppel, Schler, and Zigdon (2005). These subsets caught on because the L1 distribution is
+%by~\cite{koppel2005}. These subsets caught on because the L1 distribution is
+quite unbalanced; the subsets have a more uniform distribution of native
+languages. Thus, it is important to note if a subset of the ICLE is used so
+accurate comparisons may be made. The corpus is publicly available, but requires
+a license\footnote{\url{http://www.uclouvain.be/en-cecl-icle.html}}.
+
+ICLEv2~\cite{iclev2} is an expanded version of the ICLE\@. There are no
+major differences in the text files themselves (aside from the fact there are
+more), since the ICLE is a subset. Version two additionally comes with a
+\emph{concordancer}, a graphical interface that allows easy search and simple
+exploratory analysis over the dataset. However, when running experiments
+detailed in future sections of this paper, researchers tend to use the raw text
+data from the corpus instead of any built-in software. The corpus is publicly
+available, but requires a
+license\footnote{\url{http://www.uclouvain.be/en-277586.html}}. The maintainers
+of ICLEv2 are currently working towards releasing a third version.
+
+CEEAUS~\cite{ceeaus} is the Corpus of English Essays written by Asian
+University Students. Unlike the ICLE, the essays are restricted to two topics:
+\emph{It is important for college students to have a part-time job} and
+\emph{Smoking should be completely banned at all restaurants in the country}. A
+common vocabulary for each prompt emerges due to this fact, perhaps allowing a
+more meaningful word usage analysis to occur. Further restrictions attempt at
+creating the most uniform testing conditions as possible: spell checking is
+required, but dictionary use is prohibited; the writers have twenty to forty
+minutes to complete their task. Aside from its small size, the main downside to
+this corpus is that 77\% of the essays are from native Japanese speakers,
+establishing a rather high classification baseline for NLI\@. A Web site exists
+for the corpus, but it is no longer available to
+download\footnote{\url{http://language.sakura.ne.jp/s/kaken_ceeaus.html}} since
+it is a subset of ICNALE\@.
+
+CLEC~\cite{clec} is the Chinese Learner English Corpus. It consists of one
+million error-tagged sentences and is mainly used for grammatical error
+correction. While there is no differentiation in L1, the dataset is segmented
+into levels of English fluency. So while NLI classification is not possible, an
+analysis on the skill level is feasible. Although free, the CLEC is only
+available to members of the university that created
+it\footnote{\url{http://langbank.engl.polyu.edu.hk/corpus/clec.html}}.
+
+FCE, created by Yannakoudakis, Briscoe, and Medlock (2011), is the First
+Certificate of English dataset---a corpus of essays written by students studying
+English that took the Cambridge Assessment's ESOL (English as a second or other
+language) exam. The dataset was compiled as a benchmark for automated essay
+scoring systems, and contains about eighty types of correction annotations in
+each essay. Like the ICLE, additional metadata is also included, such as grade,
+age, and native language. There are ten different prompts, each with a varying
+number of responses. This corpus may be downloaded freely
+online\footnote{\url{http://ilexir.co.uk/applications/clc-fce-dataset/}}.
+
+ICNALE~\cite{icnale}, the International Corpus Network of Asian Learners of
+English, is an expanded version of CEEAUS\@. Like the ICLEv2, the previous
+version is a subset of this one. Aside from adding more Asian L1 languages, the
+language distribution of the dataset is much more balanced. Professional proof
+readers corrected the part-time job essays, and their revised versions are also
+included. This provides an opportunity to see how the non-native text is
+translated into sounding more native---with this information it is possible to
+do much more than NLI\@. The last segment of the ICNALE is a collection of 1,900
+recorded speeches and their transcripts. After registering online, the corpus is
+available\footnote{\url{http://language.sakura.ne.jp/icnale/download.html}} to
+freely download.
+
+NUCLE~\cite{nucle}, the National University of Singapore Corpus of Learner
+English, is also a collection of essays on a wide variety of subjects. The
+essays were written by students studying English at the Center for Language
+Communication at NUS and annotated and corrected by English instructors.
+Overall, nearly 47,000 errors were detected by the instructors with good rater
+agreement. Findings on the corpus revealed that overall, errors in non-native
+text are actually quite rare (at least in this corpus), on the order of around
+four per one hundred words. Since this corpus was not intended for NLI, there is
+no information about the L1 language of each essay. This is the dataset used by
+the CoNLL 2013 shared task described in section~\ref{subsec:grammar-shared}, and
+is available for download
+online\footnote{\url{http://www.comp.nus.edu.sg/~nlp/corpora.html}}.
+
+ETS~\cite{toef11} is a collection of essays from the Test of English as a
+Foreign Language, a component of the Educational Testing Service. It is a
+standardized test measuring English proficiency for students seeking to enroll
+in college. There are 1,100 essays per L1, sampled from eight prompts. The
+purpose of the corpus was to further enable work in NLI\@, and was used by the
+BEA8 shared task described in section~\ref{subsec:nli-shared}. ETS is publicly
+available, but requires a
+license~\footnote{\url{https://catalog.ldc.upenn.edu/LDC2014T06}}.
+
+From our comparison, we have two datasets that are subsets of another (CEEAUS
+and ICLE). There is likely no reason to prefer CEEAUS over ICNALE or ICLE over
+ICLEv2, since the newer versions are simply expanded. This leaves six main
+datasets: CLEC, ETS, FEC, ICLEv2, ICNALE, and NUCLE\@. Of these six, CLEC, ETS,
+FCE, ICNALE, and NUCLE, could be used for error analysis since they contain
+annotations. All except CLEC and NUCLE can be used for native language
+identification since the L1 information is part of the datasets.
+
+As for content, all are essays written by university students, but only ICNALE
+and ETS have the choice of essay topics strictly controlled---though the former
+has two prompts and the latter has eight. ICNALE L1s are clearly focused in
+Asia; NUCLE writers are most likely from Singapore, while FCE, ICLEv2, and ETS
+L1s are more evenly distributed across the globe. Of course, CLEC consists of
+all native Chinese authors.
+
+Considering these differences, we need to think about the following questions
+when interpreting results. What is the baseline accuracy? How difficult is it to
+distinguish L1s? Does the number of documents (and document length) have any
+bearing on an impression of the results?
+
+Although not a standardized corpus, the website
+Lang-8\footnote{\url{http://www.lang-8.com}} is also a popular location to
+retrieve non-native English. This is a site where users write in a second
+language and get corrections from native speakers. Corpora derived from this
+site have been used for NLI~(\emph{e.g.} Brooke and Hirst (2011)) and
+GEC~(\emph{e.g.} Tajiri, Komachi, and Matsumoto (2012)).
+
+In the next sections, we systematically review the two areas of non-native text
+analysis.

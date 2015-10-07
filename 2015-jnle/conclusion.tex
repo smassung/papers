@@ -1,0 +1,57 @@
+\section{Conclusions}
+\label{sec:conclusion}
+
+We realize that support for dealing with non-native text is becoming
+increasingly important; many applications benefit from automatic author
+profiling and grammatical error correction. We call this collection of
+challenges and tasks \emph{non-native text analysis}. This survey detailed
+common datasets and covered the two main applications in non-native text
+analysis: native language identification and grammatical error correction.
+
+In section~\ref{sec:datasets}, we saw the main corpora used by researchers for
+NLI and GEC. Compared to other text datasets, these are relatively small and
+only consist of essays written by students. A larger corpus would be beneficial,
+as would a corpus of text other than essays such as blogs, social media, or
+research papers. Finally, the availability of such datasets are directly
+proportional to the amount of impact they may have; freely available corpora are
+much more likely to be used than their proprietary counterparts.
+
+Section~\ref{sec:nli} detailed NLI as a classification problem. We also saw how
+a shared task was able to elicit many quality works from the community in an
+organized fashion. We subdivided NLI approaches into two techniques: feature-
+and likelihood-based. Much more effort has been put into feature-based methods
+using standard machine learning algorithms. Instead of classifiers and
+probabilistic models, is it possible to use other text mining algorithms? For
+example, can clustering methods be optimized for use with NLI? What is the
+significance of outliers and dense subclusters? How do collaborative filtering
+systems change when additional information about learning styles of users are
+known?
+
+Grammatical error correction was discussed in section~\ref{sec:grammar}. We saw
+how most approaches used a targeted strategy: first classify errors from a
+limited list and then attempt to fix them. In future work, we would like to see
+more general approaches applied that are not restricted to specific error types.
+Aside from grammaticality, fluency can also be considered: exactly what phrases
+or syntactic structures make an essay sound ``native''? Are specific topics
+handled with different grammar? Or are some differences inherently cultural?
+How are ethnicity, culture, and race related in our context? Just because one's
+text may seem like native English, does that mean it is American English? If
+American, is it Northeastern or Southern? Dialect plays a very important role
+in fluency.
+
+Finally, almost all work surveyed covered English as L2. We mentioned a few
+works and shared task in the introduction where English was not the target, and
+many techniques were general in terms of L1 and L2, but in order to prove the
+effectiveness of a technique, it is essential to showcase it in a direction
+other than L1 to English. Of course a main issue with this is the popularity of
+non-native English datasets, but given other L2 corpora, an evaluation should be
+possible.
+
+In time, the field \emph{non-native text analysis} will evolve into
+\emph{non-native text mining.} Aspects from this area discussed will be combined
+into unified algorithms and intelligent applications. For example, an NLI system
+can determine a user's L1, and use that knowledge to offer sophisticated
+annotations and corrections to their own text in L2 while simultaneously
+summarizing and condensing text from other sources. Indeed, other areas aside
+from these will arise to further the understanding of non-native writing or to
+help non-native speakers better understand their second or third language.

@@ -1,0 +1,124 @@
+\section{Introduction}
+\label{sec:introduction}
+
+By the year 2020, the British Council (2014) estimates that there will be two
+%By the year 2020,~\cite{british-council} estimates that there will be two
+billion English language learners. Some learn in the classroom; some learn
+online. Some may even learn through their phone or in an online class.
+Regardless of the medium, computational tools to enhance this educational
+experience will be valuable. Automatic scoring of essays---not only for grammar,
+but also fluency---would contribute greatly to second-language learners'
+understanding. User personalization for online services (including search
+engines and social networks) would benefit from improved user profiling. More
+relevant books or news articles could be recommended if the user's background
+and competency of English were known.
+
+Due to these many motivating examples, research in \emph{non-native text
+analysis} has prospered. This field encompasses any textual task that deals with
+words written in a language other than the writer's native tongue. We call the
+native language L1 and the second, learned language L2. Throughout this survey,
+we will usually assume that L2 is English, though most (but not all) techniques
+discussed in this survey are general and could function with any pair of L1 and
+L2.
+
+Existing work in non-native text analysis is somewhat scattered, appearing in
+workshops and shared tasks more frequently than standard proceedings. In this
+survey, we provide a systematic overview of these scattered works to make it
+easier for researchers to digest the state of the art in this emerging area.
+
+\subsection{Scope}
+
+The current work on non-native text analysis generally falls into two main
+categories:
+
+\begin{enumerate}
+    \item \textbf{Native Language Identification} (NLI): classifying L1 based on
+        text written in L2. Techniques can be categorized into
+        \textbf{feature-based} (using a classifier) or \textbf{likelihood-based}
+        (using a probabilistic model).
+    \item \textbf{Non-native Grammatical Error Correction} (GEC): detecting and
+        correcting grammatical errors in L2 text. Techniques can be categorized
+        into \textbf{targeted} (correcting specific errors) or \textbf{general}
+        (correcting all errors).
+\end{enumerate}
+
+Other subareas such as fluency scoring, non-native essay scoring, and text
+simplification for non-native speakers also exist, but we focus this survey on
+the two much larger areas explained above.
+
+An excellent overview of grammatical error correction with a focus on non-native
+learners is available~\cite{leacock-survey}. This short book is a concise
+collection on the topic and consists of many recent advances since 2010. If the
+reader wishes to delve into more detail in this subtopic, we suggest referencing
+their work, whereas our paper is a broader outline and thus not able to go into
+as much depth in one particular area.
+
+Spelling correction described in Kukich (1992) is a potentially relevant
+%Spelling correction described in\cite{1992-spelling} is a potentially relevant
+task, though we choose to focus on the grammar correction aspect instead. This
+is not to say that spelling features do not play a role in (\emph{e.g.}) NLI;
+rather, the method of spelling correction is not relevant to non-native text
+analysis. Correcting speech is also an important issue: besides the obvious
+speech recognition challenges in computer science and electrical engineering,
+speakers tend to voice their words much differently than when writing.
+Therefore, we do not include any investigation into these works in this paper.
+
+Shared tasks provide a common goal and dataset to a wide array of researchers.
+This enables quick and accurate comparison of different methods, while
+simultaneously increasing interest and producing exposure for the problem at
+hand. Thus, we detail two relevant shared tasks in this survey that deal with
+non-native writers of English. Author profiling, authorship attribution, and
+plagiarism detection at PAN 2014~\cite{pan-2014} are also related, but we do not
+focus on those here, instead considering them related works since there is no
+specific component of non-native analysis.
+
+Shared tasks have even started to evolve for L2s besides English. For example,
+the Techniques for Educational Applications Workshop had a shared task on GEC
+for Chinese as a foreign language~\cite{tea}.
+
+\subsection{Organization}
+
+We now review the structure of this paper. In each section, a figure briefly
+summarizes the papers discussed and the methods used. If applicable, a
+comparison of performance is also included. In this survey, we have a particular
+preference for system papers as demonstrated by our sections on shared tasks. By
+system papers, we mean research that immediately puts theory into practice,
+giving real-world results which allow for better interpretation of effectiveness
+by the reader.
+
+First, in section~\ref{sec:datasets}, we introduce common datasets used in works
+described throughout the rest of this survey. They should give some perspective
+on the task at hand and create a mental baseline for the reader. We feel that it
+is important to make note of these datasets here since any future work will most
+likely be making use of these corpora.
+
+In section~\ref{subsec:nli}, we start with an introduction to NLI, usually
+formulated as a classification problem. Observed data is text written in L2
+(where L2 means English: the second or foreign language), and a classifier
+predicts the writers' L1 (the native language). Although this may be considered
+a standard classification problem, the features chosen to target non-native
+writer discrimination distinguish different approaches. These range from simple
+unigram word counting to parse tree reranking descriptions. In future sections,
+we will see how classifiers themselves may be adapted or configured to take
+advantage of this specific domain.
+
+Section~\ref{subsec:nli-shared} discusses the NLI Shared Task 2013 from the
+Building Educational Applications (BEA) workshop. This shared task uses a corpus
+detailed in section~\ref{sec:datasets}.
+
+Section~\ref{subsec:grammar} discusses correcting grammatical errors, such as
+articles and prepositions. These techniques are usually framed as classification
+problems; a classifier determines if there is an error or not, and if so,
+predicts what the best solution would be given a fixed set of candidates. Some
+methods go beyond a simple classification setup and rely on more NLP-heavy
+techniques such as language models and grammatical parse trees to find the
+best corrected sentence.
+
+Then, section~\ref{subsec:grammar-shared} covers the CoNLL 2013 and 2014 shared
+task on grammatical error correction. This task also uses a corpus described in
+section~\ref{sec:datasets}, and systems find and correct errors in text written
+by non-native English speakers.
+
+Finally, we end with a discussion and conclusions in
+section~\ref{sec:conclusion}, reflecting on what issues may still be
+unaddressed.

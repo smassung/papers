@@ -1,3 +1,5 @@
+*.fdb_latexmk
+*.fls
 *dot*.tex
 *.fls
 *.fdb_latexmk

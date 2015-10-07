@@ -1,0 +1,62 @@
+% rubber: setlist arguments --shell-escape
+\documentclass{nle}
+
+\newcommand{\makecite}[4]{\bibitem[\protect(\citename{#1 }#2)]{#3}#4}
+\usepackage{graphicx,color,amssymb,times}
+\usepackage[hidelinks]{hyperref}
+
+\newcommand{\textoverline}[1]{$\overline{\mbox{#1}}$}
+
+\title{Non-Native Text Analysis: A Survey}
+\author[Sean Massung and ChengXiang Zhai]{SEAN MASSUNG and CHENGXIANG ZHAI \\
+    Department of Computer Science \\
+College of Engineering \\ University of Illinois at Urbana-Champaign \\
+\texttt{\{massung1,czhai\}@illinois.edu}}
+\received{25 November 2014; revised 12 March, 18 May, and 16 July 2015;\\
+    accepted 20 July 2015}
+\pagerange{\pageref{firstpage}--\pageref{lastpage}}
+\pubyear{2015}
+
+\newcommand{\todo}[1]{}
+\renewcommand{\todo}[1]{{\color{red} TODO: {#1}}}
+
+\begin{document}
+\label{firstpage}
+\maketitle
+
+\begin{abstract}
+Non-native speakers of English far outnumber native speakers; English is the
+main language of books, newspapers, airports, air-traffic control, international
+business, academic conferences, science, technology, diplomacy, sports,
+international competitions, pop music, and advertising (British Council 2014).
+Online education in the form of MOOCs (massive online open courses) is also
+primarily in English---even teaching English. This creates enormous amounts of
+text written by non-native speakers, which in turn generates a need for grammar
+correction and analysis. Even aside from MOOCs, the number of English learners
+in Asia alone is in the tens of millions.
+
+In this paper, we provide a survey of the two main areas of existing work on
+non-native text analysis, prefaced by an overview of common datasets used by
+researchers, comparing their attributes and potential uses. Then, an
+introduction to native language identification follows: determining the native
+language of an author based on text in the second language. This section is
+subdivided into various techniques and a shared task on this classification
+problem. Next, we discuss non-native grammatical error correction---finding and
+modifying text to fix errors or to make it sound more fluent. Again, we discuss
+different methods before investigating a relevant shared task. Lastly, we end
+with conclusions and potential future directions. While this survey primarily
+focuses on detecting and correcting non-native \emph{English} text, many
+approaches are general and can be used across any language pairing.
+\end{abstract}
+
+\input{introduction}
+\input{datasets}
+\input{nli}
+\input{grammar}
+\input{conclusion}
+
+\begin{thebibliography}{}
+    \input{manualbib}
+\end{thebibliography}
+\label{lastpage}
+\end{document}

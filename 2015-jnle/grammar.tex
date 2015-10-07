@@ -1,0 +1,367 @@
+\section{Non-Native Grammar Correction}
+\label{sec:grammar}
+
+We now transition from native language identification to non-native grammar
+correction. While the former is often tackled as a one-step task, the latter
+usually relies on classification as a component, but also consists of other
+parts that are able to capture a deeper syntactic meaning (such as dependencies
+or language modeling). Correcting machine translated text is a related issue,
+but we do not discuss it here; instead, please see Corston-Oliver, Gamon, and
+Brockett (2001) or Gamon, Aue, and Smets (2005).
+
+In the section~\ref{subsec:grammar}, we discus some key papers that display a
+wide variety of techniques. We also briefly touch on training data issues as
+well as evaluation of corrected text. Section~\ref{subsec:grammar-shared}
+outlines the CoNLL shared task in grammatical error correction for 2013 and
+2014.
+
+\subsection{Techniques in Non-Native Grammar Correction}
+\label{subsec:grammar}
+
+Some grammar correction methods are targeted towards a very specific subset of
+errors, often categorized by the corpus; others attempt to solve more general
+errors concerning word sense or collocations. Evaluation for grammar correction
+is much more varied and unstandardized in comparison to the configurations from
+NLI seen in the previous section. Which non-native corpus is used also dictates
+the types of errors that can be corrected. Table~\ref{table:gec} compares the
+different methods discussed in this section and categorizes them as either
+targeted or general approaches.
+
+Lee and Seneff (2006) train a trigram language model on a lattice of alternatives,
+where ``alternatives'' are prepositions, articles, and auxiliaries that may or
+may not occur between words in the original text. For example, the sentence
+\emph{I want flight Monday} can be corrected by inserting two tokens as such:
+\emph{I want a flight on Monday}. Their algorithm first strips all such
+alternatives from the original sentence. So far, this is not much different from
+the article and preposition corrections. However, they additionally change each
+remaining word in the input sentence to be a set of related words to the base
+form: $want~\rightarrow~\{want, wants, wanted, wanting\}$. Their language model
+then outputs the $k$-best candidates. Next, these candidates are given to a PCFG
+and reranked. The final output is the top-ranked sentence from the PCFG\@.
+Across all experiments, they found that reranking the language model candidates
+significantly increased the $F$ measure.
+
+\begin{table}[t]
+    \begin{center}
+    \begin{tabular}{lll}
+        \hline
+        \hline
+        \textbf{Paper} & \textbf{Method} & \textbf{Target} \\
+        \hline
+        (Lee and Seneff 2006) & LM with PCFG scoring$^*$ & articles, prepositions,\\
+                              & & and word forms \\
+        (Gamon 2010) & classifier ensemble$^*$ & articles and prepositions \\
+        (West et al. 2011) & bilingual random walk$^+$ & word sense \\
+        (Dahlmeier and Ng 2011a) & machine translation$^+$ & collocation errors \\
+        (Dahlmeier and Ng 2011b) & structure optimization$^*$ & articles/prepositions \\
+        (Madnani and Tetreault 2012) & machine translation$^+$ & common errors\\
+        \hline
+        \hline
+    \end{tabular}
+    \caption{Comparison of grammatical error correction strategies. $^*$
+    indicates targeted approaches and $^+$ indicates general approaches.}
+    \label{table:gec}
+    \end{center}
+\end{table}
+
+West, Park, and Levy (2011) use bilingual random walks between L1 and L2 word senses. For
+example, on one side of a bipartite graph are L1 words. There are connections
+from a word $w\in$ L1 to a word $w'\in$ L2 if a $w$ could be translated into
+$w'$. $w$ could be the English word \emph{head}, and be translated into a
+physical head, head of an organization, or the verb \emph{to head}. This model
+was used to correct non-native sounding phrases such as \emph{entire stranger} to
+the more natural \emph{complete stranger}. This bipartite graph was combined with
+a language model to correct non-native sentences. In these experiments, the
+native language was Korean. Evaluation was performed with Amazon Mechanical
+Turk~\footnote{\url{https://www.mturk.com/mturk/welcome}} where workers chose
+between the corrected sentence and the original sentence. Results were not
+strongly positive, since sometimes the corrected errors changed the meaning of
+the sentence or made it ungrammatical. In future work the authors suggest using
+a richer probabilistic model such as a PCFG.
+
+Dahlmeier and Ng (2011a) use the NUCLE corpus to find and correct collocation errors via
+machine translation. Here, a collocation is a phrase commonly used by native
+speakers. The authors propose that when a writer mentally translates from L1 to
+L2, some unnatural phrases result due to word choice. They give an example,
+``\emph{I like to look movies}'' that might be written by a native Chinese
+speaker since \emph{watch} and \emph{look} are very similar in the L1. It would
+be possible to correct this to the more grammatical ``\emph{I like to look at
+movies}'', but it still does not sound natural. Instead, \emph{look} is replaced
+by \emph{watch}, resulting in the more fluent collocation \emph{watch movies}.
+For their experiments, they assume the unnatural collocations have already been
+identified; this mimics a system where a user may ask for improvement
+suggestions for a snippet of writing. They train a statistical machine
+translation model on a parallel Chinese-English corpus to correct collocation
+errors in the NUCLE corpus. A log-linear model was used to score the candidate
+phrases which allows additional spelling, homophone, and synonym features to be
+incorporated. They evaluated their method as a retrieval task, where they
+returned the top $k$ suggestions to fix each collocation error. Two
+native-English speakers judged results from five hundred corrections with good
+rater agreement. Finally, they performed an analysis of errors and found that
+the main reason top-ranked phrases were not correct was due to out-of-vocabulary
+words.
+
+Dahlmeier and Ng (2011b) introduce an alternating structure optimization (ASO)
+approach to GEC\@. In short, ASO is able to leverage a
+common structure between multiple related problems; see Ando and Zhang (2005) for a more
+detailed description. In this case, the related problems are selection (find
+features from native text) and correction (fix the errors in non-native text).
+Targets were article and preposition errors, again using the NUCLE corpus.
+It was shown that ASO significantly outperformed a simple linear classifier as
+well as two unnamed commercial grammar checkers. Features included
+part-of-speech tags, hypernyms from WordNet, named entities, and shallow parsing
+tags.
+
+Gamon (2010) combined a language model and classifier into a
+``meta-classifier'' that detected errors in both article and preposition use.
+Additionally, they investigated how much more training data is needed for the
+individual methods to approach the accuracy of the meta-classifier. Features for
+the classifier were a window of six tokens to the right and left of errors, POS
+tags, and lexical head features. The classifier was actually split into two
+steps: first, determine the likely presence of a preposition or article. Then,
+determine \emph{which} article or preposition should be chosen. The language
+model is trained on LDC's \emph{Gigaword} corpus and log-likelihood was
+used (normalized by sentence length). The meta-classifier uses features
+generated from the two primary models such as ratio of likelihood scores from
+the language model and classifier decisions. As expected, the meta-classifier
+outperformed the two simpler models. Prepositions were harder to classify than
+articles and they required more training data to reach a specific level of
+accuracy. Future work would be including more primary models to feed features
+into the meta-classifier.
+
+Madnani, Tetreault, and Chodorow (2012) applied ``round-trip'' machine translation to correct generic
+errors in L2 text. A round-trip translation used the Google Translate
+API\footnote{\url{http://research.google.com/university/translate/}} to
+translate the candidate text from L2 to eight different languages and back again
+to L2. Since it is not guaranteed that the translations will preserve the
+meaning of the sentence, they assert that using a language model to select the
+most fluent choice is not acceptable. Instead, they combined alignments between
+the source and each round trip translation to create the final answer. This
+method had a better likelihood of maintaining the sentence's original meaning.
+In order to evaluate their system, they had human graders check whether the
+fixes were fluent as well as retaining the original meaning.
+
+The next two papers we discuss consider alternatives to standard acquisition of
+training data for GEC\@. Usually, a dataset with annotated areas as described
+from section~\ref{sec:datasets} is used, but these papers create or acquire
+their own non-native errors.
+
+Instead of training directly on non-native text, Rozovskaya and Roth (2010) took
+native text and intentionally inserted article errors. In order to create a
+realistic error distribution, they generated the article errors with the same
+observed distribution as the non-native corpora. Advantages to training data
+generation in this style are avoiding expensive data annotation, circumventing
+small corpus sizes, and tailoring the classifier to a particular language. Most
+of all, their method was shown to be superior to only training a classifier on
+purely native data. One final note they make is that previous baselines used in
+the literature are not always appropriate; baselines mentioned before are simply
+the majority class. While this is acceptable for a selection task, this ignores
+the actual error rate in the data. Usually, the error rate is much lower (shown
+to be about 10\% in their experiments) than the majority class. Therefore, they
+argue, a more fair comparison would be the \emph{error reduction}, and this is
+indeed the measure they use to report their results. They reduced the error
+detection in native Chinese, Czech, and Russian text by 10\%, 5\%, and 11\%
+respectively.
+
+The next authors~\cite{wiki-rev} obtained their grammatical errors from Wikipedia revisions. They
+filtered the article revisions dataset looking for single-word changes that
+corresponded to correcting article and preposition errors. Using this method,
+they obtained over one million corrections. They compared their mined corpus
+with standard error correction corpora as well as artificially-inserted errors
+like Rozovskaya and Roth's approach. They found that the larger ``somewhat
+clean'' Wikipedia edits were much better in increasing the $F_1$ of the grammar
+corrector as opposed to other common datasets, including a smaller ``more
+clean'' version of their Wikipedia data. Furthermore, they found that artificial
+error insertion methods trained on their Wikipedia revisions data increased
+system accuracy compared to training on smaller corpora, and even generalized
+across datasets.
+
+In sharp contrast to NLI evaluation, Chodorow, Dickinson, Israel, and Tetreault
+(2012) describe many issues
+regarding evaluation for grammatical error correction, with a focus on
+non-native sentences. This is a valuable paper for those engaging in any GEC
+task. Their main issue is the ``three-way contingency'' between the original
+sentence, the human correction, and the system output (let alone the evaluation
+scripts themselves). Mentioned later~\cite{2013-joint}, this report also
+emphasizes the significance of the relatively low error rates in non-native
+sentences---this phenomenon suggests using more interpretable measures such as
+true and false positives and negatives. Furthermore, how is the severity of an
+error taken into account? For example, most native English speakers often misuse
+\emph{who} and \emph{whom}. Their conclusion from these observations is to
+develop a robust evaluation system based on raw error type counts. This allows
+bias and error skewness to be perceived by the reader while simultaneously
+permitting the reader or other evaluator to map the raw error data into another
+form such as precision, accuracy, prevalence, or bias.
+
+\subsection{Shared Task in Non-Native Grammar Correction}
+\label{subsec:grammar-shared}
+
+We continue our discussion on GEC with the introduction of the
+CoNLL-2013 shared task~\cite{2013-task-all} and the CoNLL-2014 shared task~\cite{2014-task-all}. The training data was the NUCLE
+corpus, containing annotations categorized by five error types in 2013 along
+with the corrected text. In 2014, there were a total of twenty-eight error
+types, many of which were subcategories of the 2013 types. Some systems first
+classified potential errors by error type and then corrected errors while others
+made no such distinction. Additionally, the teams received preprocessed input:
+sentence segmentation, word tokenization, and part-of-speech tagging were all
+performed.
+
+In all, there were 1,397 essays consisting of 57,151 total sentences. Article
+and determiner errors were most prevalent. Testing data was considerably smaller
+with only fifty essays each year. Teams were also allowed to use any external
+resources that were non-proprietary and publicly available.
+Table~\ref{table:grammar-comp} shows the methods of the top teams from both
+years. The five error types from 2013 are listed below:
+
+\begin{itemize}
+    \item \textbf{Article or determiner}: ``\emph{In late nineteenth century,
+        there was a severe air crash happening at Miami international
+        airport.}'' Correction: replace \emph{late} with \emph{the late}.
+    \item \textbf{Preposition}: ``\emph{Also tracking people is very dangerous
+        if it has been controlled by bad men in a not good purpose.} Correction:
+        replace \emph{in} with \emph{for}.
+    \item \textbf{Noun number}: ``\emph{I think such powerful device shall not
+        be made easily available.}'' Correction: replace \emph{device} with
+        \emph{devices}.
+    \item \textbf{Verb form}: ``\emph{However, it is an achievement as it is an
+        indication that our society is progressed well and people are living in
+        better conditions.}'' Correction: replace \emph{progressed} with
+        \emph{progressing}.
+    \item \textbf{Subject-verb agreement}: ``\emph{People still prefers to bear
+        the risk and allow their pets to have maximum freedom.}'' Correction:
+        replace \emph{prefers} with \emph{prefer}.
+\end{itemize}
+
+While the contest setup and evaluation does not completely mimic real-life
+scenarios, it does provide useful information for those interested in GEC\@.
+Since the errors are categorized into groups, it is possible to perform an error
+analysis on the results.
+
+As mentioned previously, even performing the evaluation is not a trivial task;
+suggested corrections---while completely valid---may not actually match the
+``official'' corrections. To mitigate these issues, the contest organizers
+permitted the contestants to submit their own gold standard corrections if they
+disagreed with the provided answers. Of course, the corrections were reviewed.
+It is also worth noting that the training and test data contained errors other
+than those in the five categories, but these additional errors were not taken
+into consideration in the final scoring.
+
+\begin{table}[t]
+  \begin{center}
+      \begin{tabular}{llll}
+       \hline
+       \hline
+       \textbf{Team} & $P$ & $R$ & $F_{\{1,0.5\}}$\\
+       \hline
+       \hline
+       UIUC (Rozovskaya et al. 2013)& 46.45 & 23.49 & 31.20$_{F1}$ \\
+       \hspace{.1in}averaged perceptron and Na\"ive Bayes & & &\\
+       \hline
+       NTHU (Kao et al. 2013)& 23.80 & 26.35 & 25.01$_{F1}$ \\
+       \hspace{.1in}$n$-gram and dependency language model & & & \\
+       \hline
+       HIT (Xiang et al. 2013)& 35.65 & 16.56 & 22.61$_{F1}$ \\
+       \hspace{.1in}MaxEnt and rules & & & \\
+       \hline
+       \hline
+       CUUI (Rozovskaya et al. 2014) & 52.4 & 29.89 & 45.57$_{F0.5}$\\
+       \hspace{.1in} error interaction via joint inference & & & \\
+       \hline
+       CAMB (Felice et al. 2014) & 46.70 & 34.30 & 43.55$_{F0.5}$\\
+       \hspace{.1in} pipeline and error type filtering & & & \\
+       \hline
+       \hline
+      \end{tabular}
+  \end{center}
+      % can't have citations in captions for some reason...
+      \caption{Top teams from the CoNLL-2013 and CoNLL-2014 GEC shared task.}
+      \label{table:grammar-comp}
+\end{table}
+
+The 2013 third-place team~\cite{2013-task-hit} from Harbin Institute of
+Technology (HIT), split their system into two parts: a machine learning module
+(article \emph{vs} determiner, prepositions, and noun errors) and a rule-based
+module (verb form and subject-verb agreement). As indicated in
+Table~\ref{table:grammar-comp}, the classifier used was a Maximum Entropy classifier
+with additional feature selection via genetic algorithms and confidence tuning
+based on the maximum entropy score. The rules were first preprocessed with the
+frequent pattern mining algorithm FP-growth to find common incorrect phrases.
+These common phrases were then removed from the candidate set to be corrected. A
+list of these common phrases was provided and may prove useful for future work.
+In their results, they found that their models were very sensitive to the
+parameters and that the confidence tuning had the largest positive effect in
+their pipeline.
+
+National Tsing Hua University (NTHU)~\cite{2013-task-nthu} finished in
+second place in 2013 with a system that was very similar to theirs from the
+previous year. In the CoNLL-2013 shared task, subject-verb agreement was not a
+labeled error type so the NTHU system ignored these errors. In the seemingly
+current trend, a module was created for each error type, though their modules
+were more similar to each other than the previous systems. Each module used a
+moving window of words up to length five---five here because they leverage the
+Google 5-gram corpus as well as their previous tool
+Linggle\footnote{\url{http://linggle.com}}. Linggle is a linguistic search
+engine in which the user can specify wildcards for nouns, verbs, and
+adjectives~\cite{linggle}. Results were returned with those wildcards filled in
+ordered by increasing likelihood in the dataset. These likelihoods were used to
+score candidates generated by their system in each module. Their candidate
+voting system was created using a backoff model of lower-order $n$-grams. Verb
+form errors were really the only significantly different module by including
+pointwise mutual information.
+
+The University of Illinois at Urbana-Champaign (UIUC)~\cite{2013-task-uiuc}
+had the best-performing system in 2013. They made use of previous work for
+article errors (with averaged perceptron) and preposition errors (with Na\"ive
+Bayes). The remaining three error classes were dealt with Na\"ive Bayes with
+priors trained on the same Google corpus that NTHU used. Although the CoNLL
+corpus already contained part-of-speech tags, they reparsed the dataset with
+their own tools in addition to running a shallow parser for feature generation.
+There was no pipeline in the system, meaning that corrections of each model were
+pooled together to create the final output sentence. In their error analysis,
+they found that an incorrect verb form can cause parsers to break, which greatly
+hindered rule-based methods. Since the errors were so sparse, they hypothesize,
+less complicated machine learning algorithms would be more robust to the large
+amount of noise. This analysis provided much insight and would be useful for
+future work.
+
+After the contest ended, UIUC~\cite{2013-joint} returned to the
+CoNLL-2013 shared tasks with a joint learning and inference approach. Based on
+their observations from the shared task, they reasoned that individual (read:
+\emph{independent}) classifiers per word do not capture interactions between
+errors and word choice. They accomplish this by combining individual classifiers
+using integer linear programming---a model which is able to jointly learn the
+error occurrences. They thus increased the $F_1$ score on the CoNLL-2013 data to
+$42\%$, significantly higher than their first place score. They do note though,
+that $F_1$ may not be an appropriate measure; it is indeed more intuitive to
+measure the increase in correctness of the original data since it is quite
+likely that the grammar correction systems actually introduce errors themselves.
+
+Cambridge University~\cite{2014-hybrid}  was the second-best team in 2014.
+Without additional error suggestions for evaluation, they were in first place.
+They used a pipeline-based system which first ran rule-based corrections with a
+tool designed for English learners at their school. A language model selected
+the best candidate sentences from the rule-based edits. Then, those candidates
+were sent to a statistical machine translation system trained on parallel
+English data, which included NUCLE and FCE (see section 2). Then, a large 5-gram
+language model from Microsoft was used to select candidates for the final stage.
+This is the main novelty of their system: with these final candidates they
+filter the error correction types to ignore unnecessary corrections. Their
+classifier was able to label almost $70\%$ of error types correctly on
+development data. They filtered out the labeled types that had zero precision,
+which consisted of reordering errors, run-ons, comma splices, and acronyms.
+Although the filtering did increase their $F_{0.5}$ score, the difference was not
+statistically significant. This is an example of how evaluation metrics play an
+integral part in system design.
+
+Columbia University and the University of Illinois at
+Urbana-Champaign~\cite{2014-cuui} was the top team in 2014. They improved upon their system from
+the previous year, and also included their joint inference work
+\cite{2013-joint}. The last addition was the inclusion of new classifiers for
+the different error types; in total they had sixteen classifiers targeting the
+twenty-eight error types. The classifier learning algorithm for each error type
+was one of Na\"ive Bayes, Na\"ive Bayes with priors, and averaged perceptron.
+
+In conclusion, we saw a variety of techniques for correcting grammatical errors,
+which can be categorized into targeted \emph{vs} general strategies. Targeted
+strategies focus on errors of only specific types (such as the shared task)
+which general correctors try to improve the overall fluency of the L2 text.
